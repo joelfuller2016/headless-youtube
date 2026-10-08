@@ -1,0 +1,68 @@
+{
+  "id": "2026-10-08-a-prayer-for-a-new-job",
+  "pillar": "prayer",
+  "series": "a-prayer-for",
+  "idea": "a prayer for someone starting a new job and feeling like they are not good enough",
+  "source": "manual",
+  "title": "A prayer for your first week at a new job",
+  "hook": "If you start a new job this week and you're scared they'll find out you don't belong, this is for you.",
+  "scenes": [
+    {
+      "index": 1,
+      "text": "If you start a new job this week and you're scared they'll find out you don't belong, this is for you.",
+      "visual": { "type": "stock-clip", "prompt": "person walking into office building early morning, soft light, from behind", "mood": "calm-dawn" },
+      "caption_emphasis": ["don't belong"],
+      "duration_hint_s": 6
+    },
+    {
+      "index": 2,
+      "text": "Lord, you already know the name on the desk and the fear in the chest. Walk in with them.",
+      "visual": { "type": "stock-clip", "prompt": "empty desk by a window with morning light, slow push in", "mood": "warm-office" },
+      "caption_emphasis": ["Walk in with them"],
+      "duration_hint_s": 7
+    },
+    {
+      "index": 3,
+      "text": "Quiet the voice that says they got lucky. They were chosen. Let them believe it for one whole day.",
+      "visual": { "type": "stock-clip", "prompt": "hands typing on laptop, close up, shallow focus, natural light", "mood": "warm-office" },
+      "caption_emphasis": ["chosen"],
+      "duration_hint_s": 8
+    },
+    {
+      "index": 4,
+      "text": "Give them one kind coworker, one small win, and the courage to ask a question out loud.",
+      "visual": { "type": "stock-clip", "prompt": "two colleagues smiling over coffee in a bright kitchen", "mood": "warm-kitchen" },
+      "caption_emphasis": ["one small win"],
+      "duration_hint_s": 7
+    },
+    {
+      "index": 5,
+      "text": "And when they get home tired, remind them: tired is not the same as failing. It is the feeling of growing.",
+      "visual": { "type": "stock-clip", "prompt": "person on a train at sunset looking out the window, calm", "mood": "golden-hour" },
+      "caption_emphasis": ["growing"],
+      "duration_hint_s": 8
+    },
+    {
+      "index": 6,
+      "text": "Be still, and know that I am God. Psalm 46:10. You're not on your own in that building. Amen.",
+      "visual": { "type": "brand-card", "prompt": "brand card, Psalm 46:10 reference, soft gradient", "mood": "calm-dawn" },
+      "caption_emphasis": ["Be still"],
+      "duration_hint_s": 8
+    }
+  ],
+  "close": "If that was for you, save it for Monday morning. Come back tomorrow, there's one for you then too.",
+  "description": "A short prayer for anyone starting a new job and fighting the feeling that they do not belong. You were chosen. Tired is not failing.\n\nNew prayers and encouragement every day.",
+  "hashtags": ["#prayer", "#newjob", "#encouragement", "#faith", "#imposter", "#shorts", "#hope", "#mentalhealth"],
+  "music": { "mood": "soft-piano-hopeful" },
+  "voice": { "provider": "edge-tts", "voice_id": "en-US-AndrewNeural", "pace": "slow" },
+  "safety": {
+    "sensitivity": "low",
+    "crisis_resources": false,
+    "quotes": [
+      { "text": "Be still, and know that I am God.", "attribution": "Psalm 46:10, King James Version", "status": "public-domain" }
+    ],
+    "judge_verdict": "pending",
+    "judge_notes": ""
+  },
+  "targets": { "duration_s": 55, "words": 150 }
+}
