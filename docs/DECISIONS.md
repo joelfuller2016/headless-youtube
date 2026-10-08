@@ -23,6 +23,7 @@ recommendation is pending evidence.
 | D-014 | Monetisation is not a goal; the content rules still comply with YouTube's monetisation policies | Proposed | 2026-10-08 |
 | D-015 | Visual rungs A and B launch together; C, D and E are switched on per series by data | Proposed | 2026-10-08 |
 | D-016 | HeyGen (AI presenter) and ChatCut (agent-driven editor) are deferred: HeyGen is a phase-6 optional rung F after a one-series test; ChatCut is used interactively for prototyping and reconsidered as a rung-D provider once its automation terms are confirmed | Proposed | 2026-10-08 |
+| D-017 | MiroFish (swarm-simulation prediction engine) is not part of the pipeline; it may be tried after phase 4 as an audience rehearsal for ranking series concepts, under the budget guard | Proposed | 2026-10-08 |
 
 ## D-001 Python and FFmpeg
 
@@ -137,3 +138,11 @@ priced sensibly for AI video and voice generation and ships a Claude Code plugin
 prohibit automated use, the plugin only runs inside desktop agent hosts, and its edits are
 non-deterministic. Neither blocks anything; both are kept as options with the conditions stated.
 **Reversible:** yes.
+
+## D-017 MiroFish
+
+**Why.** Raised by the owner on 2026-10-08 and read the same day (`docs/RESEARCH.md` section 11). It
+predicts how a simulated population reacts to seed material; it produces no video, voice or post. A run
+is thousands of LLM calls plus a cloud memory service, its interface is interactive, and the phase-4
+analytics loop measures the real audience for free. It stays an optional experiment for ranking series
+concepts, never a gate on a daily video. **Reversible:** yes.

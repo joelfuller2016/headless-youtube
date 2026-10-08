@@ -282,3 +282,30 @@ Hosting keys: [fal.ai](https://fal.ai/pricing) covers almost every model above b
 **Open questions.** Whether Together's free FLUX schnell endpoint still exists (announced as a 3-month
 promotion in October 2024); Ideogram's and Kling's official prices (JavaScript-only pages); whether
 Hailuo text-to-video can produce 9:16 at all; LTX-2's community licence terms.
+
+### MiroFish — a swarm-simulation prediction engine (not a content tool)
+
+**What it is.** [666ghj/MiroFish](https://github.com/666ghj/MiroFish) is an open-source "swarm
+intelligence engine, predicting anything": you upload seed material (a news item, a draft, a story) and a
+prediction question in plain language; it builds a knowledge graph, generates thousands of agent personas
+with memory, runs them on two simulated social platforms, and returns a prediction report you can
+interrogate by chatting with any simulated agent. Facts read on 2026-10-08:
+
+| Fact | Value | Source |
+|---|---|---|
+| Licence and status | AGPL-3.0; Python; 77,118 stars and 11,788 forks; created 2025-11-26, last push 2026-10-01; 136 open issues; incubated by Shanda Group; simulation engine is CAMEL-AI's [OASIS](https://github.com/camel-ai/oasis) | GitHub repository record, [README](https://github.com/666ghj/MiroFish) |
+| Running it | Node 18+, Python 3.11 or 3.12, `uv`; `npm run setup:all` then `npm run dev` (frontend on 3000, backend API on 5001), or `docker compose up -d`; Windows is not mentioned either way | README |
+| What it needs | an OpenAI-compatible LLM key (the README recommends Alibaba's Qwen-plus and warns "High consumption, try simulations with fewer than 40 rounds first") and a [Zep Cloud](https://app.getzep.com/) key for agent memory ("free monthly quota is sufficient for simple usage") | README |
+| Hosted version | [mirofish.ai](https://mirofish.ai/) shows only a title and, per search results, a waitlist for an online edition; no pricing | site fetch |
+| Automation | a backend API exists for its own frontend; there is no documented headless or batch interface and the workflow is designed around interactive review | README, third-party guide |
+
+**Fit for this channel.** MiroFish does not make videos, voices, captions or posts, so it has no place in
+the production pipeline. The one honest use is as an **audience rehearsal**: feed it a candidate series
+concept, a week of titles and hooks, or the wording of a sensitive mental-health script, and ask how a
+simulated audience reacts before anything is published. Three reasons to treat that as a phase-4 or
+later experiment rather than a stage: each run is thousands of LLM calls, so the cost of one rehearsal can
+exceed a month of the rest of the $0 pipeline; the output is a prediction, while the analytics loop in
+phase 4 measures the real audience for free; and it needs a cloud memory service and an interactive UI,
+which fights the unattended design. The AGPL licence is fine for private use and only matters if it were
+offered as a service. **Verdict: optional experiment after phase 4, capped by the budget guard, used to
+rank series concepts, never to approve or reject a daily video.** Recorded as D-017.
