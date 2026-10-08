@@ -74,26 +74,29 @@ links and dates, in `docs/RESEARCH.md`. The budget caps are decision D-012.
 | Render | FFmpeg with ASS captions | $0 |
 | Publish | YouTube Data API, private upload with `publishAt` | $0 |
 | Tracking | YouTube Analytics API | $0 |
-| Hosting | Windows Task Scheduler running `hy run` hourly on the owner's PC | $0 (electricity) |
+| Hosting | Windows Task Scheduler running `hy run` hourly on the owner's PC (`/ru System`), for phases 1 and 2 | $0 (electricity) |
 
-**Monthly cost:** $0. **Catch:** the PC must be on for the runner to fire; the first videos stay private
-until YouTube's API audit passes; free-tier model limits must be watched. **Best for:** phases 1 to 4.
+**Monthly cost:** $0. **Catch:** the PC must be on for the runner to fire, and sleep, update reboots or a
+changed password silently skip runs; the first videos stay private until YouTube's API audit passes;
+free-tier model limits must be watched. **Best for:** phases 1 and 2, and as the development loop and
+manual backup for ever.
 
-### Concept 2 — "Serverless on GitHub Actions"
+### Concept 2 — "Serverless on GitHub Actions" (the scheduler of record from phase 3)
 
-Same providers as Concept 1, hosted differently: a public repo with a scheduled workflow runs the
-pipeline on a GitHub-hosted Ubuntu runner (FFmpeg is not on the standard image, so the workflow installs it
-with one `apt-get` step, about 30 seconds), ideas arrive
-as GitHub issues using an issue form, results and metrics are committed back, and the rendered MP4 is
-attached to a release so other platforms can fetch it from a public URL. Secrets live in the Actions
-secret store.
+Same providers as Concept 1, hosted differently: a private repository with a scheduled workflow runs
+the pipeline on a GitHub-hosted Ubuntu runner (FFmpeg is not on the standard image, so the workflow
+installs it with one `apt-get` step), ideas arrive as GitHub issues using an issue form or through
+`workflow_dispatch` inputs, state is committed back with the job's own token (which cannot trigger
+another workflow, so there is no recursion), the rendered MP4 is kept as a workflow artifact and copied
+to public object storage for the platforms that fetch by URL, and a Discord or Telegram message reports
+each run. Secrets live in the Actions secret store.
 
-**Monthly cost:** $0 on a public repo (standard runners are free for public repositories; a private repo
-gets 2,000 free minutes a month on the Free plan). **Catch:** no GPU, so local TTS runs on CPU and AI
-images are API calls or a Hugging Face ZeroGPU Space inside the free five minutes a day; scheduled workflows in a public repo switch off after 60 days without
-repository activity, so the journal commits matter; artifact storage is 500 MB on the Free plan, so
-media go to releases. **Best for:** phase 7 as the second host, or phase 1 if the owner's PC is
-unreliable.
+**Monthly cost:** $0 (2,000 free minutes a month on a private repository is about 130 ten-minute runs;
+standard runners are free on a public one). **Catch:** no GPU, so local TTS runs on CPU and image or
+video generation is an API call, a Hugging Face ZeroGPU Space inside the free five minutes a day, or a
+Modal function inside its $30 monthly credit; cron fires late at the top of the hour, so use an odd
+minute; a public repository's schedule switches off after 60 idle days; artifact storage is 500 MB on the
+Free plan. **Best for:** phase 3 onward as the production scheduler, with the PC as backup.
 
 ### Concept 3 — "Low-code with n8n"
 
@@ -102,10 +105,12 @@ nodes: a schedule trigger, an HTTP node to the model, a TTS node, a render step 
 FFmpeg script or a hosted render API (Creatomate, Shotstack, JSON2Video), and a publish node. Many
 community templates exist for exactly this shape, and the visual canvas makes failures easy to see.
 
-**Monthly cost:** $0 to $5 for hosting, plus whatever the render API charges if one is used. **Catch:**
-community templates usually assume paid services; the self-hosted licence allows personal use but
-should be read; two systems to maintain if the Python stages are still used for rendering. **Best for:**
-the owner who wants to see the pipeline rather than read logs.
+**Monthly cost:** $0 to $6 for hosting (`npx n8n` on the PC, or a Hetzner or DigitalOcean box at about
+$6; Oracle's free tier reclaims idle machines), plus whatever a render API charges if one is used.
+**Catch:** the faceless-Shorts template on n8n's site assumes OpenAI billing and a paid Orshot plan;
+the Sustainable Use License allows personal use but not hosting for others; two systems to maintain if
+the Python stages still do the rendering. **Best for:** the owner who wants to see the pipeline rather
+than read logs.
 
 ### Concept 4 — "Managed quality stack"
 
@@ -121,9 +126,10 @@ dependency that can change its price or its terms; the downgrade ladder is what 
 
 ### Which one, and when
 
-Start with Concept 1, move the runner to Concept 2 as a second host when it has proven itself, and
-borrow Concept 4's paid providers one stage at a time, per series, behind the budget guard. Concept 3 is
-an alternative front end for the same stages rather than a different destination.
+Start with Concept 1 for phases 1 and 2, make Concept 2 the scheduler of record from phase 3 with the
+PC as backup, send GPU steps to Modal's free credit or Hugging Face Jobs, and borrow Concept 4's paid
+providers one stage at a time, per series, behind the budget guard. Concept 3 is an alternative front
+end for the same stages rather than a different destination. Decision D-009.
 
 ## 6. The format ladder, in short
 
@@ -184,7 +190,7 @@ Task-level checklists in `docs/ROADMAP.md`.
 | Harmful wording on a mental-health topic | low with controls | banned-phrase scanner, sensitivity levels, crisis block, YouTube's own guidance followed |
 | Music triggers a Content ID claim and blocks a video | low | YouTube Audio Library or a clearly licensed bed; videos under 60 seconds |
 | Stock clip repeats make the channel look like every other | medium | cache by term, allow-list per mood, rotate sources, climb to rung C for top series |
-| The PC is off and nothing posts | medium | `publishAt` schedules a day ahead; GitHub Actions as the second host in phase 7 |
+| The PC is asleep, rebooted by an update, or its task's saved password changed, and nothing posts | high over a year | `publishAt` schedules a day ahead; the task runs as System; from phase 3 GitHub Actions is the scheduler of record and the PC only a backup |
 | Spend creeps up once paid rungs are on | medium | budget guard with daily and monthly caps, downgrade on cap, spend in the daily summary |
 
 ## 11. Open questions for the owner

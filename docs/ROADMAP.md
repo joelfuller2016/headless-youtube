@@ -39,7 +39,7 @@ owner's Windows PC in under two minutes, with no network call except the LLM.
 - [ ] Publish stage for YouTube: private upload, `publishAt`, `selfDeclaredMadeForKids=false`,
       `containsSyntheticMedia` from the render tier, title and description rules
 - [ ] Submit the YouTube API Audit and Quota Extension form
-- [ ] Windows Task Scheduler job running `hy run` hourly; a `PAUSE` file honoured
+- [ ] Windows Task Scheduler job running `hy run` hourly as System (not with a saved password); a `PAUSE` file honoured
 - [ ] Daily summary to Telegram or email; failure alert with the stage and error
 - [ ] `review_mode=notify` for the first two weeks
 
@@ -54,6 +54,7 @@ passes, flipping the video to public.
 - [ ] Scripture lookup from a public-domain translation file so references are never invented
 - [ ] Brand kit: fonts, colours, bumper, end card, licensed music bed with its licence file in `assets/`
 - [ ] Telegram (or GitHub issue form) intake so ideas can be sent from a phone
+- [ ] GitHub Actions workflow in a private repository as the scheduler of record: cron at an odd minute, `workflow_dispatch` with idea and publish inputs, FFmpeg install step, state committed back, 25-minute job timeout, Discord or Telegram report; the PC becomes the backup
 
 **Done when:** thirty days unattended with no more than two failed jobs and zero rejected-for-safety
 videos published.
@@ -93,7 +94,7 @@ retention per series.
 ## Phase 7 — Hardening
 
 - [ ] Backup of `output/*/job.json` and `metrics.csv` to the repo or object storage
-- [ ] GitHub Actions runner as a second host, with secrets in the Actions store
+- [ ] Modal or Hugging Face Jobs function for the GPU steps, capped at Modal's free credit
 - [ ] Runbook: what to do when a token expires, a provider changes its price, or a platform changes a rule
 - [ ] Quarterly re-check of every dated claim in `docs/RESEARCH.md` and `docs/DISTRIBUTION.md`
 

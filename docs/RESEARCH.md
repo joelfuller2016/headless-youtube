@@ -496,8 +496,9 @@ to Whisper for the forced-alignment fallback in section 4.
   option for one clip a day.
 - Hosting: a GPU-free host can call a ZeroGPU Space (5 free minutes a day, 40 on PRO at $9 a month) or
   route to fal and Replicate through Inference Providers with one token; the owner may also host two
-  ZeroGPU Spaces of his own for free, which is a way to run Kokoro, Z-Image-Turbo or ACE-Step as a private
-  API without a local GPU.
+  ZeroGPU Gradio Spaces of his own for free (any other Gradio or Docker Space needs PRO), which is a way
+  to run Kokoro, Z-Image-Turbo or ACE-Step as a private API without a local GPU; for scheduled batch work
+  Hugging Face Jobs (section 7) is the cleaner fit.
 - Scripture: the three public-domain translations are downloaded once as parquet files into `assets/`.
 
 **Open questions.** Qwen3-TTS speed on CPU and whether it returns timestamps; whether the LTX community
@@ -570,3 +571,75 @@ not expect to pass. The cheapest way to make TikTok hands-off is an aggregator w
 **Open questions.** How long a TikTok audit takes and whether a channel with a public website could pass
 (third-party claims only); whether the legacy LinkedIn share product is still granted to new apps;
 Instagram's 100 versus 50 daily limit; Bluesky's current API-enforced limits (call `getUploadLimits`).
+
+## 7. Orchestration, scheduling and hosting (checked 2026-10-08)
+
+**Summary.** For one video a day the scheduler and host are the cheapest part of the system and can stay
+at $0 indefinitely. The strongest free option is a GitHub Actions workflow on a cron trigger: standard
+Linux runners are free on public repositories and a private repository gets 2,000 minutes a month on the
+Free plan; a job may run six hours; the runner has Python 3.12 and Node 22 and passwordless sudo, so
+FFmpeg is one `apt-get` away; `workflow_dispatch` and `issues` events let the owner push an idea from the
+GitHub app on a phone. The catches are real but manageable. For GPU bursts, Modal's Starter plan carries
+$30 a month of free credit billed per second, and Hugging Face Jobs run scheduled jobs for cents. The
+owner's Windows PC is the right development runner and manual backup but a poor production scheduler.
+
+### Free and cheap schedulers
+
+| Option | Cost | What you get | Catches | Source |
+|---|---|---|---|---|
+| **GitHub Actions** | $0 on a public repo; 2,000 minutes a month on a private repo (Free plan), 500 MB artifact storage; Linux overage $0.006 a minute | cron `schedule` (shortest every 5 minutes), `workflow_dispatch` with up to 25 inputs, `issues` trigger; jobs up to 6 hours; 20 concurrent jobs; secrets store | **no FFmpeg on the image** (install each run or cache a static build); **no GPU** (GPU runners are Team and Enterprise only, $0.052 a minute); cron fires late at the top of the hour under load, so pick an odd minute; public-repo schedules disable after 60 idle days; pushes made with the job's own token do not trigger other workflows (no recursion, but also no "publish on push"); secrets over 48 KB need a workaround | [Billing](https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-actions/about-billing-for-github-actions), [Limits](https://docs.github.com/en/actions/reference/limits), [Events](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows), [GITHUB_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token), [Runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing), [Secrets](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) |
+| **Windows Task Scheduler** on the owner's PC | $0 | `schtasks /create /sc daily`, triggers on time, logon, idle | a task created with a saved password stops silently when the password changes (`/ru System` avoids it); sleep, hibernate and update reboots skip runs. **Development runner and backup, not the production scheduler.** | [schtasks](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create) |
+| **n8n** self-hosted | $0 under the Sustainable Use License for personal use (`npx n8n` on Windows with Node 20.19 to 24, or Docker Desktop); n8n Cloud from €20 a month billed annually | visual canvas, community templates; the faceless-Shorts template [#20025](https://n8n.io/workflows/) exists but assumes OpenAI billing and a paid Orshot plan | a second system to maintain if the Python stages stay; hosting for others is not permitted | [Licence](https://github.com/n8n-io/n8n/blob/master/LICENSE.md), [Editions](https://docs.n8n.io/choose-n8n/), [Cloud pricing](https://n8n.io/pricing/) |
+| **Make** | Free: 1,000 credits a month, 2 active scenarios, 15-minute interval; Core $12 | a thin publishing tail if a native connector saves work | no TikTok publishing module | [Pricing](https://www.make.com/en/pricing) |
+| **Zapier** | Free: 100 tasks a month | | too tight for a daily three-step flow | [Pricing](https://zapier.com/pricing) |
+
+### GPU bursts without owning a GPU
+
+| Option | Price | Notes | Source |
+|---|---|---|---|
+| **Modal** | Starter plan includes **$30 a month of free credit**; per second: T4 $0.000164, L4 $0.000222, A10 $0.000306, A100 80 GB $0.000694, H100 $0.001097; CPU $0.0000131 a core-second | `modal.Cron` schedules a function (UTC), so Modal can own the whole daily run or just the GPU step; schedules cannot be paused and `Period` resets on redeploy; $30 is about 25 hours of T4 or 5 hours of A100 a month | [Pricing](https://modal.com/pricing), [Cron](https://modal.com/docs/guide/cron) |
+| **Hugging Face Jobs** | pay per second for any account with credit: cpu-basic $0.01 an hour, cpu-upgrade $0.03, t4-small $0.40, L4 $0.80, A10G small $1.00, A100 large $2.50 | scheduled jobs with cron syntax, retries, secrets; **default timeout 30 minutes**, so set it | [Jobs overview](https://huggingface.co/docs/hub/jobs-overview), [Jobs guide](https://huggingface.co/docs/huggingface_hub/guides/jobs), [Pricing](https://huggingface.co/pricing) |
+| **Hugging Face Spaces** | CPU Basic is free hardware, but **creating a Gradio or Docker Space requires PRO ($9 a month)**; free accounts may host up to 2 ZeroGPU Gradio Spaces | a free-hardware Space sleeps when idle; for batch work use Jobs | [Spaces overview](https://huggingface.co/docs/hub/spaces-overview) |
+| **RunPod Serverless** | 24 GB class $0.69 an hour, 4090 $1.10, A100 80 GB $2.72; no free credit | fallback | [Pricing](https://www.runpod.io/pricing) |
+| **Colab** | free tier restricted; Pro about $9.99 a month per search snippets (sign-in gated) | **not an automation host**: no remote-control tools, idle timeouts, interactive priority | [FAQ](https://research.google.com/colaboratory/faq.html) |
+
+### Always-on boxes
+
+| Host | Price | Catch | Source |
+|---|---|---|---|
+| Oracle Cloud Always Free | $0: Ampere A1 up to 2 OCPU and 12 GB (reduced from 4 and 24 in 2026), 200 GB storage | an idle instance (95th-percentile CPU and network under 20 percent for 7 days) may be reclaimed, and a once-a-day job looks idle; A1 capacity is often unavailable in busy regions | [Always Free resources](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm) |
+| Hetzner CX23 | about €5.99 a month including the IPv4 address (third-party August 2026 snapshot; Hetzner repriced on 2026-04-01 and its page is JavaScript-only) | confirm in the console | [Overview](https://docs.hetzner.com/cloud/servers/overview/), [Price notice](https://www.hetzner.com/pressroom/statement-price-adjustment/) |
+| DigitalOcean | $4 (512 MB) or $6 (1 GB) a month | | [Droplets](https://www.digitalocean.com/pricing/droplets) |
+| Fly.io | no free tier; shared-cpu-1x from $2.19 a month, card required | | [Pricing](https://docs.fly.io/about/pricing) |
+| Railway, Render | Railway Free is a $1 monthly credit; Render has no free cron jobs ($1 a month minimum per cron service) | | [Railway](https://railway.com/pricing), [Render cron](https://render.com/docs/cronjobs), [Render free](https://render.com/docs/free) |
+| Raspberry Pi or mini PC | one-time purchase, not priced here | the same runner as the PC without the sleep problem | |
+
+### State and observability
+
+- **State:** a SQLite file or JSON job files committed back to the repository by the workflow is enough
+  while exactly one writer exists; a second runner needs a shared store or a GitHub `concurrency` group.
+  [Supabase Free](https://supabase.com/pricing) (500 MB database, 1 GB storage) only if a browsable backlog
+  is wanted, and it **pauses after a week of inactivity**.
+- **Alerts:** a [Discord webhook](https://docs.discord.com/developers/resources/webhook) (2,000 characters,
+  10 embeds, free) or a [Telegram bot](https://core.telegram.org/bots/faq) (sends files up to 50 MB, so
+  the rendered short can be reviewed on a phone) per run, plus GitHub's own failure email to the workflow
+  author. Keep rendered MP4s as workflow artifacts rather than commits.
+- **Guardrails:** GitHub Actions spending limit at $0 (the default), a 25-minute `timeout-minutes` on the
+  job, Modal capped at its free credit, an explicit timeout on any Hugging Face Job.
+
+### What this section decides (D-009 revised)
+
+- **Phases 1 and 2** run on the owner's Windows PC from Task Scheduler with `/ru System`, as the
+  development loop and manual backup; YouTube's `publishAt` means the PC need not be awake at publish time.
+- **From phase 3 the scheduler of record is a GitHub Actions workflow in a private repository** (2,000
+  free minutes a month is about 130 ten-minute runs): cron at an odd minute, `workflow_dispatch` with
+  idea text and a publish flag, an `issues` trigger for the phone, FFmpeg installed each run, state
+  committed back with the job token, a Discord or Telegram message per run.
+- **GPU steps** (AI video, local image models) go to Modal under `modal.Cron` inside the $30 credit, or
+  to Hugging Face Jobs, or run on the PC's GPU when it is on; they never block the daily post.
+- n8n stays optional as a visual front end; Make is acceptable only as a thin tail; Zapier is out.
+
+**Open questions.** Whether commits made by the workflow's own token count as "repository activity" for
+the 60-day rule (keep a human-visible journal commit anyway); current Hetzner prices; Docker Desktop on
+Windows Home (the requirements page lists Pro, Enterprise and Education); Modal's retry guarantees for
+scheduled functions.

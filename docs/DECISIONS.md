@@ -15,7 +15,7 @@ recommendation is pending evidence.
 | D-006 | Scripture only from public-domain translations; licensed translations only within their gratis limits and with the required notice | Proposed | 2026-10-08 |
 | D-007 | Phase 1 voice: Kokoro-82M locally as primary, Google Cloud TTS free tier as fallback; `edge-tts` for prototyping only | Proposed | 2026-10-08 |
 | D-008 | Script model and judge model are different models | Proposed | 2026-10-08 |
-| D-009 | Phase 1 and 2 run on the owner's Windows PC from Task Scheduler; GitHub Actions is the phase-3 option | Proposed | 2026-10-08 |
+| D-009 | Phases 1 and 2 run on the owner's Windows PC from Task Scheduler as the development runner; from phase 3 the scheduler of record is a GitHub Actions workflow in a private repository; GPU steps go to Modal's free credit or Hugging Face Jobs | Proposed | 2026-10-08 |
 | D-010 | Phase 5 publishes directly to Instagram Reels, Facebook Reels, Threads and Bluesky at $0; TikTok goes through Buffer's free plan (or upload-post at $24 a month); Pinterest and LinkedIn after their paperwork; X skipped | Proposed | 2026-10-08 |
 | D-011 | `review_mode` defaults to `none`; `notify` for the first two weeks | Proposed | 2026-10-08 |
 | D-012 | Budget caps: $0 for phases 1 to 4, up to $25 a month in phase 5, up to $100 a month in phase 6 | Proposed | 2026-10-08 |
@@ -88,12 +88,18 @@ in `docs/RESEARCH.md`. **Reversible:** yes, the voice provider is an interface.
 **Why.** A judge grading its own writer's output is a weak gate. Use a different provider or at least a
 different model family for the quality judge. Costs pennies.
 
-## D-009 Windows PC first
+## D-009 Windows PC first, GitHub Actions as the scheduler of record from phase 3
 
-**Why.** $0, no deployment, the owner can watch it work. The PC must be awake when the runner fires;
-YouTube's `publishAt` means it does not have to be awake at publish time. GitHub Actions is the next
-step when the PC stops being reliable, with the caveat that scheduled workflows in a public repo switch
-off after 60 days without repository activity (the journal commits count as activity).
+**Why.** $0, no deployment, the owner can watch it work, so the PC is the right place to build and the
+right manual backup. It is a poor production scheduler: a Task Scheduler task with a saved password
+stops silently when the password changes, and sleep, hibernate and update reboots skip runs. GitHub
+Actions costs nothing for one run a day (2,000 free minutes a month on a private repository), has
+secrets, a cron trigger, a dispatch trigger with inputs and an issues trigger, and a job may run six
+hours; FFmpeg is installed each run and there is no GPU, so GPU steps go to Modal (free $30 a month of
+credit, per-second billing, its own cron) or Hugging Face Jobs. In a public repository the schedule
+switches off after 60 idle days; a private repository avoids that and keeps prompts out of public view.
+Sources and dates in `docs/RESEARCH.md` section 7. **Reversible:** yes; the runner is the same code on
+every host.
 
 ## D-010 Direct APIs where they are free, an aggregator only for TikTok
 

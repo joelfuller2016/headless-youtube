@@ -171,12 +171,17 @@ account can call shared ZeroGPU Spaces for five minutes a day through the Gradio
 Spaces of its own, or route to fal and Replicate through Inference Providers with one token
 (`docs/RESEARCH.md` section 12). Four shapes, detailed in `docs/PROJECT_PLAN.md`:
 
-1. **Owner's Windows PC** with Task Scheduler. $0, but the PC must be on at publish time (or publish via
-   `publishAt` ahead of time).
-2. **GitHub Actions** on a schedule. $0 for a public repo, stateless, so the queue and results are committed
-   back to the repo and media go to workflow artifacts or releases. Secrets in the Actions secret store.
-3. **A small always-on box** (Raspberry Pi, mini PC, or a $5 VPS) running the same runner from cron.
-4. **n8n** (self-hosted) orchestrating the same stages as nodes, when a visual canvas is preferred.
+1. **Owner's Windows PC** with Task Scheduler (`/ru System`). $0; the development runner and manual
+   backup. Sleep, update reboots and password changes skip runs, so it is not the production scheduler.
+2. **GitHub Actions** on a schedule in a private repository: the scheduler of record from phase 3. $0
+   within 2,000 minutes a month, stateless, so the queue and results are committed back with the job's
+   own token (which cannot trigger another workflow) and media go to workflow artifacts and public
+   object storage. Secrets in the Actions secret store; FFmpeg installed each run; no GPU.
+3. **GPU bursts** on Modal (`modal.Cron`, $30 a month of free credit, per-second billing) or Hugging
+   Face Jobs (cron, cents an hour for CPU, $0.40 an hour for a T4) for any stage that needs one.
+4. **A small always-on box** (Raspberry Pi, mini PC, or a $6 VPS) running the same runner from cron, if
+   a host that is neither the PC nor GitHub is ever wanted.
+5. **n8n** (self-hosted) orchestrating the same stages as nodes, when a visual canvas is preferred.
 
 ## 9. Observability and control
 
