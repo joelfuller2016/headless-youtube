@@ -220,6 +220,11 @@ free plan as the TikTok bridge.
 | Instagram | none | caption, first line is the hook | 3 to 5 (Instagram's own advice) | Meta's AI label where exposed; required for photorealistic video or realistic-sounding audio, with penalties stated for not labelling | container then publish; the runner picks the time |
 | Facebook | title | description | 3 to 5 | as Instagram | as Instagram |
 
+Generated media keeps its provenance: Google's images and Veo clips carry a SynthID watermark, several
+providers attach C2PA metadata, and TikTok has auto-labelled uploads that carry it since 2024-05-09. The
+pipeline does not strip any of it (stripping may breach the provider's terms) and expects an automatic
+"AI" label on those uploads whether or not it set the flag itself.
+
 ## 6. The one-slot-a-day rhythm
 
 The runner publishes at one fixed local time per day per platform. YouTube gets the exact time via

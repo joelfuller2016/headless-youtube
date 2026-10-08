@@ -220,7 +220,9 @@ enforced by the render and gate stages, not by taste:
 
 - **Music.** No two videos in any rolling 14 days share a music bed; the library holds at least 20 beds,
   and generated beds (ACE-Step) get a fresh prompt and seed per video.
-- **Visuals.** No stock clip or generated image is reused within 30 days; brand cards use at least 12
+- **Visuals.** No stock clip or generated image is reused within 30 days, and the first page of a stock
+  search is skipped when a later page fits, because the clips used by thousands of channels both feed the
+  inauthentic-content test and draw false Content ID claims from other uploaders; brand cards use at least 12
   backgrounds and 3 palettes and never run two days in a row on the same series.
 - **Structure.** Sixteen series with different shapes, on a six-pillar rotation; the judge rejects a
   script whose structure matches the previous day's video.

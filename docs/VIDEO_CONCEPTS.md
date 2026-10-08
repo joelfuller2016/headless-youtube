@@ -75,8 +75,10 @@ cents per video through an API or zero on a local GPU.
 portrait frame, or Google's Nano Banana at about $0.034) or to a local ComfyUI install on a Windows GPU,
 where the Apache-licensed FLUX.1 schnell weights run on a 4 GB card and Z-Image-Turbo (Apache-2.0, better
 text rendering) on a 16 GB card, both for nothing. Without a local GPU, a Hugging Face ZeroGPU Space
-renders a short's images inside the five free minutes a day (`docs/RESEARCH.md` section 12). The image is generated at 1080x1920 or upscaled, and
-FFmpeg's `zoompan` adds the move. Images are cached by prompt hash.
+renders a short's images inside the five free minutes a day (`docs/RESEARCH.md` section 12). The image is generated at 1024x1536 (fal bills by
+megapixel rounded up, and 1080x1920 rounds to three) and scaled to 1080x1920 in the render stage, and
+FFmpeg's `zoompan` adds the move. Cloudflare Workers AI's free 10,000 neurons a day cover about 148
+such FLUX schnell images (`docs/RESEARCH.md` section 3), so rung C has a $0 hosted option too. Images are cached by prompt hash.
 
 **Risks.** Hands, text and faces still go wrong; a stylised, people-light look avoids most of it. A
 photoreal scene that "did not occur" would need YouTube's synthetic-content flag; a clearly stylised
