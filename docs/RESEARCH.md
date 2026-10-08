@@ -120,3 +120,26 @@ client-side), so quality claims above are vendor claims or impressions.
 **Open questions.** Audio tokens per minute for `gpt-4o-mini-tts` (not published); whether ElevenLabs'
 with-timestamps endpoint is on Starter; Kokoro's real-time factor on a typical desktop CPU (measure in the
 bake-off); whether Polly's 12-month allowances apply to new accounts.
+
+## 5. YouTube API and policy (checked 2026-10-08)
+
+The full treatment with design consequences is in `docs/DISTRIBUTION.md`; this is the fact sheet.
+
+| Fact | Value | Source |
+|---|---|---|
+| Default Data API quota | 100 `search.list` calls, 100 `videos.insert` calls, and 10,000 units a day for everything else; the two named methods have their own buckets at 1 unit a call; resets at midnight Pacific | [Getting started](https://developers.google.com/youtube/v3/getting-started), [Quota costs](https://developers.google.com/youtube/v3/determine_quota_cost) |
+| Stale figure still on the quota page | the summary box says `videos.insert` costs 1,600 points; the bucket text below it is the current rule | same |
+| Unaudited projects | uploads via `videos.insert` from unverified projects created after 28 July 2020 are restricted to private; an audit lifts it | [Videos: insert](https://developers.google.com/youtube/v3/docs/videos/insert) |
+| Audit and more quota | the Audit and Quota Extension form; periodic audits; appeals form | [Quota and compliance audits](https://developers.google.com/youtube/v3/guides/quota_and_compliance_audits) |
+| Scheduling | `status.publishAt` only with `privacyStatus=private` on a never-published video; a past time publishes immediately | [Videos resource](https://developers.google.com/youtube/v3/docs/videos) |
+| Required flags | `status.selfDeclaredMadeForKids`; `status.containsSyntheticMedia` for realistic altered or synthetic content | same |
+| Title | 100 characters, no `<` or `>` | same |
+| File size | up to 256 GB | [Videos: insert](https://developers.google.com/youtube/v3/docs/videos/insert) |
+| AI disclosure | required for realistic likenesses, altered real footage, realistic scenes that did not occur, AI music as the main focus; not for scripts, captions, or cloning your own voice | [Disclosing altered or synthetic content](https://support.google.com/youtube/answer/14328491) |
+| OAuth token life | External apps in Testing status get refresh tokens that expire in 7 days; 100 refresh tokens per account per client | [Using OAuth 2.0](https://developers.google.com/identity/protocols/oauth2) |
+| Shorts definition | square or vertical, up to three minutes, uploaded on or after 15 October 2024 | [Three-minute Shorts](https://support.google.com/youtube/answer/15424877) |
+| Content ID on Shorts | a Short over one minute with any active claim is blocked globally; Audio Library music is not claimed | same, [Audio Library](https://support.google.com/youtube/answer/3376882) |
+| Partner Program | 1,000 subscribers plus 4,000 watch hours in 12 months or 10 million Shorts views in 90 days; expanded tier at 500 subscribers, 3 uploads in 90 days, and 3,000 hours or 3 million Shorts views | [YPP eligibility](https://support.google.com/youtube/answer/72851), [Expanded YPP](https://support.google.com/youtube/answer/13429240) |
+| Inauthentic content | 15 July 2025 rename of "repetitious content"; content must be original and "not be mass-produced, generic, repetitive, or manipulative" | [Channel monetization policies](https://support.google.com/youtube/answer/1311392) |
+| Self-harm policy | supportive, recovery-focused wording; resources in video and description; no methods; crisis resource panels may be added | [Suicide, self-harm policy](https://support.google.com/youtube/answer/2802245) |
+| Analytics | `reports.query` with `views`, `likes`, `averageViewDuration`, `averageViewPercentage`, `subscribersGained`, filterable by `video`; scopes `yt-analytics.readonly` and `youtube.readonly` | [Reports: query](https://developers.google.com/youtube/analytics/reference/reports/query) |
