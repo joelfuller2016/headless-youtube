@@ -160,3 +160,27 @@ coping strategies in the video and the description, and avoid naming methods or 
 - Saves and shares over likes: this content is saved for later and sent to a friend; those are the
   signals the idea generator weights highest once the analytics stage exists.
 - Comments that say "I needed this today". Those are read by the owner, not by the machine.
+
+## 11. Variety rules, because the Spam policy names this exact pipeline
+
+YouTube's Spam policy gives as its example of prohibited mass-production "channels that use the exact
+same background music and repetitive AI generated imagery across many videos" with an AI-written
+narration in each, and its monetisation policy lists image slideshows, templated storylines and
+scrolling text with little narrative as ineligible (sources in `docs/DISTRIBUTION.md`). A channel that
+rotates one brand card and one music bed under one script template is that example. These rules are
+enforced by the render and gate stages, not by taste:
+
+- **Music.** No two videos in any rolling 14 days share a music bed; the library holds at least 20 beds,
+  and generated beds (ACE-Step) get a fresh prompt and seed per video.
+- **Visuals.** No stock clip or generated image is reused within 30 days; brand cards use at least 12
+  backgrounds and 3 palettes and never run two days in a row on the same series.
+- **Structure.** Twelve series with different shapes, on a six-pillar rotation; the judge rejects a
+  script whose structure matches the previous day's video.
+- **Narrative.** Every video has a hook, a turn and a close, written to one person. A quote on a
+  background with no reflection is not a video; the scripture card always carries the reflection.
+- **The owner's perspective.** Each series carries a recurring framing that is Joel's, not the model's:
+  a short set of lines, images and stances the owner writes once and the generator is told to draw on,
+  so the channel sounds like a person with a point of view. These live in `config/perspective.md`.
+- **Volume.** One video a day, at most three, so the channel is a daily word, not a flood.
+- **Provenance.** The job file records every asset's source, licence and model, so any question about
+  originality can be answered from the record.

@@ -36,8 +36,11 @@ only rung with zero external dependencies, which makes it the fallback for every
 caption file is burned in. Twelve backgrounds and three colour themes are enough for a month without
 visible repetition.
 
-**Risks.** Looks like a thousand other channels unless the typography and the voice are distinctive.
-The quality judge's originality check and a consistent brand kit are the mitigations.
+**Risks.** Looks like a thousand other channels unless the typography and the voice are distinctive,
+and YouTube's monetisation policy names "image slideshows" and "scrolling text with minimal or no
+narrative" as ineligible, so this rung is never the whole channel and always carries a real narrative.
+The quality judge's originality check, the variety rules in `docs/CONTENT_STRATEGY.md` section 11 and a
+consistent brand kit are the mitigations.
 
 ### Rung B — Stock clip loop (cost: $0)
 
@@ -121,7 +124,8 @@ expected steady state once the channel has data on which series earn the spend.
 ## 3. Three "formats within a format" that cost nothing extra
 
 - **Kinetic typography.** No background at all: words animate in and out on a solid brand colour. Pure
-  captions, highest contrast, works at Rung A. Good for affirmations.
+  captions, highest contrast, works at Rung A. Good for affirmations. Use sparingly: it is the format
+  closest to the "scrolling text" YouTube's monetisation policy calls ineligible.
 - **Letter format.** "To the person who..." read slowly over a single long clip with no cuts. One stock
   clip, one voice, no scene changes. Calm and cheap.
 - **Scripture card.** One verse, one minute: the verse shown in full on a brand card while the narrator

@@ -56,7 +56,7 @@ flowchart LR
 | 7 | **Render** | visuals, voice, captions, music bed, brand bumpers | `final.mp4` (1080x1920, 30 fps, H.264, AAC, loudness normalised), `thumb.jpg`, `render.actual_duration_s`, `render.cost_usd`; `state=rendered` | duration over the platform limit, silent gap, FFmpeg error | trim close, re-render once |
 | 8 | **Metadata** | title, description, hashtags, safety flags | per-platform title/description with crisis resources appended when `crisis_resources` is true, AI-disclosure flags; `state=ready` | title over 100 chars | truncate at a word boundary |
 | 9 | **Publish** | `final.mp4`, metadata, platform config | `publish.<platform>.{status, remote_id, url, scheduled_for}`; `state=published` when every enabled platform is `published` or `scheduled` | platform quota, auth expiry, upload error | retry per platform; others proceed |
-| 10 | **Track** | remote ids, days 1, 3, 7, 28 | `metrics.json` and a row in `output/metrics.csv`; on day 1 also the Content ID claim status of the YouTube upload; `state=tracked` | analytics API error; a claim that blocks the video | retry next day; on a claim, replace the track from the licensed library or file the stored dispute text, and alert |
+| 10 | **Track** | remote ids, days 3, 7, 28 (YouTube's reports omit the most recent days) | `metrics.json` and a row in `output/metrics.csv`; on day 1 also the Content ID claim status of the YouTube upload; `state=tracked` | analytics API error; a claim that blocks the video | retry next day; on a claim, replace the track from the licensed library or file the stored dispute text, and alert |
 
 Two side states exist: `failed` (terminal, owner alerted, job kept for inspection) and `awaiting-approval`
 (only in `approve` review mode; a timeout can either publish or fail, by config).
@@ -70,7 +70,9 @@ cron workflow, or by hand):
    created today, generate one idea.
 2. For each job not in a terminal state, oldest first, run its next stage. Stop a job after three failures
    of the same stage.
-3. For each published job with a due tracking day, pull metrics.
+3. For each published job with a due tracking day, pull metrics (with a three-day offset for YouTube).
+   Also enforce the variety rules before rendering: a job whose music bed, visual set or structure
+   repeats a recent video is sent back to the visuals stage with a different draw.
 4. Send the daily summary if one has not been sent today.
 
 Because every stage is idempotent, a crash halfway through leaves nothing to clean up; the next run picks
@@ -120,8 +122,9 @@ Captions are the product at the $0 tier, so they get their own stage.
   last frame, optional 0.5 s end card. Music bed ducked under the voice.
 - Hard limits are configuration, not code: `max_duration_s` defaults to 60 so a video qualifies as a Short
   on every platform regardless of the current YouTube limit (see `docs/DISTRIBUTION.md`).
-- The thumbnail is the hook frame with the title overlaid; most platforms ignore it for shorts, YouTube
-  uses it in some surfaces.
+- The thumbnail is the hook frame with the title overlaid; most platforms ignore it for shorts, and
+  YouTube only opened custom Shorts thumbnails to Partner Program channels in July 2026, so it is saved
+  but nothing depends on it.
 - A dry-run flag renders everything and publishes nothing. It is the default in development.
 
 ## 6. Publishing
@@ -132,7 +135,8 @@ Each platform is an adapter with the same three methods: `authenticate`, `upload
 Two ways to reach the long tail of platforms, both designed in:
 
 - **Direct APIs** for the platforms that matter most and whose APIs are workable for a single developer
-  (YouTube first).
+  (YouTube first). The YouTube adapter sends every field in the single insert call, because updates and
+  thumbnail sets cost 50 quota units each and an update that omits a field deletes it.
 - **A scheduler or aggregator** (self-hosted or paid) that takes one upload and fans it out, for platforms
   whose own APIs demand an app review that is not worth it for one channel.
 

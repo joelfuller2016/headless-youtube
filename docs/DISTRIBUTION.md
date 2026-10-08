@@ -54,6 +54,21 @@ Checked 2026-10-08 against Google's developer and help pages.
   photoreal AI video of real-looking scenes does. The metadata stage sets the flag from the render tier.
 - **Title** is limited to 100 characters, no `<` or `>`. Same source.
 - **File size** up to 256 GB. Irrelevant for shorts but it means no size guard is needed.
+- **Put every field in the one insert call.** `videos.update` and `thumbnails.set` each cost 50 units
+  from the 10,000-unit general bucket, and an update that omits a property deletes its value. The
+  `notifySubscribers` parameter defaults to true. Sources:
+  [Quota costs](https://developers.google.com/youtube/v3/determine_quota_cost),
+  [Videos: update](https://developers.google.com/youtube/v3/docs/videos/update),
+  [Videos: insert](https://developers.google.com/youtube/v3/docs/videos/insert).
+- **Thumbnails barely matter for Shorts.** Custom Shorts thumbnails opened to Partner Program channels
+  first in July 2026 and do not show in the swipe feed; custom thumbnails at all require the
+  phone-verified "intermediate" feature level. The pipeline still saves a thumbnail frame but never depends
+  on it. Sources: [YouTube blog, 2026-07-24](https://blog.youtube/news-and-events/youtube-studio-custom-thumbnail-updates/),
+  [Channel features](https://support.google.com/youtube/answer/9890437).
+- **Encoding.** YouTube's recommendation is an MP4 with the `moov` atom at the front, H.264 High
+  Profile, closed GOP of half the frame rate, 8 Mbps at 1080p for 24 to 30 fps, AAC-LC 48 kHz 384 kbps
+  stereo; there are no Shorts-specific settings. Source:
+  [Recommended upload encoding settings](https://support.google.com/youtube/answer/1722171).
 
 ### OAuth, and why the token dies after a week
 
@@ -64,7 +79,14 @@ Checked 2026-10-08 against Google's developer and help pages.
   sensitive, so Google shows an "unverified app" warning on the consent screen; for a single-user app that
   is acceptable and the owner clicks through once. The refresh token then lasts until revoked.
 - The runner stores the refresh token outside the repo (environment variable, Windows Credential Manager,
-  or the CI secret store) and refreshes the access token on every run.
+  or the CI secret store) and refreshes the access token on every run, and alerts on `invalid_grant`.
+- An unverified app on a sensitive scope shows the "unverified app" warning and is capped at 100 users
+  over the project's lifetime; the single owner is one. Refresh tokens also die after six months of no
+  use. Sources: [Publishing status](https://support.google.com/cloud/answer/15549945),
+  [OAuth verification FAQ](https://support.google.com/cloud/answer/13463817).
+- The audit form asks for a website, a privacy policy URL and demo credentials, so a one-page site on a
+  domain the owner controls is part of phase 2. Source:
+  [Audit and Quota Extension form](https://support.google.com/youtube/contact/yt_api_form).
 
 ### Monetisation and policy (not a goal, but do not foreclose it)
 
@@ -73,24 +95,49 @@ Checked 2026-10-08 against Google's developer and help pages.
   revenue): 500 subscribers, 3 public uploads in 90 days, and either 3,000 watch hours or 3 million Shorts
   views in 90 days. Sources: [YPP overview and eligibility](https://support.google.com/youtube/answer/72851),
   [Expanded YPP](https://support.google.com/youtube/answer/13429240).
+- **The Spam policy, which carries strikes.** Under "Automated or synthetic mass-production" YouTube's
+  Community Guidelines prohibit "using automated tools or AI to churn out high volumes of similar content
+  with minimal changes" and give as the example "channels that use the exact same background music and
+  repetitive AI generated imagery across many videos" where each video reads an AI-written narration.
+  Violations can remove content and bring a warning or a strike; three strikes in 90 days can terminate
+  the channel. Source: [Spam, deceptive practices and scams policies](https://support.google.com/youtube/answer/2801973).
+  This is the single biggest policy risk to the project, because that example is the naive version of
+  this pipeline. The content rules in `docs/CONTENT_STRATEGY.md` section 11 exist to keep the channel on
+  the right side of it: no two videos share a music bed and a visual set, structures rotate, and every
+  script carries the owner's own perspective.
 - **Inauthentic content (15 July 2025).** YouTube renamed its "repetitious content" policy to "inauthentic
   content" and clarified that it covers content that is "repetitive or mass-produced". Content must "be
   your original creation" and "not be mass-produced, generic, repetitive, or manipulative. It should be
   made for the enjoyment or education of viewers, rather than for the sole purpose of getting views."
-  Source: [YouTube channel monetization policies](https://support.google.com/youtube/answer/1311392).
-  What it means here: a channel of templated, identical-sounding AI videos is exactly the target. The
-  defences are built into the content rules: every script is written to one specific person and moment,
-  series rotate, visuals vary, and the quality judge rejects anything generic. See
-  `docs/CONTENT_STRATEGY.md`.
+  The page's examples of ineligible content include "image slideshows, templated storylines, or scrolling
+  text with minimal or no narrative, commentary, or educational value" and "AI-generated content made with
+  generic or unoriginal templates". Source:
+  [YouTube channel monetization policies](https://support.google.com/youtube/answer/1311392).
+  What it means here: the brand-card and kinetic-typography formats are the most exposed, so they are
+  never the whole channel, and every video must carry narrative and the owner's perspective, not only a
+  quote on a background.
+- **February 2027 changes.** New Partner Program applicants will need 1,000 subscribers plus 8,000
+  qualified watch hours in 365 days or 20 million qualified Shorts views in 90 days; existing members are
+  not affected, but earning from the Shorts Creator Pool each month will require 10 million qualified
+  Shorts views over the previous 90 days; a channel counts as active with 1,000 watch hours a year, 1
+  million Shorts views in 90 days, or two long-form videos or five Shorts every 90 days. Creators keep 45
+  percent of their allocated Shorts revenue. Sources:
+  [Updates to YPP](https://support.google.com/youtube/answer/12843009),
+  [Google blog, 2026-08-11](https://blog.google/intl/en-mena/product-updates/connect-communicate/new-opportunities-to-earn-and-changes-to-the-youtube-partner-program/).
+  A daily pipeline clears the activity rule by itself; the view thresholds are far away and not a goal.
 
 ### Analytics for the feedback loop
 
 The YouTube Analytics API `reports.query` method returns `views`, `likes`, `averageViewDuration`,
 `averageViewPercentage` and `subscribersGained` (among others) and can be filtered and grouped by the
 `video` dimension with several video ids at once. Scopes: `yt-analytics.readonly`, and the page notes
-requests now also require `youtube.readonly`. The track stage pulls these on days 1, 3, 7 and 28.
-Source: [Reports: query](https://developers.google.com/youtube/analytics/reference/reports/query),
-checked 2026-10-08. The Audio Library page also matters here: music downloaded from it "won't be claimed by
+requests now also require `youtube.readonly`. The track stage pulls these on days 3, 7 and 28, because day-dimension
+reports omit the most recent days, and it prefers `engagedViews` (views past the first frame) to the
+public view count, which since 27 August 2026 counts from the first frame on every format. Per-video
+retention curves come from the `elapsedVideoTimeRatio` dimension with `audienceWatchRatio`.
+Sources: [Reports: query](https://developers.google.com/youtube/analytics/reference/reports/query),
+[Metrics](https://developers.google.com/youtube/analytics/metrics),
+[Data API revision history](https://developers.google.com/youtube/v3/revision_history), checked 2026-10-08. The Audio Library page also matters here: music downloaded from it "won't be claimed by
 a rights holder through the Content ID system" on YouTube, Creative Commons tracks there must be credited
 in the description, and YouTube says nothing about use off-platform. Source:
 [Audio Library help](https://support.google.com/youtube/answer/3376882).

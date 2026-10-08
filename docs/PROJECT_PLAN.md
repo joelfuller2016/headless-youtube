@@ -176,7 +176,7 @@ Task-level checklists in `docs/ROADMAP.md`.
 | Videos stay private because the YouTube API audit is slow or refused | high at first | upload private with `publishAt`; owner flips to public by hand until the audit passes; submit the form in phase 2, week one |
 | The OAuth refresh token expires after seven days | certain if the app is left in Testing | set the consent screen to In production before the first unattended run |
 | A free TTS or model endpoint changes or disappears | medium over a year | every stage has a fallback provider; the runner alerts on fallback use |
-| The channel reads as mass-produced under the inauthentic-content policy | medium | one-person scripts, rotating series and visuals, judge's originality check, no reused clips across videos |
+| The channel trips the Spam policy's mass-production rule (strikes) or reads as inauthentic (demonetised) | medium, and the naive pipeline is the policy's own example | the variety rules in `docs/CONTENT_STRATEGY.md` section 11: no shared music bed or visual set between videos, rotating structures, narrative in every video, the owner's own perspective layer, one to three videos a day, provenance logged |
 | A fabricated or misattributed quote is published | medium without controls, low with them | scripture from a file, quotes from a verified list, judge rejects unverifiable quotes |
 | Harmful wording on a mental-health topic | low with controls | banned-phrase scanner, sensitivity levels, crisis block, YouTube's own guidance followed |
 | Music triggers a Content ID claim and blocks a video | low | YouTube Audio Library or a clearly licensed bed; videos under 60 seconds |
