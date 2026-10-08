@@ -58,7 +58,9 @@ Checked 2026-10-08 against Google's developer and help pages.
   for a voice-over. Sources: [Videos resource](https://developers.google.com/youtube/v3/docs/videos),
   [Disclosing altered or synthetic content](https://support.google.com/youtube/answer/14328491).
   Rule for this project: brand cards, stock clips and clearly stylised AI images do not need the flag;
-  photoreal AI video of real-looking scenes does. The metadata stage sets the flag from the render tier.
+  photoreal AI video of real-looking scenes does. The metadata stage sets the flag from the render tier:
+  any generated visual sets it (tiers C, D, F, and an E hybrid whose hook is generated); a generated
+  music bed under narration does not, a video that is mostly music does (D-020).
 - **Title** is limited to 100 characters, no `<` or `>`. Same source.
 - **File size** up to 256 GB. Irrelevant for shorts but it means no size guard is needed.
 - **Put every field in the one insert call.** `videos.update` and `thumbnails.set` each cost 50 units
@@ -278,9 +280,9 @@ pass, 2026-10-08, against each platform's token page).
 
 | Platform | Title | Description | Hashtags | AI flag | Schedule |
 |---|---|---|---|---|---|
-| YouTube | ≤100 chars | full description plus crisis resources when flagged, and the same block posted as the first comment on heavy videos (`commentThreads.insert`; pinning is manual) | 3 to 5 in description (YouTube shows three and ignores all of them past 60) | `containsSyntheticMedia` when render tier is D or photoreal C; YouTube's exemption list covers a synthetic voice over stock | `publishAt` with `privacyStatus=private` |
+| YouTube | ≤100 chars | full description plus crisis resources when flagged, and the same block posted as the first comment on heavy videos (`commentThreads.insert`; pinning is manual) | 3 to 5 in description (YouTube shows three and ignores all of them past 60) | `containsSyntheticMedia` when any scene is generated (tiers C, D, F, or E with a generated hook) or the video is mostly generated music; YouTube's page exempts cloning one's own voice and lists no rule for a generic synthetic narrator, so the flag stays off for a synthetic voice over stock and the footer line discloses it (D-020) | `publishAt` with `privacyStatus=private` |
 | TikTok | caption only (title field is the caption) | first 100 chars matter | 3 to 5 in caption | `post_info.is_aigc` on Direct Post, which labels the video as AI-generated; the August 2026 guidelines require it for realistic AI scenes and exempt generic text-to-speech narration (`docs/RESEARCH.md` section 9) | post time chosen by the runner |
-| Instagram | none | caption, first line is the hook | 3 to 5 (Instagram's own advice) | Meta's AI label where exposed; required for photorealistic video or realistic-sounding audio, with penalties stated for not labelling | container then publish; the runner picks the time |
+| Instagram | none | caption, first line is the hook | 3 to 5 (Instagram's own advice) | Meta's AI label wherever the API exposes it, on every video, because the narration is synthetic and Meta's summary names realistic-sounding audio; over-compliance until the help page is read in a browser (D-020) | container then publish; the runner picks the time |
 | Facebook | title | description | 3 to 5 | as Instagram | as Instagram |
 
 Generated media keeps its provenance: Google's images and Veo clips carry a SynthID watermark, several

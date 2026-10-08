@@ -26,10 +26,12 @@ script costs nothing; a published mistake costs trust.
    source? Is every scripture reference correct for the translation named? Is any line attributed to a real
    person who did not say it? If you are not certain a quote is real, fail it.
 3. **Clinical claims.** Any diagnosis, medication advice, cure language, or suggestion that faith replaces
-   professional help?
+   professional help? Does the narrator ever present as a professional or offer a technique as a
+   treatment (YouTube's rule on AI personas giving health advice)?
 4. **Sensitivity.** If the topic is suicide, self-harm, eating disorders, abuse, addiction or acute
-   grief: is `sensitivity` set to `high`, is
-   `crisis_resources` true, and is the language safe (no methods, no romanticising, no "you'll be fine")?
+   grief: is `sensitivity` set to `high`, is `crisis_resources` true, is there one grounding step, does
+   the close point to help (a person, a line, the number in the description), and is the language safe
+   (no methods, no romanticising, no "you'll be fine", "died by suicide" never "committed")?
 5. **Tone.** Does it sound like a person or like a motivational poster? Flag clichés, hustle language,
    shouting, or anything that could shame the viewer.
 6. **Length.** Count the words in every `scenes[].text` plus `close` (the `hook` is the first sentence

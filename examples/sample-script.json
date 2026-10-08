@@ -10,7 +10,7 @@
   "scenes": [
     {
       "index": 1,
-      "text": "New job this week, scared you don't belong. This one is for you.",
+      "text": "New job this week, scared you don't belong.",
       "visual": {
         "type": "stock-clip",
         "prompt": "person walking into office building early morning, soft light, from behind",
@@ -75,7 +75,7 @@
     },
     {
       "index": 6,
-      "text": "Be still, and know that I am God. Psalm 46:10. You're not on your own in that building. Amen.",
+      "text": "{{verse:Psalm 46:10}} You're not on your own in that building. Amen.",
       "visual": {
         "type": "brand-card",
         "prompt": "brand card, Psalm 46:10 reference, soft gradient",
@@ -109,8 +109,9 @@
     "crisis_resources": false,
     "quotes": [
       {
-        "text": "Be still, and know that I am God.",
-        "attribution": "Psalm 46:10, King James Version",
+        "reference": "Psalm 46:10",
+        "translation": "WEB",
+        "attribution": "Psalm 46:10, World English Bible",
         "status": "public-domain"
       }
     ],
@@ -119,6 +120,6 @@
   },
   "targets": {
     "duration_s": 55,
-    "words": 130
+    "words": 140
   }
 }

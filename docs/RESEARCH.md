@@ -616,8 +616,9 @@ cheapest version of this pipeline (a quote on a static background with a synthet
 has to make every video distinct on purpose. Audience studies agree on two things and disagree on the
 rest: the hook has to land in the first seconds and read with the sound off, and Shorts of 40 seconds or
 more earn more engagement from the viewers who stay. The safety picture is consistent across YouTube,
-TikTok and Meta: content that promotes or instructs self-harm is removed, recovery and encouragement
-content is allowed, and the platforms want crisis resources on the video. Language models fabricate
+TikTok and Meta: content that promotes or instructs self-harm is removed; YouTube and Meta say in so
+many words that recovery content is allowed; YouTube asks creators to put resources on the video and
+Meta and TikTok add their own. Language models fabricate
 quotes, so attribution needs an allowlist, and scripture needs a translation whose licence an unattended
 pipeline can satisfy, which means a public-domain one.
 
@@ -675,10 +676,12 @@ Studio audience data after 30 days.
 | YouTube crisis resource panels | shown on watch pages for suicide, self-harm and eating-disorder videos and on crisis searches; the US partner is 988; not triggered by watch history; not in every country | [help](https://support.google.com/youtube/answer/10726080) (fetched); search alerts widened to depression, sexual assault, substance abuse and eating disorders on 2021-11-09 per [Social Media Today](https://www.socialmediatoday.com/news/youtube-expands-crisis-response-panels-to-provide-more-mental-health-assist/609772) |
 | YouTube medical misinformation | bans "guaranteed cure" claims and content that discourages approved treatment or promotes alternatives in its place; does not name mental-health conditions | [policy](https://support.google.com/youtube/answer/13813322) (fetched) |
 | YouTube inauthentic content (YPP) | renamed from "repetitious content" on 2025-07-15; "channels where content feels interchangeable from video to video are not allowed to monetize"; examples include "image slideshows, templated storylines, or scrolling text with minimal or no narrative" and "AI-generated content made with generic or unoriginal templates"; series with a shared intro are fine when each video has its own storyline or focus | [policy](https://support.google.com/youtube/answer/1311392) (fetched); [Plagiarism Today, 2025-07-08](https://www.plagiarismtoday.com/2025/07/08/youtube-targets-inauthentic-content/) |
+| YouTube AI personas on sensitive topics (YPP) | under the heading "AI Personas Related to Sensitive Topics": channels that use AI-generated personas to deliver information on sensitive topics, including "content that presents itself as a human expert providing advice to viewers" on health, legal issues, finances or politics, "will not be allowed to monetize"; the first example is an AI "doctor" providing medical diagnoses, health advice or wellness remedies, the second AI podcast hosts offering financial guidance, the third AI personas giving legal advice; the list is not exhaustive | same [policy page](https://support.google.com/youtube/answer/1311392) (fetched 2026-10-08); this is the rule behind "encouragement, not advice" and behind the narrator never presenting as a professional |
 | YouTube Partner Program thresholds | 1,000 subscribers with 4,000 watch hours in 12 months, or with 10M Shorts views in 90 days; Shorts-feed watch time does not count toward the 4,000; updated terms must be accepted by 2027-01-31 | [YPP](https://support.google.com/youtube/answer/72851) (fetched); detail in `docs/DISTRIBUTION.md` |
 | YouTube hashtags and titles | more than 60 hashtags and all are ignored; three are shown by the title; misleading tags can remove the video; titles up to 100 characters; Shorts up to 3 minutes since 2024-10-15 | [hashtags](https://support.google.com/youtube/answer/6390658), [Shorts help](https://support.google.com/youtube/answer/10059070), [YouTube blog 2024-10-03](https://blog.youtube/news-and-events/tall-updates-coming-to-shorts/) (all fetched) |
 | Instagram hashtags | Instagram's creators account advised 3 to 5 relevant hashtags in September 2021 and said 10 to 20 "will not help you get additional distribution" | [Social Media Today](https://www.socialmediatoday.com/news/new-study-looks-at-optimal-hashtag-usage-in-instagram-feed-posts-based-on/610377) (snippet; 2021 advice, so a house rule more than a platform limit) |
 | TikTok integrity and authenticity, August 2026 version (effective 2026-09-24) | labels are required for "AI-generated or significantly edited content that shows realistic-looking scenes or people" and for audio that mimics a real person's voice; not required for "generic text-to-speech (TTS) narration, when the TTS isn't a recognizable voice of a known individual" or for artistic styles; unlabelled content "may be removed, restricted, or labeled"; self-harm content is removed | [guidelines](https://www.tiktok.com/community-guidelines/en/integrity-authenticity) (fetched through curl; the page renders with JavaScript); auto-labelling through C2PA since 2024-05-09 per [TikTok newsroom](https://newsroom.tiktok.com/en-us/partnering-with-our-industry-to-advance-ai-transparency-and-literacy) |
+| TikTok mental and behavioral health | the suicide and self-harm rules live here, not on the labelling page: "We don't allow content that shows, promotes, or provides instructions for suicide or self-harm"; the page is JavaScript-rendered, so the sentence was read through curl by the research pass and the page's allowed-content wording could not be quoted | [guidelines](https://www.tiktok.com/community-guidelines/en/mental-behavioral-health) (read in a browser before phase 5) |
 | Meta suicide, self-injury and eating disorders | removes encouraging content, graphic self-injury and mocking; allows awareness, support and recovery, which may sit behind an 18+ sensitivity screen; directs people who post or search such content to local support; change log last dated 2026-02-27 | [standard](https://transparency.meta.com/policies/community-standards/suicide-self-injury/) (fetched) |
 | Meta AI labels | "AI info" label (renamed 2024-07-01) is applied on industry signals or self-disclosure; the Instagram help page requires labelling photorealistic video or realistic-sounding audio, not images, and says "there may be penalties" for not doing so | [Meta newsroom](https://about.fb.com/news/2024/04/metas-approach-to-labeling-ai-generated-content-and-manipulated-media/) (fetched); [Instagram help](https://help.instagram.com/761121959519495) (snippet; the page returned 400 and 403) |
 | YouTube altered or synthetic content | disclosure required for meaningfully altered or generated photorealistic content; not required for "cloning one's own voice to create voice overs or dubs", caption creation, idea generation or non-realistic content; repeated non-disclosure can bring labels, removal or YPP suspension; disclosure does not affect monetisation eligibility | [help](https://support.google.com/youtube/answer/14328491) (fetched) |
@@ -727,12 +730,15 @@ no label on TikTok and none on YouTube; the pipeline still says so in the descri
 
 A verse card is arguably "digital artwork" under ESV's wording and a "verse standing alone" under NIV's,
 which is why `docs/CONTENT_STRATEGY.md` defaults to the World English Bible or the Berean Standard Bible,
-keeps the KJV for Psalms and Proverbs cadence, and treats ESV and NIV as opt-in with a verse counter,
-the notice in the description and, for ESV, the spoken credit.
+keeps the KJV for Psalms and Proverbs cadence, and treats the ESV as opt-in with a verse counter, the notice in the
+description and the spoken credit, and keeps the NIV off until its terms have been read on the official
+pages.
 
 ### What this section decides
 
-- Positioning is "encouragement, not advice": the writer speaks as a peer, never as a clinician; no
+- Positioning is "encouragement, not advice", which YouTube's AI-personas rule makes a monetisation
+  condition as well as a safety one: the writer speaks as a peer, never as a clinician or a professional,
+  and never offers a technique as a treatment; no
   diagnoses, medication names, cure or "skip treatment" lines, no "just pray harder", no prosperity
   promises; a standing description footer says the video is encouragement, not medical advice.
 - A heavy-topic gate: a classifier for suicide, self-harm, eating disorders, abuse, addiction and grief
@@ -770,8 +776,9 @@ the notice in the description and, for ESV, the spoken credit.
 Every unit price here was read on the linked page on 2026-10-08 in the section cited; the one price this
 section adds (Cloudflare R2) was read the same day. The sheets assume one video a day (30 a month) and show
 what changes at three a day (90). One video is a 55-second short with a 140-word script, which is about
-700 characters of speech to the voice engine (the sample in `examples/sample-script.json` speaks 129 words
-in 654 characters across its scenes and close), eight visuals, one hook clip where a clip is used, and one upload per platform.
+700 characters of speech to the voice engine (the sample in `examples/sample-script.json` speaks 114 words
+in 587 characters across its scenes and close before its verse token is filled, and the verse adds
+about twenty), eight visuals, one hook clip where a clip is used, and one upload per platform.
 Nothing below includes electricity, the owner's time, or a domain, because the privacy-policy and terms
 pages the platform app reviews ask for can sit on GitHub Pages at $0.
 

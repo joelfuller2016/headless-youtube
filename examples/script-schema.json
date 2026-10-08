@@ -151,7 +151,7 @@
       "maxItems": 5,
       "items": {
         "type": "string",
-        "pattern": "^#[A-Za-z0-9_]+$"
+        "pattern": "^#[a-z0-9_]+$"
       }
     },
     "music": {
@@ -213,13 +213,13 @@
           "items": {
             "type": "object",
             "required": [
-              "text",
               "attribution",
               "status"
             ],
             "properties": {
               "text": {
-                "type": "string"
+                "type": "string",
+                "description": "The words as spoken; omitted for a verse token, which the pipeline fills from the translation file."
               },
               "attribution": {
                 "type": "string"
@@ -232,6 +232,20 @@
                   "original",
                   "unverified"
                 ]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Book, chapter and verse for scripture, matching a {{verse:...}} token in a scene."
+              },
+              "translation": {
+                "type": "string",
+                "enum": [
+                  "WEB",
+                  "BSB",
+                  "KJV",
+                  "ESV"
+                ],
+                "description": "Set by the pipeline when it inserts the verse; WEB or BSB by default, KJV when the series asks, ESV only within its gratis terms."
               }
             }
           }
@@ -247,6 +261,20 @@
         },
         "judge_notes": {
           "type": "string"
+        }
+      },
+      "if": {
+        "properties": {
+          "sensitivity": {
+            "const": "high"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "crisis_resources": {
+            "const": true
+          }
         }
       }
     },

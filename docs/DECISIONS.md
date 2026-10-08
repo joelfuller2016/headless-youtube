@@ -26,6 +26,7 @@ recommendation is pending evidence.
 | D-017 | MiroFish (swarm-simulation prediction engine) is not part of the pipeline; it may be tried after phase 4 as an audience rehearsal for ranking series concepts, under the budget guard | Proposed | 2026-10-08 |
 | D-018 | Hugging Face assets adopted: ACE-Step 1.5 as the $0 generated music bed, Qwen3-TTS in the voice bake-off, Z-Image-Turbo as the second rung-C model, Wan2.1-T2V-1.3B as the small-GPU local video model, ZeroGPU Spaces and Inference Providers as the GPU-free hosted path, public-domain scripture parquet files for the lookup stage | Proposed | 2026-10-08 |
 | D-019 | Heavy-topic videos (suicide, self-harm, eating disorders, abuse, addiction, acute grief) run through the safe-messaging lint, carry the crisis block in the description and in the first comment (pinned by the owner at approval), and wait for the owner's approval even when the channel runs unattended; the approve timeout can never publish one | Proposed | 2026-10-08 |
+| D-020 | AI labels: every platform's flag is set whenever any scene is generated (rungs C, D, F, hybrid with a generated hook) or the video is mostly generated music; for a synthetic narrator over stock, YouTube's and TikTok's flags stay off and Meta's label is set wherever the API exposes it until Meta's help page is read in a browser | Proposed | 2026-10-08 |
 
 ## D-001 Python and FFmpeg
 
@@ -194,3 +195,16 @@ ordinary job by config, can only fail a heavy-topic job; and because the Data AP
 the pipeline posts the crisis block as the first comment and the owner pins it at approval. Evidence in
 `docs/RESEARCH.md` section 9; rules in `docs/CONTENT_STRATEGY.md` section 6. **Reversible:** yes, by changing `review_mode` for the heavy
 template, though the default should not change without a reason written here.
+
+## D-020 AI labels
+
+**Why.** The three platforms draw the line differently (`docs/RESEARCH.md` section 9): YouTube requires
+disclosure for realistic generated scenes and exempts cloning one's own voice without naming a generic
+narrator; TikTok's August 2026 guidelines exempt generic text-to-speech explicitly; Meta's summary names
+"realistic-sounding audio" and says penalties may apply, and its help page refused every automated
+fetch. One rule that satisfies all three is cheap: label whenever anything on screen is generated, label
+on Meta whenever the API offers the field, and say "made with AI tools" in every description. The only
+cost of over-labelling is a small badge; the cost of under-labelling is a removal or a strike. The schema
+carries the render tier, so the metadata stage can set the flags without a human. Generated music under
+narration is not "the main focus" in YouTube's words, so it alone sets nothing; a video that is mostly
+music does. **Reversible:** yes, once Meta's page is read; record the reading here.
