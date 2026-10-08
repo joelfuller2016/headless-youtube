@@ -11,10 +11,12 @@ the numbers justify it. Prices are summarised here and sourced with dates in `do
 - One warm narrator voice, slow pace, the same voice on every video.
 - Large animated captions, one to three words at a time, with emphasis words in the brand colour. On a
   phone with the sound off, the captions *are* the video.
-- A licensed music bed that never triggers Content ID, ducked under the voice. YouTube's Audio Library is
-  claim-free on YouTube but YouTube does not address use on other platforms, so the bed comes from a library
-  whose licence covers every platform (Pixabay's Content License covers its music, no attribution required).
-  Sources and alternatives in `docs/RESEARCH.md`.
+- A licensed music bed, ducked under the voice, from a curated local library of 20 to 30 tracks: the
+  YouTube Audio Library's attribution-free tracks (the only music YouTube itself says will not be claimed)
+  and Pixabay music (free, no attribution, covers every platform, but contributors can register tracks in
+  Content ID, so the licence summary is stored per track for disputes). Fewer distinct tracks means fewer
+  surprise claims. A $10-a-month safelisting subscription replaces this in phase 5. Sources and the
+  claim-check step in `docs/RESEARCH.md` section 4 and `docs/ARCHITECTURE.md`.
 - A 0.3 second brand bumper at the start and an end card that says only "come back tomorrow".
 - The hook scene is the only place the pipeline spends extra; everything after it can be plain.
 

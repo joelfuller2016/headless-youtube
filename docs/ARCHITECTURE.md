@@ -56,7 +56,7 @@ flowchart LR
 | 7 | **Render** | visuals, voice, captions, music bed, brand bumpers | `final.mp4` (1080x1920, 30 fps, H.264, AAC, loudness normalised), `thumb.jpg`, `render.actual_duration_s`, `render.cost_usd`; `state=rendered` | duration over the platform limit, silent gap, FFmpeg error | trim close, re-render once |
 | 8 | **Metadata** | title, description, hashtags, safety flags | per-platform title/description with crisis resources appended when `crisis_resources` is true, AI-disclosure flags; `state=ready` | title over 100 chars | truncate at a word boundary |
 | 9 | **Publish** | `final.mp4`, metadata, platform config | `publish.<platform>.{status, remote_id, url, scheduled_for}`; `state=published` when every enabled platform is `published` or `scheduled` | platform quota, auth expiry, upload error | retry per platform; others proceed |
-| 10 | **Track** | remote ids, days 1, 3, 7, 28 | `metrics.json` and a row in `output/metrics.csv`; `state=tracked` | analytics API error | retry next day |
+| 10 | **Track** | remote ids, days 1, 3, 7, 28 | `metrics.json` and a row in `output/metrics.csv`; on day 1 also the Content ID claim status of the YouTube upload; `state=tracked` | analytics API error; a claim that blocks the video | retry next day; on a claim, replace the track from the licensed library or file the stored dispute text, and alert |
 
 Two side states exist: `failed` (terminal, owner alerted, job kept for inspection) and `awaiting-approval`
 (only in `approve` review mode; a timeout can either publish or fail, by config).
@@ -97,14 +97,18 @@ scene is downgraded last, because it is the one that decides whether anyone watc
 
 Captions are the product at the $0 tier, so they get their own stage.
 
-- **Timing source, in order of preference:** word timestamps from the voice provider (no extra work),
-  then forced alignment of the voice file against the known script text (fast and accurate because the
-  text is known), then plain transcription as a last resort.
+- **Timing source, in order of preference:** word timestamps from the voice provider (Kokoro-FastAPI's
+  captioned endpoint at the $0 tier; ElevenLabs' character timings or Azure's word-boundary events on
+  paid voices; Google's newest voices give none), then forced alignment of the voice file against the
+  known script text with `faster-whisper` (fast and accurate because the text is known), then plain
+  transcription as a last resort. Details and sources in `docs/RESEARCH.md` section 4.
 - **Style:** one to three words per card, centred in the lower-middle third, large sans-serif, high
   contrast, the `caption_emphasis` words in the brand accent colour. A card never covers a face.
 - **Output:** an ASS subtitle file burned in by the renderer. ASS keeps styling deterministic and works
   on every platform without a Node toolchain. A Remotion template is the upgrade path when animated
-  captions are wanted.
+  captions are wanted. On Windows the renderer passes the subtitle path relative to the job folder (an
+  absolute path needs its drive-letter colon escaped in the filter string) and points `fontsdir` at the
+  bundled fonts so no system font configuration is needed.
 - **Checks:** total caption duration equals voice duration within 300 ms; no card shorter than 250 ms; no
   card longer than 2.5 s.
 
