@@ -45,6 +45,11 @@ publish (YouTube first) → track (analytics back into the idea queue)
 - Safe by construction: crisis resources, banned phrases and a second-model judge live in the pipeline.
 - Windows-first: it runs on the owner's PC before it runs anywhere else.
 
+## Credits
+
+Stock footage and photos in rung B come from [Pexels](https://www.pexels.com) and
+[Pixabay](https://pixabay.com) under their free licences; the Pexels API terms ask for this credit.
+
 ## Working in this repo
 
 See [`CLAUDE.md`](CLAUDE.md) for the journal rule, commit conventions, and the rule that no secret ever
