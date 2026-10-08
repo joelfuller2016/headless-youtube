@@ -35,7 +35,8 @@ owner's Windows PC in under two minutes, with no network call except the LLM.
 ## Phase 2 — YouTube, unattended
 
 - [ ] Google Cloud project, YouTube Data API enabled, OAuth consent screen set to **In production**
-- [ ] One-time OAuth flow that stores the refresh token outside the repo
+- [ ] One-time OAuth flow (loopback redirect, user account; service accounts do not work) that stores the refresh token outside the repo
+- [ ] One real API upload before the publish stage is built, to see whether the private-until-audit rule still applies; record the result in `docs/DECISIONS.md`
 - [ ] Publish stage for YouTube: private upload, `publishAt`, `selfDeclaredMadeForKids=false`,
       `containsSyntheticMedia` from the render tier, title and description rules
 - [ ] Submit the YouTube API Audit and Quota Extension form

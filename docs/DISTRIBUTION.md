@@ -30,14 +30,21 @@ Checked 2026-10-08 against Google's developer and help pages.
   [Quota costs](https://developers.google.com/youtube/v3/determine_quota_cost). Note: the summary box on
   the quota-cost page still says `videos.insert` costs 1,600 points; the table and the prose below it say
   1 unit in its own bucket. The bucket text is the newer one. One video a day uses 1 percent of the bucket.
+  A fully decorated upload also spends from the 10,000-unit pool: `thumbnails.set` 50, `captions.insert`
+  400 if an SRT is uploaded as well as burned in, `playlistItems.insert` 50, so about 500 units a video
+  and room for roughly 20 such videos a day (per-call costs on the quota-cost page). There is no Shorts
+  flag on the insert call: a video is a Short by aspect ratio and length, and the hashtag is optional.
 - **The private-upload trap.** "All videos uploaded via the `videos.insert` endpoint from unverified API
   projects created after 28 July 2020 will be restricted to private viewing mode. To lift this restriction,
   each API project must undergo an audit to verify compliance with the Terms of Service."
   Source: [Videos: insert](https://developers.google.com/youtube/v3/docs/videos/insert). The audit is
   requested with the
   [Audit and Quota Extension form](https://developers.google.com/youtube/v3/guides/quota_and_compliance_audits).
-  Plan for it: the first videos will land as private until the audit passes, so phase 1 includes
-  submitting that form early. A fallback is to upload as private via the API and publish by hand for a
+  The rule dates from 2020 and nobody has tested it for this project, so phase 2 starts with one real API
+  upload to see whether it lands private; the publish stage is built on what that shows. Plan for it: the
+  first videos will land as private until the audit passes, so phase 1 includes submitting that form
+  early. The audit also expects the Required Minimum Functionality for upload clients (title,
+  description and privacy status settable by the user), which the CLI satisfies. A fallback is to upload as private via the API and publish by hand for a
   few weeks, which still saves most of the work.
 - **Scheduling.** `status.publishAt` schedules a video; it can only be set when `privacyStatus` is
   `private` and the video has never been published. A past time publishes immediately.
@@ -60,7 +67,8 @@ Checked 2026-10-08 against Google's developer and help pages.
   [Quota costs](https://developers.google.com/youtube/v3/determine_quota_cost),
   [Videos: update](https://developers.google.com/youtube/v3/docs/videos/update),
   [Videos: insert](https://developers.google.com/youtube/v3/docs/videos/insert).
-- **Thumbnails barely matter for Shorts.** Custom Shorts thumbnails opened to Partner Program channels
+- **Thumbnails barely matter for Shorts.** Whether `thumbnails.set` even applies to a Short on a channel
+  outside the Partner Program is unverified. Custom Shorts thumbnails opened to Partner Program channels
   first in July 2026 and do not show in the swipe feed; custom thumbnails at all require the
   phone-verified "intermediate" feature level. The pipeline still saves a thumbnail frame but never depends
   on it. Sources: [YouTube blog, 2026-07-24](https://blog.youtube/news-and-events/youtube-studio-custom-thumbnail-updates/),
@@ -78,15 +86,28 @@ Checked 2026-10-08 against Google's developer and help pages.
   expiration). Fix: set the app's publishing status to **In production**. The `youtube.upload` scope is
   sensitive, so Google shows an "unverified app" warning on the consent screen; for a single-user app that
   is acceptable and the owner clicks through once. The refresh token then lasts until revoked.
-- The runner stores the refresh token outside the repo (environment variable, Windows Credential Manager,
-  or the CI secret store) and refreshes the access token on every run, and alerts on `invalid_grant`.
+- **Service accounts do not work for the Data API** (calls fail with `youtubeSignupRequired`), so the
+  only route for an unattended uploader is a user refresh token obtained once in a browser through the
+  loopback (localhost) redirect; the out-of-band flow is deprecated. The runner stores that token outside
+  the repo (environment variable, Windows Credential Manager, or the CI secret store), refreshes the access
+  token on every run, and alerts on `invalid_grant`.
+- The [Developer Policies](https://developers.google.com/youtube/terms/developer-policies) (section
+  III.I.2) forbid automating uploads "without the user's prior specific and express consent"; here the
+  user and the operator are the same person, and that standing consent is recorded in the repo's
+  configuration so the record exists if the project is ever audited. The same policies (III.E.4.c) say an
+  API client must delete or refresh stored authorised data after 30 days, which is why the track stage
+  re-pulls analytics instead of keeping old pulls as the source of truth.
 - An unverified app on a sensitive scope shows the "unverified app" warning and is capped at 100 users
   over the project's lifetime; the single owner is one. Refresh tokens also die after six months of no
   use. Sources: [Publishing status](https://support.google.com/cloud/answer/15549945),
   [OAuth verification FAQ](https://support.google.com/cloud/answer/13463817).
 - The audit form asks for a website, a privacy policy URL and demo credentials, so a one-page site on a
   domain the owner controls is part of phase 2. Source:
-  [Audit and Quota Extension form](https://support.google.com/youtube/contact/yt_api_form).
+  [Audit and Quota Extension form](https://support.google.com/youtube/contact/yt_api_form). Google's own
+  pages give two figures for sensitive-scope verification time, 3 to 5 business days and about 10; carry
+  both.
+- The Analytics API's default quota is not published; it shows only under APIs and Services, Quotas, in
+  the Cloud console for the project. Read it there before sizing the track stage.
 
 ### Monetisation and policy (not a goal, but do not foreclose it)
 
