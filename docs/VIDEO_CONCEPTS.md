@@ -57,7 +57,7 @@ fetched twice and the monthly budget is never touched.
 a grief prayer) is worse than a brand card. The mitigation is a curated allow-list of search terms per
 mood and a fallback to Rung A when the search returns nothing with the right mood.
 
-### Rung C — AI image with motion (cost: cents per video)
+### Rung C — AI image with motion (cost: two to thirty cents per video)
 
 **What the viewer sees.** One generated image per scene in a consistent painterly or soft-photographic
 style (never photoreal people), with a Ken Burns move, and the captions over it.
@@ -66,23 +66,26 @@ style (never photoreal people), with a Ken Burns move, and the captions over it.
 cents per video through an API or zero on a local GPU.
 
 **How it is made.** The scene's visual prompt plus a fixed style suffix goes to an image API
-(Flux models through fal.ai or Replicate, OpenAI's image model, or Gemini's image model) or to a local
-Stable Diffusion or Flux install on a Windows GPU. The image is generated at 1080x1920 or upscaled, and
+(FLUX.1 schnell through fal.ai at $0.003 a megapixel, OpenAI's mini image model at about $0.006 a
+portrait frame, or Google's Nano Banana at about $0.034) or to a local ComfyUI install on a Windows GPU
+with a 4 GB card, where the Apache-licensed FLUX.1 schnell weights cost nothing. The image is generated at 1080x1920 or upscaled, and
 FFmpeg's `zoompan` adds the move. Images are cached by prompt hash.
 
 **Risks.** Hands, text and faces still go wrong; a stylised, people-light look avoids most of it. A
 photoreal scene that "did not occur" would need YouTube's synthetic-content flag; a clearly stylised
 image does not. See `docs/DISTRIBUTION.md`.
 
-### Rung D — AI video clips (cost: tens of cents to a few dollars per video)
+### Rung D — AI video clips (cost: about $2.40 to $6.40 per video on budget models)
 
 **What the viewer sees.** Generated 5 to 8 second clips per scene, in motion, with captions.
 
 **Why it works.** The most "produced" feel and the strongest hook, if the clips are good.
 
-**How it is made.** The scene prompt goes to a video API (Google Veo, Kling, Runway, Luma, Hailuo, or an
-open-weight model such as Wan hosted on Replicate or fal). Clips are generated vertical where the
-provider supports it, otherwise cropped. Six to eight clips per video.
+**How it is made.** The scene prompt goes to a video API (Google Veo 3.1 Lite at $0.05 a second, Pika 2.5
+at $0.04, Kling, Runway, Luma, Hailuo, or an open-weight model such as Wan hosted on fal). Clips are
+generated vertical where the provider supports it, audio off, and preferably from the rung-C still
+(image-to-video) so a failed clip falls back to the identical Ken Burns image. Six to eight clips per
+video. No video API has a free tier. Prices with dates in `docs/RESEARCH.md` section 3.
 
 **Risks.** The expensive rung, with the most failures (bad motion, uncanny faces, provider queues) and
 the clearest disclosure obligation. Reserve it for the hook scene of top-performing series, and never
@@ -104,7 +107,7 @@ expected steady state once the channel has data on which series earn the spend.
 
 | | A brand card | B stock loop | C AI image | D AI video | E hybrid |
 |---|---|---|---|---|---|
-| Marginal cost per video | $0 | $0 | cents | $0.50 to several dollars | pennies to dimes |
+| Marginal cost per video | $0 | $0 | about $0.02 to $0.30 for eight images | about $2.40 to $6.40 on budget models, $25 on the best | pennies to a dollar |
 | External dependency | none | stock API | image API or GPU | video API | mixed |
 | Render time on a laptop | under 1 min | 1 to 2 min | 2 to 5 min | provider-bound | mixed |
 | Disclosure needed | no | no | only if photoreal | usually yes | depends on hook |

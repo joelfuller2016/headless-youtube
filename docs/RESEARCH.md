@@ -160,7 +160,7 @@ changes the phase 1 plan; each has a place later, with conditions.
 | Web plans | Free: 3 videos a month, up to 1 minute, 1080p. Creator $29 a month ($24 annual): 600 credits, videos up to 30 minutes, watermark removal. Pro $49: 1,000 credits. Business $149 plus $20 a seat: 1,500 credits. | [Pricing](https://www.heygen.com/pricing), [FAQ](https://www.heygen.com/faq) |
 | Credit burn on web plans | 20 credits a minute for Avatar IV, Avatar V and Video Agent; 3 a minute for Avatar III (so Creator's 600 credits are about 30 minutes of current-generation avatar video a month) | search summary of the pricing FAQ; not re-read directly, treat as approximate |
 | API billing | separate pay-as-you-go wallet, starts at $5, no subscription, "price per 1 minute, charged by actual seconds generated"; **no free API credits since February 2026**; pay-as-you-go credits expire after 12 months; 10 concurrent videos | [API plans article, updated 2026-09-16](https://intercom.help/heygen/en/articles/10060327-new-heygen-api-plans), [FAQ](https://www.heygen.com/faq) |
-| API per-minute rates | the official table did not render on the help article or the app page. Third-party pages agree on roughly $1 a minute for Avatar III, $3 to $4 for Avatar IV (photo avatar cheaper than studio or digital twin), about $4 for Avatar V, $2 for Video Agent ([G2](https://www.g2.com/articles/heygen-api-pricing), [AdMake](https://admakeai.com/blog/heygen-pricing-explained)). **Unverified on an official page; confirm in the wallet before budgeting.** | |
+| API per-minute rates | the official table did not render on the help article or the app page. One third-party page that could be read ([AdMake, published 2026-06-26, prices checked 2026-07-11](https://admakeai.com/blog/heygen-pricing-explained)) lists $1 a minute for a standard avatar video at 720p or 1080p, $4 a minute for Avatar IV at 1080p, and $2 a minute for Video Agent and for translation; search summaries of other pages put Avatar V at about $4 a minute. **Unverified on an official page; confirm in the wallet before budgeting.** | |
 | API limits | 10 concurrent workflows on pay-as-you-go; `POST /v3/videos` 10 a second; avatar script up to 5,000 characters; 30 minutes a scene | [Usage limits](https://developers.heygen.com/docs/usage-limits) |
 | API shape | `X-Api-Key` header; create, then poll `GET /v3/videos/{id}` until `completed`, or give a `callback_url`; result is a `video_url` MP4 | [Quick start](https://developers.heygen.com/docs/quick-start) |
 | Ownership and commercial use | Creator, Pro and Business: "you own all rights in your User Input or User Output", commercial use allowed. **Free plan output is a revocable licence for personal, non-commercial and evaluation use and "may not be ... monetized, or used in connection with commercial activities."** The terms do not say which bucket pay-as-you-go API users fall in. | [Terms](https://heygen.com/terms) |
@@ -208,3 +208,77 @@ CLI's licence is `UNLICENSED`; and the agent's edits are non-deterministic, whic
 idempotent, downgradeable design in `docs/ARCHITECTURE.md`. **Verdict: use interactively in phase 1 to
 prototype caption styles and brand cards, and reconsider as a rung-D provider in phase 6 once its
 automation terms are confirmed.** Recorded as D-016.
+
+## 3. Visuals: stock, AI images, AI video (checked 2026-10-08)
+
+**Summary.** Three tiers with a clean cost gap between them. Stock clips are free and licence-clean
+from two APIs. AI stills for a Ken Burns format cost a fraction of a cent to a few cents each, so eight
+per video is roughly two to thirty cents. AI video costs about $0.04 to $0.10 per generated second on the
+budget models and $0.40 on Google's top model with audio, so a 60-second short built from six to eight
+clips is roughly $2.40 to $6.40 on budget models and over $25 on Veo 3.1 Standard. No video API has a
+free tier. The market churns monthly (OpenAI's Sora 2 API was shut down on 2026-09-24; Google's original
+Nano Banana image model was shut down on 2026-10-02), so every generator sits behind one adapter.
+
+### Stock footage and images (rung B)
+
+| Source | Price | Limits | Licence | Fit |
+|---|---|---|---|---|
+| [Pexels API](https://www.pexels.com/api/documentation/) | free | 200 requests an hour, 20,000 a month; "unlimited for free" on request; video search accepts `orientation=portrait` (confirmed on the docs page) | [free for commercial use, attribution not required, modification allowed](https://www.pexels.com/license/); the API terms ask for a visible Pexels link in the application, which a line in the README and daily summary satisfies | **primary** |
+| [Pixabay API](https://pixabay.com/api/docs/) | free | 100 requests a minute; responses must be cached 24 hours; no hotlinking; "systematic mass downloads are not allowed" and the API is "intended for real human requests", so keep volume modest | [free, no attribution, modification allowed, no standalone resale](https://pixabay.com/service/license-summary/); covers its music too | **fallback** |
+| [Coverr API](https://api.coverr.co/docs/start) | demo tier free at 50 requests an hour; production needs a paid plan | | [free for commercial use, no attribution](https://coverr.co/license) | spare |
+| [Unsplash API](https://unsplash.com/documentation) | free | 50 an hour demo | photos only; its [guidelines](https://help.unsplash.com/en/articles/2511245-unsplash-api-guidelines) prohibit "automated uses" and require hotlinking | **excluded** |
+| [Mixkit](https://mixkit.co/llm-info/) | free | no API | per-clip Free versus Restricted licence | excluded (cannot be automated safely) |
+| [Storyblocks](https://www.storyblocks.com/business-solutions/api) | plans from $21 a month billed annually; API quote-only | | royalty-free with Content ID protection; one YouTube channel on individual plans | later, if stock repetition becomes the problem |
+
+### AI images (rung C)
+
+| Option | Price per image | Free | Notes |
+|---|---|---|---|
+| [FLUX.1 schnell on fal.ai](https://fal.ai/models/fal-ai/flux/schnell) | $0.003 per megapixel, rounded up, commercial rights included; [Replicate](https://replicate.com/pricing) $3 per 1,000 | none hosted; **$0 locally** (weights are [Apache-2.0](https://huggingface.co/black-forest-labs/FLUX.1-schnell)) in ComfyUI on a 4 GB NVIDIA card | **phase-6 default**; pick 704x1408 (0.99 MP) so fal bills one megapixel, not two |
+| FLUX.1 dev and 1.1 pro ([fal](https://fal.ai/models/fal-ai/flux-pro/v1.1), Replicate, [Together](https://www.together.ai/pricing)) | $0.025 and $0.04 per megapixel or image | none; local dev weights are under a [non-commercial licence](https://huggingface.co/black-forest-labs/FLUX.1-dev) | better prompt adherence and text |
+| [OpenAI GPT Image](https://developers.openai.com/api/docs/guides/image-generation) | `gpt-image-1-mini` low $0.006 for 1024x1536 portrait; `gpt-image-2` low $0.005 to high $0.165 | none | strongest text rendering; organisation verification may be required |
+| [Google Nano Banana 2.1](https://ai.google.dev/gemini-api/docs/pricing) | $0.0336 at 1K; Pro $0.134 | **none**: the pricing page lists the free tier as "Not available" for every image model | SynthID watermark on every image |
+| Ideogram 4.5 via [fal](https://fal.ai/models/fal-ai/ideogram/v3) or Pika's catalog | $0.027 low to $0.09 high (reseller prices; the official page is JavaScript-only) | weekly credits in the consumer app only | best typography for quote cards |
+| [Recraft](https://www.recraft.ai/docs) | V4.1 Flash about $0.007 | none | vector output |
+| Midjourney | subscription only, no API, automation prohibited per secondary sources | | **excluded** |
+| Local UIs | [ComfyUI](https://github.com/comfyanonymous/ComfyUI) (GPL-3.0, weekly releases, Windows desktop app, JSON API for headless use) | $0 | [Fooocus](https://github.com/lllyasviel/Fooocus) (last commit 2025-09-02, SDXL only) and [Forge](https://github.com/lllyasviel/stable-diffusion-webui-forge) (2025-06-26) are dormant |
+
+### AI video (rung D)
+
+Prices per generated second, 9:16 support as documented, and the cost of a 60-second short from 6 to 8
+clips.
+
+| Model | Route | Price | 9:16 | 60 s short | Notes |
+|---|---|---|---|---|---|
+| Veo 3.1 Lite | [Gemini API](https://ai.google.dev/gemini-api/docs/pricing) | $0.05 (720p) or $0.08 (1080p) with audio | yes | $3.20 | 4, 6 or 8 s clips; no free tier; SynthID; stored 2 days |
+| Veo 3.1 Fast | Gemini API or [fal](https://fal.ai/models/fal-ai/veo3.1) | $0.10 (720p); fal $0.10 without audio | yes | $6.40 | |
+| Veo 3.1 Standard | Gemini API | $0.40 with audio; fal $0.20 without | yes | $25.60 | the quality ceiling; turn audio off, the pipeline adds its own |
+| Pika 2.5 | [Pika developer catalog](https://api.dev.pika.art/catalog/apis) | $0.04 (720p), $0.09 (1080p) | yes on [fal v2.2](https://fal.ai/models/fal-ai/pika/v2.2/text-to-video) | $2.40 | cheapest branded option; "no free generation tier" |
+| Hailuo 02 and 2.3 | [fal](https://fal.ai/models/fal-ai/minimax/hailuo-2.3/standard/text-to-video) | $0.045 per s; 2.3 $0.28 per 6 s | undocumented in MiniMax's own API | $2.70 to $3.36 | official packages start at $1,000 a month, so use a reseller |
+| Kling 2.5 Turbo Pro | [fal](https://fal.ai/models/fal-ai/kling-video/v2.5-turbo/pro/text-to-video) | $0.35 per 5 s plus $0.07 per extra second | yes (schema enum) | $4.20 | official packages from $700 with expiry |
+| Runway Gen-4 Turbo | [Runway API](https://docs.dev.runwayml.com/guides/pricing/) | $0.05 | 720x1280 per help centre | $3.00 | Gen-4.5 $0.12 |
+| Luma Ray 3.2 | [Luma API](https://lumalabs.ai/api/pricing) | 10 s at 720p $0.90; billed per 5 s block | yes | $5.40 | |
+| Wan 2.2 (open weights) | [fal](https://fal.ai/models/fal-ai/wan/v2.2-a14b/text-to-video) or local | $0.04 (480p) to $0.08 (720p); local $0 | 704x1280 on the 5B model | $2.40 to $4.80 | [Apache-2.0](https://github.com/Wan-Video/Wan2.2); local needs a 24 GB card and about 9 minutes per 5 s clip |
+| LTX-2 (open weights) | [fal](https://fal.ai/models/fal-ai/ltx-2/text-to-video) or local | $0.06 (1080p) | only 16:9 listed on fal | $3.60 | audio and video in one model; local set about 66 GiB |
+| HunyuanVideo 1.5 | [fal](https://fal.ai/models/fal-ai/hunyuan-video-v1.5/text-to-video) | $0.075 (480p only) | yes | $4.50 | licence [excludes the EU, UK and South Korea](https://github.com/Tencent-Hunyuan/HunyuanVideo/blob/main/LICENSE.txt); local needs 45 to 60 GB |
+| CogVideoX-2B | local | $0 | 720x480 landscape only | | the only video model for a small GPU, at low quality |
+| Sora 2 | | **shut down 2026-09-24** per [OpenAI's docs](https://developers.openai.com/api/docs/guides/video-generation); resellers still list stale prices | | | excluded |
+
+Hosting keys: [fal.ai](https://fal.ai/pricing) covers almost every model above behind one key;
+[Replicate](https://replicate.com/pricing) is the backup. Neither advertises sign-up credit.
+
+### What this section decides
+
+- Rung B: Pexels primary, Pixabay fallback, clips downloaded and cached, a Pexels credit line in the
+  README and the daily summary.
+- Rung C: FLUX.1 schnell on fal (about $0.02 to $0.05 for eight images) or locally in ComfyUI; OpenAI's
+  mini image model or Ideogram only for frames that need legible text.
+- Rung D: one `VideoClipProvider` adapter with Veo 3.1 Lite, Pika 2.5 and Kling behind it; prefer
+  image-to-video from the rung-C still so the Ken Burns fallback is identical; generate audio-off; pin
+  clip lengths to each vendor's billing block (Veo 8 s, Kling and Luma 10 s).
+- Record provider, model, licence tag, cost and watermark flag per clip in the job file so disclosure
+  and licence questions can be answered later.
+
+**Open questions.** Whether Together's free FLUX schnell endpoint still exists (announced as a 3-month
+promotion in October 2024); Ideogram's and Kling's official prices (JavaScript-only pages); whether
+Hailuo text-to-video can produce 9:16 at all; LTX-2's community licence terms.
