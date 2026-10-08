@@ -88,16 +88,17 @@
     }
   ],
   "close": "If that was for you, save it for Monday morning. Come back tomorrow, there's one for you then too.",
-  "description": "A short prayer for anyone starting a new job and fighting the feeling that they do not belong. You were chosen. Tired is not failing.\n\nNew prayers and encouragement every day.",
+  "description": "New job this week, scared you don't belong.\nA short prayer for anyone starting a new job and fighting the feeling that they do not belong. You were chosen. Tired is not failing.\nSeries: A prayer for.\n\nNew prayers and encouragement every day.",
   "hashtags": [
     "#shorts",
     "#prayer",
+    "#aprayerfor",
     "#newjob",
-    "#encouragement",
-    "#faith"
+    "#encouragement"
   ],
   "music": {
-    "mood": "soft-piano-hopeful"
+    "mood": "soft-piano-hopeful",
+    "licence": "chosen by the render stage from assets/music/LICENCES.md"
   },
   "voice": {
     "provider": "kokoro",

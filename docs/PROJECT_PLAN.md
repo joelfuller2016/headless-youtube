@@ -75,7 +75,7 @@ links and dates, in `docs/RESEARCH.md`. The budget caps are decision D-012.
 | Render | FFmpeg with ASS captions | $0 |
 | Publish | YouTube Data API, private upload with `publishAt` | $0 |
 | Tracking | YouTube Analytics API | $0 |
-| Hosting | Windows Task Scheduler running `hy run` hourly on the owner's PC (`/ru System`), for phases 1 and 2 | $0 (electricity) |
+| Hosting | Windows Task Scheduler running `hy run` hourly on the owner's PC as the owner's account, for phases 1 and 2 | $0 (electricity) |
 
 **Monthly cost:** $0. **Catch:** the PC must be on for the runner to fire, and sleep, update reboots or a
 changed password silently skip runs; the first videos stay private until YouTube's API audit passes;
@@ -87,7 +87,7 @@ manual backup for ever.
 Same providers as Concept 1, hosted differently: a private repository with a scheduled workflow runs
 the pipeline on a GitHub-hosted Ubuntu runner (FFmpeg is not on the standard image, so the workflow
 installs it with one `apt-get` step), ideas arrive as GitHub issues using an issue form or through
-`workflow_dispatch` inputs, state is committed back with the job's own token (which cannot trigger
+`workflow_dispatch` inputs, the tracked `state/` directory is committed back to a `state` branch with the job's own token (which cannot trigger
 another workflow, so there is no recursion), the rendered MP4 is kept as a workflow artifact and copied
 to public object storage for the platforms that fetch by URL, and a Discord or Telegram message reports
 each run. Secrets live in the Actions secret store.
@@ -193,7 +193,7 @@ Task-level checklists in `docs/ROADMAP.md`.
 | Harmful wording on a mental-health topic | low with controls | banned-phrase scanner, sensitivity levels, crisis block, YouTube's own guidance followed |
 | Music triggers a Content ID claim and blocks a video | low | YouTube Audio Library or a clearly licensed bed; videos under 60 seconds |
 | Stock clip repeats make the channel look like every other | medium | cache by term, allow-list per mood, rotate sources, climb to rung C for top series |
-| The PC is asleep, rebooted by an update, or its task's saved password changed, and nothing posts | high over a year | `publishAt` schedules a day ahead; the task runs as System; from phase 3 GitHub Actions is the scheduler of record and the PC only a backup; a dead-man's switch (healthchecks.io, free) emails when a day passes without a run |
+| The PC is asleep, rebooted by an update, or its task's saved password changed, and nothing posts | high over a year | `publishAt` schedules a day ahead; the task runs as the owner's account; from phase 3 GitHub Actions is the scheduler of record and the PC only a backup; a dead-man's switch (healthchecks.io, free) emails when a day passes without a run |
 | Spend creeps up once paid rungs are on | medium | budget guard with daily and monthly caps, downgrade on cap, spend in the daily summary |
 
 ## 11. Open questions for the owner

@@ -27,7 +27,7 @@ acceptance test and is not negotiable by the person doing the work.
 - [ ] Caption stage producing an ASS file with word timing and emphasis colouring
 - [ ] Render stage with FFmpeg: bumper, scenes, captions, music bed, loudness normalisation, thumbnail
 - [ ] Dry-run flag that stops before publish, on by default
-- [ ] `tests/`: schema test, golden render of `examples/sample-script.json`
+- [ ] `tests/`: schema test; a golden render of `examples/sample-script.json` that asserts probed properties (duration within 0.1 s, 1080x1920, 30 fps, stream layout, loudness within 1 LU, caption event count) rather than bytes, and fails on a libass font-fallback warning in FFmpeg's stderr
 
 **Done when:** `hy new` followed by `hy run` turns the sample idea into a 45 to 60 second MP4 on the
 owner's Windows PC in under two minutes, with no network calls except the model, judge and moderation
@@ -36,13 +36,13 @@ endpoints.
 ## Phase 2 — YouTube, unattended
 
 - [ ] Google Cloud project, YouTube Data API enabled, OAuth consent screen set to **In production**
-- [ ] One-time OAuth flow (loopback redirect, user account; service accounts do not work) that stores the refresh token outside the repo
-- [ ] One real API upload before the publish stage is built, to see whether the private-until-audit rule still applies; record the result in `docs/DECISIONS.md`
+- [ ] One-time OAuth flow (loopback redirect, user account; service accounts do not work) requesting `youtube.upload`, `youtube.force-ssl`, `youtube.readonly` and `yt-analytics.readonly` at once, storing the refresh token outside the repo
+- [ ] One real API upload before the publish stage is built: private with a `publishAt` 30 minutes ahead, to see whether the private-until-audit rule still applies, whether `publishAt` fires on a restricted upload, and whether the owner can flip a second restricted upload to public in Studio; record all three in D-005 and make the phase-2 acceptance conditional on them
 - [ ] Publish stage for YouTube: private upload, `publishAt`, `selfDeclaredMadeForKids=false`,
       `containsSyntheticMedia` from the render tier, title and description rules
 - [ ] One-page site with a privacy policy on a domain the owner controls (GitHub Pages is enough), because the audit form asks for both
 - [ ] Submit the YouTube API Audit and Quota Extension form
-- [ ] Windows Task Scheduler job running `hy run` hourly as System (not with a saved password); a `PAUSE` file honoured
+- [ ] Windows Task Scheduler job running `hy run` hourly as the owner's account with "run whether user is logged on or not" (the System account cannot read the owner's credential store); a `PAUSE` file honoured
 - [ ] Daily summary to Telegram or email; failure alert with the stage and error
 - [ ] Dead-man's switch: ping healthchecks.io (free Hobbyist plan) at the end of every run so a day without a run raises an email
 - [ ] `review_mode=notify` for the first two weeks
@@ -56,6 +56,7 @@ passes, flipping the video to public.
 - [ ] Self-feeding idea generator with the rotation calendar and the last-30-ideas memory
 - [ ] Crisis-resource block appended automatically for high-sensitivity topics
 - [ ] Heavy-topic gate: keyword-checked classifier, safe-messaging lint, help-seeking close, `review_mode: approve` for that video (D-019)
+- [ ] Durable approval: `awaiting-approval` jobs read an `approve` or `reject` label on their GitHub issue; 48-hour deadline; the review copy (720x1280, under 50 MB) is what Telegram sends
 - [ ] Comment safety on heavy videos: hold-for-review with the crisis keyword list set once in Studio, the resource block posted as the first comment by the API and pinned by the owner at approval, a daily owner sweep; the bot never replies to a crisis comment
 - [ ] Read section 8 of Orygen's #chatsafe guidelines (US edition) by hand and paraphrase the influencer rules into the writer prompt; the PDF is copyrighted and too large to fetch
 - [ ] Confirm NIV terms in a browser before any NIV use; ESV and NIV stay off until then (D-006)
@@ -64,7 +65,7 @@ passes, flipping the video to public.
 - [ ] GitHub issue form as the one idea queue; Telegram polling and self-feed open issues into it
 - [ ] Brand kit: fonts, colours, bumper, end card, licensed music bed with its licence file in `assets/`
 - [ ] Telegram (or GitHub issue form) intake so ideas can be sent from a phone
-- [ ] GitHub Actions workflow in a private repository as the scheduler of record: cron at an odd minute, `workflow_dispatch` with idea and publish inputs, FFmpeg install step, state committed back, 25-minute job timeout, Discord or Telegram report; the PC becomes the backup
+- [ ] GitHub Actions workflow in a private repository as the scheduler of record: cron at an odd minute, `workflow_dispatch` with idea and publish inputs, FFmpeg install step, `actions/cache` for pip and model files, two runs a day, a `concurrency` group, `state/` committed back to the `state` branch with pull-rebase and one push retry, every open `idea` issue read each run, 25-minute job timeout, Discord or Telegram report; the PC becomes the backup and runs only when `hy run --as-backup` finds no run in the last 36 hours
 
 **Done when:** thirty days unattended, including a full week with the owner's PC switched off, with no
 more than two failed jobs and zero rejected-for-safety videos published.
@@ -73,7 +74,7 @@ more than two failed jobs and zero rejected-for-safety videos published.
 
 - [ ] Stock adapter for Pexels (portrait video search, cache by term, allow-list per mood) and Pixabay
 - [ ] Downgrade ladder B → A exercised by a test
-- [ ] Track stage: Content ID claim check on day 1; YouTube Analytics pull on days 3, 7, 28 into `output/metrics.csv`
+- [ ] Track stage: Content ID claim check on day 1; YouTube Analytics pull on days 3, 7, 28 into `state/metrics.csv`
 - [ ] Series scoreboard in the daily summary; the idea generator reads the top series
 
 **Done when:** every pillar has at least five published videos on rung B and the scoreboard shows
@@ -105,7 +106,7 @@ retention per series.
 
 ## Phase 7 — Hardening
 
-- [ ] Backup of `output/*/job.json` and `metrics.csv` to the repo or object storage
+- [ ] Backup of the `state` branch and the media under `output/` to object storage
 - [ ] Modal or Hugging Face Jobs function for the GPU steps, capped at Modal's free credit
 - [ ] Runbook: what to do when a token expires, a provider changes its price, or a platform changes a rule
 - [ ] Quarterly re-check of every dated claim in `docs/RESEARCH.md` and `docs/DISTRIBUTION.md`

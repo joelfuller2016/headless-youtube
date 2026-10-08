@@ -315,9 +315,10 @@ covers every platform: Pixabay, CC BY with the credit, ACE-Step, or ElevenLabs M
   Kevin MacLeod only with the credit block templated into the description. Move, only while TikTok stays on the inbox route and the phase-5 cap of $25 allows it, to a $10-a-month
   safelisting subscription in phase 5 when three platforms are live. For a generated bed per video, ACE-Step
   1.5 (MIT, local, under 4 GB of VRAM; section 12) is the $0 option and ElevenLabs Music the hosted one.
-- Add a post-publish claim check to the track stage: poll each new YouTube video for Content ID claims
-  and either replace the track or dispute with the stored licence text, and never let claims accumulate
-  silently.
+- Add a post-publish claim check to the track stage: on day 1 read `videos.list` for
+  `status.uploadStatus`, `rejectionReason` and `contentDetails.licensedContent`, which is all the Data
+  API exposes about claims (there is no claims resource, and disputes and track replacement exist only in
+  YouTube Studio); alert the owner with the stored licence text so claims never accumulate silently.
 
 **Open questions.** Whether the Audio Library's standard licence allows the same tracks on TikTok and
 Instagram (read the in-Studio licence text); current Epidemic Sound, Artlist and Uppbeat prices (pages
@@ -436,7 +437,7 @@ owner's Windows PC is the right development runner and manual backup but a poor 
 | Option | Cost | What you get | Catches | Source |
 |---|---|---|---|---|
 | **GitHub Actions** | $0 on a public repo; 2,000 minutes a month on a private repo (Free plan), 500 MB artifact storage; Linux overage $0.006 a minute | cron `schedule` (shortest every 5 minutes), `workflow_dispatch` with up to 25 inputs, `issues` trigger; jobs up to 6 hours; 20 concurrent jobs; secrets store | **no FFmpeg on the image** (install each run or cache a static build); **no GPU** (GPU runners are Team and Enterprise only, $0.052 a minute); cron fires late at the top of the hour under load, so pick an odd minute; public-repo schedules disable after 60 idle days; pushes made with the job's own token do not trigger other workflows (no recursion, but also no "publish on push"); secrets over 48 KB need a workaround | [Billing](https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-actions/about-billing-for-github-actions), [Limits](https://docs.github.com/en/actions/reference/limits), [Events](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows), [GITHUB_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token), [Runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing), [Secrets](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) |
-| **Windows Task Scheduler** on the owner's PC | $0 | `schtasks /create /sc daily`, triggers on time, logon, idle | a task created with a saved password stops silently when the password changes (`/ru System` avoids it); sleep, hibernate and update reboots skip runs. **Development runner and backup, not the production scheduler.** | [schtasks](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create) |
+| **Windows Task Scheduler** on the owner's PC | $0 | `schtasks /create /sc daily`, triggers on time, logon, idle | a task created with a saved password stops silently when the password changes (`/ru System` avoids that but cannot read the owner's credential store, profile caches or user-session servers, so the saved password plus a dead-man's switch is the workable pair); sleep, hibernate and update reboots skip runs. **Development runner and backup, not the production scheduler.** | [schtasks](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create) |
 | **n8n** self-hosted | $0 under the Sustainable Use License for personal use (`npx n8n` on Windows with Node 20.19 to 24, or Docker Desktop); n8n Cloud from €20 a month billed annually | visual canvas, community templates; the faceless-Shorts template [#20025](https://n8n.io/workflows/) exists but assumes OpenAI billing and a paid Orshot plan | a second system to maintain if the Python stages stay; hosting for others is not permitted | [Licence](https://github.com/n8n-io/n8n/blob/master/LICENSE.md), [Editions](https://docs.n8n.io/choose-n8n/), [Cloud pricing](https://n8n.io/pricing/) |
 | **Make** | Free: 1,000 credits a month, 2 active scenarios, 15-minute interval; Core $12 | a thin publishing tail if a native connector saves work | no TikTok publishing module | [Pricing](https://www.make.com/en/pricing) |
 | **Zapier** | Free: 100 tasks a month | | too tight for a daily three-step flow | [Pricing](https://zapier.com/pricing) |
@@ -486,7 +487,8 @@ owner's Windows PC is the right development runner and manual backup but a poor 
 
 ### What this section decides (D-009 revised)
 
-- **Phases 1 and 2** run on the owner's Windows PC from Task Scheduler with `/ru System`, as the
+- **Phases 1 and 2** run on the owner's Windows PC from Task Scheduler as the owner's account ("run
+whether user is logged on or not"; the System account cannot see the per-user credential store), as the
   development loop and manual backup; YouTube's `publishAt` means the PC need not be awake at publish time.
 - **From phase 3 the scheduler of record is a GitHub Actions workflow in a private repository** (2,000
   free minutes a month is about 200 ten-minute runs): cron at an odd minute, `workflow_dispatch` with
@@ -637,7 +639,7 @@ pipeline can satisfy, which means a public-domain one.
 
 | Channel | Size | Format | Source |
 |---|---|---|---|
-| Lion of Judah (`@lionofjudahmotivation`) | 3.52M subscribers, about 21 uploads a month, about 28K views an upload | original narration recorded in-house over stock licensed from Filmpac and Videoblocks; recent titles lean to prophecy and current events | [SponsorRadar, updated 2026-09-29](https://sponsorradar.com/channels/lionofjudahmotivation) (fetched); a mirrored description quoted in a [Substack post](https://truthparadigm.substack.com/p/most-people-dont-even-realize-that) (snippet) |
+| Lion of Judah (`@lionofjudahmotivation`) | 3.52M subscribers, about 25 uploads a month, about 27.7K views an upload (the verification pass re-read the page on 2026-10-08, when it said "Updated October 6, 2026"); its current output is prophecy and political current events with outside speakers, so it is a size comparison, not a format to copy | original narration recorded in-house over stock licensed from Filmpac and Videoblocks; recent titles lean to prophecy and current events | [SponsorRadar, updated 2026-09-29](https://sponsorradar.com/channels/lionofjudahmotivation) (fetched); a mirrored description quoted in a [Substack post](https://truthparadigm.substack.com/p/most-people-dont-even-realize-that) (snippet) |
 | Grace For Purpose | about 3.8M subscribers, roughly 1,650 videos, many an hour long | prophecy, motivational prayers, biblical commentary | [vidIQ, data of 2025-02-12](https://vidiq.com/youtube-stats/channel/UCI8gcSTo1FowsRJdilsjsZw) (snippet) |
 | Daily Jesus Devotional | about 1.34M subscribers | daily morning-prayer videos | [vidIQ, 2025-09](https://vidiq.com/youtube-stats/channel/UCJd6GPedYU1Muh8zmjMF7tw) (snippet) |
 
@@ -722,7 +724,9 @@ no label on TikTok and none on YouTube; the pipeline still says so in the descri
 - Even famous lines are unsourced: "Be the change you wish to see in the world" traces to Arleen Lorrance
   in 1974, not Gandhi ([Quote Investigator, 2017-10-23](https://quoteinvestigator.com/2017/10/23/be-change/)).
 - [Quotable](https://github.com/lukePeavey/quotable) (MIT, 180 requests a minute, 55 open issues) says
-  nothing about how its quotes were sourced, so it is not an attribution oracle. Quote Investigator has
+  nothing about how its quotes were sourced, so it is not an attribution oracle; its hosted API's TLS
+  certificate expired on 2024-09-10 (verification pass), so the service is dead and the dataset would have
+  to be self-hosted anyway. Quote Investigator has
   no API, and the Wikiquote MediaWiki API answered an anonymous request with HTTP 429 and requires a
   descriptive User-Agent, so the check runs against a cached local list, never a live call per video. Wikiquote separates
   sourced, disputed and misattributed entries and is [CC BY-SA](https://en.wikiquote.org/wiki/Wikiquote:Copyrights),
@@ -762,8 +766,8 @@ pages.
 - Distinctness is measured, not hoped for: a rotation of at least four visual templates, a distinctness
   score (embedding distance to the last 30 scripts) as a deterministic gate, and the originality score in
   the judge. These join the variety rules already in `docs/CONTENT_STRATEGY.md` section 11.
-- Scheduling seeds from Buffer's Friday 4 to 7 p.m. and the 4 p.m. agreement, then follows YouTube
-  Studio audience data after 30 days; success is judged on retention, shares and saves, not subscriber
+- Scheduling seeds from Buffer's Friday 4 to 7 p.m. and the 4 p.m. agreement; after 30 days the owner
+  reads Studio's audience-hours chart, which the Analytics API does not expose, and edits the slot; success is judged on retention, shares and saves, not subscriber
   count, because most small accounts do not move up a tier in a year.
 - Four series from this pass that `docs/CONTENT_STRATEGY.md` did not already have were added there as
   series 13 to 16: breathe-with-me, a scripture story in sixty seconds, call-and-response prayer, and a
@@ -842,9 +846,9 @@ sheet is the PC being on at the scheduled minute.
 
 | Line | Choice | Month |
 |---|---|---|
-| Runner | GitHub Actions, private repository: 30 runs of about 10 minutes is 300 of the 2,000 free minutes | $0 |
+| Runner | GitHub Actions, private repository: two runs a day (make and schedule, then track), 60 runs of about 10 minutes is 600 of the 2,000 free minutes, with pip wheels and model files in `actions/cache` so a run does not re-download them; the 10 minutes is an allowance to be measured in phase 3 | $0 |
 | Artifacts | 60 MB a run with a 3-day retention is about 180 MB of the 500 MB allowance | $0 |
-| Public URL | Cloudflare R2 free tier, 1.8 GB of 10 GB | $0 |
+| Public URL | Cloudflare R2 free tier, under 200 MB at 72-hour retention (1.8 GB even if a month were kept) of 10 GB | $0 |
 | Writer, judge, voice, visuals, captions, render, publish | as Concept 1; Kokoro and `faster-whisper` run on the runner's CPU | $0 |
 | GPU steps when rung C or D is used | Modal cron inside the $30 credit, or a ZeroGPU Space | $0 |
 | **Total** | | **$0** |
@@ -913,9 +917,11 @@ $171, so three a day on the managed stack is only possible in the low configurat
   $25 covers upload-post Basic ($24, or $16 on annual billing) for fully automatic TikTok, or the $10
   music safelisting subscription with TikTok on the inbox route, never both; phase 6 at up to $100 buys Concept 4
   in its low configuration with about $50 of headroom, or the high configuration minus Ideogram.
-- The downgrade order the budget guard follows, cheapest saving first: Ideogram to FLUX ($20.10), Epidemic
-  to Pixabay ($10), ElevenLabs Creator to Cartesia ($17), Veo Lite to Pika ($2.40) to no hook clip
-  ($9.60), Blotato to upload-post ($5) to the TikTok inbox route ($24), VPS to GitHub Actions ($6).
+- The budget guard enforces the metered lines at call time, in this order as the cap approaches:
+  Ideogram to FLUX ($20.10 a month), Veo Lite to Pika ($2.40) to no hook clip ($9.60), Opus to Haiku
+  ($0.88), then the $0 chain. The fixed lines are the owner's to switch, with the guard only alerting:
+  Epidemic to Pixabay ($10), ElevenLabs Creator to Cartesia ($17), Blotato to upload-post ($5) to the
+  TikTok inbox route ($24), VPS to GitHub Actions ($6).
 - Three videos a day is affordable only on Concepts 1 and 2 or on Concept 4's low configuration.
 
 ## 11. Tools the owner asked about: HeyGen, ChatCut and MiroFish (checked 2026-10-08)

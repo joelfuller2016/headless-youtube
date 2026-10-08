@@ -52,14 +52,15 @@ struggles, job stress, and ordinary hard days.
 7. **Visual prompts** describe what to show, never text to render. Prefer calm, natural, human scenes.
    Set `visual.type` to `{{default_visual_type}}` unless a scene truly needs a brand card.
 8. **Titles** are under 70 characters, say who it is for, and never use clickbait words.
-9. **Hashtags**: 3 to 5, lowercase, no spaces, always including `#shorts`.
+9. **Hashtags**: 3 to 5, lowercase, no spaces, always including `#shorts`, the pillar tag and the series
+   tag.
+10. **Description**: the hook verbatim as the first line, then two lines on what the video is, then
+   `Series: <series name>`. The pipeline appends the crisis block, the footer lines and the hashtags.
 
 ## Output
 
 Return one JSON object that validates against the schema below. No markdown fences, no commentary.
-(The schema sent to the model is a relaxed copy without string-length limits, because Anthropic's
-structured outputs reject `minLength` and `maxLength`; the full `examples/script-schema.json` is
-validated locally and the word count is enforced in code.)
+(The schema sent to the model is a generator-only sub-schema, the Script stage's fields plus `original_angle`, `safety.sensitivity`, `safety.crisis_resources` and `music.mood`, with every length, numeric and array constraint stripped and `additionalProperties: false` on every object, because Anthropic's structured outputs reject those keywords; the Python SDK's `messages.parse()` strips them itself. The runner merges the reply into the job file and validates the full schema, the word band and the hashtag rules in code.)
 
 ```
 {{script_schema_json}}

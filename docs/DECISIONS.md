@@ -102,7 +102,9 @@ local model. Prices and sources in `docs/RESEARCH.md` section 8.
 
 **Why.** $0, no deployment, the owner can watch it work, so the PC is the right place to build and the
 right manual backup. It is a poor production scheduler: a Task Scheduler task with a saved password
-stops silently when the password changes, and sleep, hibernate and update reboots skip runs. GitHub
+stops silently when the password changes (and the System account, which avoids that, cannot read the
+owner's credential store or reach servers started in the owner's session, so the task runs as the owner
+and a dead-man's switch catches the stop), and sleep, hibernate and update reboots skip runs. GitHub
 Actions costs nothing for one run a day (2,000 free minutes a month on a private repository), has
 secrets, a cron trigger, a dispatch trigger with inputs and an issues trigger, and a job may run six
 hours; FFmpeg is installed each run and there is no GPU, so GPU steps go to Modal (free $30 a month of
@@ -136,7 +138,9 @@ the same day.
 ## D-012 Budget caps
 
 **Why.** Free first, expand later, in the owner's words. Caps are enforced by the budget guard in the
-runner, not by discipline.
+runner, not by discipline, on the metered lines (images, clips, model tokens) from a committed
+`spend.json` ledger; the fixed subscriptions count toward the cap but only the owner can switch them, so
+the guard alerts when fixed plus metered spend would pass it.
 
 ## D-013 No voice cloning in v1
 
@@ -192,7 +196,10 @@ always. The 988 press guidance asks for a referral number, a safe-commenting pol
 the first comment; the Recommendations for Reporting on Suicide name the phrases to avoid. Those become
 code. What code cannot judge is whether a particular script, on a particular day, is the one that should
 not go out, so the one class of video where a mistake can hurt someone gets a human look, and the bot
-never answers a crisis comment. Two mechanics follow: the approve-mode timeout, which may publish an
+never answers a crisis comment. The look is durable: the job waits as `awaiting-approval` with a 48-hour
+deadline, the owner's decision is an `approve` or `reject` label on the job's GitHub issue that the next
+run reads (Telegram only notifies, since it keeps an unread reply for 24 hours), and the deadline fails
+the job. Two mechanics follow: the approve-mode timeout, which may publish an
 ordinary job by config, can only fail a heavy-topic job; and because the Data API cannot pin a comment,
 the pipeline posts the crisis block as the first comment and the owner pins it at approval. Evidence in
 `docs/RESEARCH.md` section 9; rules in `docs/CONTENT_STRATEGY.md` section 6. **Reversible:** yes, by changing `review_mode` for the heavy

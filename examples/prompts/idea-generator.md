@@ -11,7 +11,9 @@ You plan daily short videos for a channel that gives people hope. It is faith-fr
 ## Context
 
 - Today: `{{date}}` (`{{weekday}}`)
-- Pillar for today: `{{pillar}}` (rotation: hope, prayer, mental-health, job-career, encouragement, happiness)
+- Pillar for today: `{{pillar}}` (rotation: hope, prayer, mental-health, job-career, encouragement, happiness;
+  on Sunday the runner fixes the series to `night-prayer` or `one-verse-one-minute` and on Monday to
+  `monday-reset` before filling this prompt, and the pillar follows the series)
 - Series available for this pillar: `{{series_list}}`
 - The last 30 ideas, so you do not repeat them:
   `{{recent_ideas}}`
@@ -29,5 +31,5 @@ Bad: "a motivational video about confidence".
 Return JSON only:
 
 ```
-{ "idea": "<one sentence>", "pillar": "<pillar>", "series": "<series id>", "why_today": "<one sentence>" }
+{ "idea": "<one sentence>", "pillar": "<pillar>", "series": "<series id from the list above>", "why_today": "<one sentence, copied into the issue body>" }
 ```

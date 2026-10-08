@@ -40,7 +40,25 @@
     },
     "series": {
       "type": "string",
-      "description": "Repeatable format name from docs/CONTENT_STRATEGY.md, e.g. a-prayer-for, to-the-person-who, one-verse-one-minute."
+      "enum": [
+        "a-prayer-for",
+        "to-the-person-who",
+        "one-verse-one-minute",
+        "monday-reset",
+        "when-your-mind-says",
+        "small-joys",
+        "permission-slip",
+        "interview-day",
+        "grief-is",
+        "night-prayer",
+        "you-are-not-behind",
+        "thank-you-for",
+        "breathe-with-me",
+        "sixty-second-story",
+        "pray-with-me",
+        "younger-self"
+      ],
+      "description": "One of the series ids in docs/CONTENT_STRATEGY.md section 3."
     },
     "idea": {
       "type": "string",
@@ -54,18 +72,20 @@
     "source": {
       "type": "string",
       "enum": [
-        "manual",
-        "github-issue",
-        "telegram",
-        "sheet",
+        "cli",
         "email",
-        "self-feed"
+        "github-issue",
+        "manual",
+        "relay",
+        "self-feed",
+        "sheet",
+        "telegram"
       ],
-      "description": "Where the idea came from."
+      "description": "Where the idea came from (the origin, even though every source opens a GitHub issue)."
     },
     "title": {
       "type": "string",
-      "maxLength": 100,
+      "maxLength": 70,
       "description": "Platform title. YouTube allows 100 characters."
     },
     "hook": {
@@ -118,6 +138,31 @@
               "mood": {
                 "type": "string",
                 "description": "Short mood tag used to pick colour and music, e.g. calm-dawn, warm-kitchen, rain-window."
+              },
+              "asset": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Written by the visuals stage: provenance for the asset actually used.",
+                "properties": {
+                  "provider": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "source_url": {
+                    "type": "string"
+                  },
+                  "licence": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "photoreal": {
+                    "type": "boolean"
+                  }
+                }
               }
             }
           },
@@ -138,7 +183,7 @@
     },
     "close": {
       "type": "string",
-      "description": "The last spoken line. A blessing, a question, or a gentle invitation to come back tomorrow. Never a hard sell."
+      "description": "The last spoken line, spoken as the final scene over the end-card visual. A blessing, a question, or a gentle invitation to come back tomorrow (on a heavy script, a line that points to help). Never a hard sell."
     },
     "description": {
       "type": "string",
@@ -152,6 +197,9 @@
       "items": {
         "type": "string",
         "pattern": "^#[a-z0-9_]+$"
+      },
+      "contains": {
+        "const": "#shorts"
       }
     },
     "music": {
@@ -164,6 +212,10 @@
         "track_id": {
           "type": "string",
           "description": "Filled in by the render stage from the licensed music library."
+        },
+        "licence": {
+          "type": "string",
+          "description": "Licence summary or URL for the bed, stored with the job for disputes."
         }
       }
     },
@@ -202,7 +254,7 @@
             "medium",
             "high"
           ],
-          "description": "high = suicide, self-harm, eating disorders, abuse, addiction, acute grief; triggers stricter language rules, crisis resources and owner approval (D-019)."
+          "description": "high = suicide, self-harm, eating disorders, abuse, addiction, acute grief; triggers stricter language rules, crisis resources and owner approval (D-019). medium = anxiety, depression, burnout, loneliness without a heavy topic; gentler pace and the footer line, no approval hold. low = everything else."
         },
         "crisis_resources": {
           "type": "boolean"
@@ -288,15 +340,16 @@
       "properties": {
         "duration_s": {
           "type": "integer",
-          "minimum": 20,
-          "maximum": 90
+          "minimum": 45,
+          "maximum": 60
         },
         "words": {
           "type": "integer",
-          "minimum": 50,
-          "maximum": 230
+          "minimum": 100,
+          "maximum": 160
         }
-      }
+      },
+      "description": "Per-job band from the series duration and the measured pace; the deterministic gate accepts words within 10 of targets.words."
     },
     "render": {
       "type": "object",
@@ -309,7 +362,8 @@
             "B-stock-loop",
             "C-ai-image",
             "D-ai-video",
-            "E-hybrid"
+            "E-hybrid",
+            "F-ai-presenter"
           ]
         },
         "video_path": {
@@ -323,6 +377,10 @@
         },
         "cost_usd": {
           "type": "number"
+        },
+        "synthetic_media": {
+          "type": "boolean",
+          "description": "Set by the visuals stage when any scene is generated (tiers C, D, F, or E with a generated hook) or the video is mostly generated music; the metadata stage sets every platform's AI flag from it (D-020)."
         }
       }
     },
@@ -357,6 +415,11 @@
           }
         }
       }
+    },
+    "why_today": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "The idea generator's one-sentence reason; copied into the issue body."
     }
   }
 }

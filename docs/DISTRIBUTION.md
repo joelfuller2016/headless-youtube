@@ -85,7 +85,10 @@ Checked 2026-10-08 against Google's developer and help pages.
 - A Google Cloud project whose OAuth consent screen is **External** and in **Testing** status issues refresh
   tokens that **expire in 7 days**. Source:
   [Using OAuth 2.0](https://developers.google.com/identity/protocols/oauth2) (section on refresh token
-  expiration). Fix: set the app's publishing status to **In production**. The `youtube.upload` scope is
+  expiration). Fix: set the app's publishing status to **In production**. The one consent requests every scope the
+  later phases need, because widening scopes later means a new refresh token: `youtube.upload`,
+  `youtube.force-ssl` (the first comment, future updates), `youtube.readonly` (status and the day-1
+  claim check) and `yt-analytics.readonly`. The `youtube.upload` scope is
   sensitive, so Google shows an "unverified app" warning on the consent screen; for a single-user app that
   is acceptable and the owner clicks through once. The refresh token then lasts until revoked.
 - **Service accounts do not work for the Data API** (calls fail with `youtubeSignupRequired`), so the
@@ -288,13 +291,19 @@ pass, 2026-10-08, against each platform's token page).
 | Instagram | none | caption, first line is the hook | 3 to 5 (Instagram's own advice) | Meta's AI label wherever the API exposes it, on every video, because the narration is synthetic and Meta's summary names realistic-sounding audio; over-compliance until the help page is read in a browser (D-020) | container then publish; the runner picks the time |
 | Facebook | title | description | 3 to 5 | as Instagram | as Instagram |
 
-Generated media keeps its provenance: Google's images and Veo clips carry a SynthID watermark, several
-providers attach C2PA metadata, and TikTok has auto-labelled uploads that carry it since 2024-05-09. The
-pipeline does not strip any of it (stripping may breach the provider's terms) and expects an automatic
-"AI" label on those uploads whether or not it set the flag itself.
+Provenance does not survive the render: a C2PA manifest is bound to the source file's bytes and FFmpeg's
+scaling, compositing and re-encoding drop it, and SynthID survives in Google's pixels but only Google
+reads it. So no platform will label the rendered file on its own, and the flags are the pipeline's job:
+`containsSyntheticMedia` and Meta's label are set from `render.synthetic_media` (D-020). On TikTok's
+inbox route the owner sets the AI-generated toggle in the app when finishing the post, which is on the
+finish checklist; upload-post passes `is_aigc`. Source clips keep whatever metadata they carry, since
+stripping it may breach a provider's terms, but nothing downstream depends on it.
 
 ## 6. The one-slot-a-day rhythm
 
-The runner publishes at one fixed local time per day per platform. YouTube gets the exact time via
-`publishAt`; other platforms are posted when the runner wakes closest to the slot. The slot is config, and
-the analytics loop may move it once there is data.
+The runner publishes at one fixed local time per day per platform. The slot is config as an IANA zone
+plus a local time; the runner computes the next slot itself and hands it to every platform that accepts
+a scheduled time (YouTube `publishAt`, Facebook Reels' schedule), and posts the rest when it wakes
+closest to the slot. The Actions cron is UTC and drifts by minutes, so it carries two cron lines for the
+two halves of daylight-saving time and runs one to two hours before the earliest local slot of the year.
+The owner moves the slot once there is Studio data.

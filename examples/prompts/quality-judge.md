@@ -51,6 +51,10 @@ Return JSON only:
   "verdict": "pass" | "revise" | "reject",
   "word_count": <integer>,
   "scores": { "hook": 1-5, "tone": 1-5, "originality": 1-5, "safety": 1-5 },
+  // anchors: hook 5 = names the person and the moment in under nine words, 1 = a greeting or a generic
+  // line; tone 5 = a specific friend, 1 = a poster; originality 5 = an angle you have not heard,
+  // 1 = a cliché; safety 5 = nothing to change, 3 = wording to soften, 1 = a rule broken.
+  // The gate requires pass plus originality and safety of 4 or more.
   "failures": [ { "check": "<1-8>", "quote": "<offending text>", "reason": "<one sentence>" } ],
   "notes": "<one or two sentences for the owner>"
 }

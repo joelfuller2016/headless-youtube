@@ -62,8 +62,9 @@ be checked.
 
 ## 4. Script rules (enforced by the generator prompt and the judge)
 
-- **Length.** 125 to 150 spoken words for a 50-second video at about 2.5 words a second, hook under nine
-  words. The judge counts, and the synthesised audio (45 to 60 seconds, measured with `ffprobe`) is the
+- **Length.** The band is `targets.words` plus or minus 10, set per job from the series duration and the
+  measured pace: 125 to 150 spoken words for a 55-second series at about 2.5 words a second, about 112
+  for the 45-second `night-prayer`. Hook under nine words. The judge counts, and the synthesised audio (45 to 60 seconds, measured with `ffprobe`) is the
   final arbiter; the voice's measured pace feeds back into the budget.
 - **Hook.** The first line names who this is for and the moment. No greeting, no "in this video", no
   question that can be answered "no". It is the first sentence of scene 1, repeated verbatim in the
@@ -147,6 +148,8 @@ coping strategies in the video and the description, and avoid naming methods or 
   Source for 988: [988lifeline.org](https://988lifeline.org/) (call, text, or chat; 24/7/365).
   [Find A Helpline](https://findahelpline.com/) is run by ThroughLine as a public service and lists
   verified crisis lines by country across more than 175 countries (checked 2026-10-08).
+- **`medium` sensitivity** (anxiety, depression, burnout, loneliness without a heavy topic) gets the
+  gentler pace and the footer line and no approval hold; `low` is everything else.
 - **Phrase scanner.** A deterministic list of phrases the gate rejects outright regardless of the judge
   (method words, medication names, "cure", "just pray harder"). It lives in config, not in a prompt, so it
   cannot be talked out of.
@@ -197,8 +200,9 @@ coping strategies in the video and the description, and avoid naming methods or 
 
 - One video a day, same local time, seven days a week. Daily is what the pipeline is for; consistency
   matters more than the slot. The seed slot is 4 p.m. in the owner's time zone, where two vendor studies
-  agree (they disagree on the day); after 30 days of data the scheduler follows the channel's own YouTube
-  Studio audience hours instead (`docs/RESEARCH.md` section 9).
+  agree (they disagree on the day); after 30 days of data the owner reads the "when your viewers are on
+  YouTube" chart in Studio, which the Analytics API does not expose, and edits the slot in config
+  (`docs/RESEARCH.md` section 9).
 - Sunday is `night-prayer` or `one-verse-one-minute`. Monday is `monday-reset`. The rest follow the
   rotation.
 - After 60 published videos the analytics loop may propose a second daily slot for the strongest pillar;
@@ -241,8 +245,9 @@ enforced by the render and gate stages, not by taste:
   search is skipped when a later page fits, because the clips used by thousands of channels both feed the
   inauthentic-content test and draw false Content ID claims from other uploaders; brand cards use at least 12
   backgrounds and 3 palettes and never run two days in a row on the same series.
-- **Structure.** Sixteen series with different shapes, on a six-pillar rotation; the judge rejects a
-  script whose structure matches the previous day's video.
+- **Structure.** Sixteen series with different shapes, on a six-pillar rotation; the runner's variety
+  check (not the judge, which sees one script at a time) sends a script whose series shape matches the
+  previous day's video back for a different series.
 - **Visual templates.** At least four rotating layouts (calm clip with captions, kinetic typography, the
   breathing overlay, the letter typewriter, verse-and-reflection split, three-step list), so the same
   series does not look the same two days running.
