@@ -1,0 +1,126 @@
+{
+  "id": "2026-10-08-a-prayer-for-a-new-job",
+  "pillar": "prayer",
+  "series": "a-prayer-for",
+  "idea": "a prayer for someone starting a new job and feeling like they are not good enough",
+  "original_angle": "Tired after a first day is not failure; it is the feeling of growing. The prayer asks for one kind coworker and one small win, not for confidence.",
+  "source": "manual",
+  "title": "A prayer for your first week at a new job",
+  "hook": "New job this week, scared you don't belong.",
+  "scenes": [
+    {
+      "index": 1,
+      "text": "New job this week, scared you don't belong.",
+      "visual": {
+        "type": "stock-clip",
+        "prompt": "person walking into office building early morning, soft light, from behind",
+        "mood": "calm-dawn"
+      },
+      "caption_emphasis": [
+        "don't belong"
+      ],
+      "duration_hint_s": 6
+    },
+    {
+      "index": 2,
+      "text": "Lord, you already know the name on the desk and the fear in the chest. Walk in with them.",
+      "visual": {
+        "type": "stock-clip",
+        "prompt": "empty desk by a window with morning light, slow push in",
+        "mood": "warm-office"
+      },
+      "caption_emphasis": [
+        "Walk in with them"
+      ],
+      "duration_hint_s": 7
+    },
+    {
+      "index": 3,
+      "text": "Quiet the voice that says they got lucky. They were chosen. Let them believe it for one whole day.",
+      "visual": {
+        "type": "stock-clip",
+        "prompt": "hands typing on laptop, close up, shallow focus, natural light",
+        "mood": "warm-office"
+      },
+      "caption_emphasis": [
+        "chosen"
+      ],
+      "duration_hint_s": 8
+    },
+    {
+      "index": 4,
+      "text": "Give them one kind coworker, one small win, and the courage to ask a question out loud before lunch.",
+      "visual": {
+        "type": "stock-clip",
+        "prompt": "two colleagues smiling over coffee in a bright kitchen",
+        "mood": "warm-kitchen"
+      },
+      "caption_emphasis": [
+        "one small win"
+      ],
+      "duration_hint_s": 7
+    },
+    {
+      "index": 5,
+      "text": "And when they get home tired, remind them: tired is not the same as failing. It is the feeling of growing.",
+      "visual": {
+        "type": "stock-clip",
+        "prompt": "person on a train at sunset looking out the window, calm",
+        "mood": "golden-hour"
+      },
+      "caption_emphasis": [
+        "growing"
+      ],
+      "duration_hint_s": 8
+    },
+    {
+      "index": 6,
+      "text": "{{verse:Psalm 46:10}} You're not on your own in that building. Amen.",
+      "visual": {
+        "type": "brand-card",
+        "prompt": "brand card, Psalm 46:10 reference, soft gradient",
+        "mood": "calm-dawn"
+      },
+      "caption_emphasis": [
+        "Be still"
+      ],
+      "duration_hint_s": 8
+    }
+  ],
+  "close": "If that was for you, save it for Monday morning. Come back tomorrow, there's one for you then too.",
+  "description": "New job this week, scared you don't belong.\nA short prayer for anyone starting a new job and fighting the feeling that they do not belong. You were chosen. Tired is not failing.\nSeries: A prayer for.\n\nNew prayers and encouragement every day.",
+  "hashtags": [
+    "#shorts",
+    "#prayer",
+    "#aprayerfor",
+    "#newjob",
+    "#encouragement"
+  ],
+  "music": {
+    "mood": "soft-piano-hopeful",
+    "licence": "chosen by the render stage from assets/music/LICENCES.md"
+  },
+  "voice": {
+    "provider": "kokoro",
+    "voice_id": "am_michael",
+    "pace": "slow"
+  },
+  "safety": {
+    "sensitivity": "low",
+    "crisis_resources": false,
+    "quotes": [
+      {
+        "reference": "Psalm 46:10",
+        "translation": "WEB",
+        "attribution": "Psalm 46:10, World English Bible",
+        "status": "public-domain"
+      }
+    ],
+    "judge_verdict": "pending",
+    "judge_notes": ""
+  },
+  "targets": {
+    "duration_s": 55,
+    "words": 140
+  }
+}
