@@ -1,0 +1,120 @@
+# Decisions
+
+One entry per decision, newest at the bottom, never deleted. A reversed decision gets a new entry that
+names the one it replaces. **Accepted** means the plan is built on it; **Proposed** means it is the
+recommendation and the owner has not yet said yes; **Open** means the options are listed and a
+recommendation is pending evidence.
+
+| ID | Decision | Status | Date |
+|---|---|---|---|
+| D-001 | Reference implementation in Python 3.12; FFmpeg for rendering | Proposed | 2026-10-08 |
+| D-002 | One JSON job file per video is the only state; no database in v1 | Proposed | 2026-10-08 |
+| D-003 | Captions rendered from an ASS file burned in by FFmpeg; Remotion optional later | Proposed | 2026-10-08 |
+| D-004 | Videos are capped at 60 seconds by default | Proposed | 2026-10-08 |
+| D-005 | YouTube first, through the Data API; submit the compliance audit in phase 2 | Proposed | 2026-10-08 |
+| D-006 | Scripture only from public-domain translations; licensed translations only within their gratis limits and with the required notice | Proposed | 2026-10-08 |
+| D-007 | Phase 1 voice: a local open-weight TTS as primary, a free online TTS as fallback | Open | 2026-10-08 |
+| D-008 | Script model and judge model are different models | Proposed | 2026-10-08 |
+| D-009 | Phase 1 and 2 run on the owner's Windows PC from Task Scheduler; GitHub Actions is the phase-3 option | Proposed | 2026-10-08 |
+| D-010 | Platforms beyond YouTube go through an aggregator or scheduler unless a direct API is cheap to keep | Open | 2026-10-08 |
+| D-011 | `review_mode` defaults to `none`; `notify` for the first two weeks | Proposed | 2026-10-08 |
+| D-012 | Budget caps: $0 for phases 1 to 4, up to $25 a month in phase 5, up to $100 a month in phase 6 | Proposed | 2026-10-08 |
+| D-013 | No voice cloning of the owner in v1 | Proposed | 2026-10-08 |
+| D-014 | Monetisation is not a goal; the content rules still comply with YouTube's monetisation policies | Proposed | 2026-10-08 |
+| D-015 | Visual rungs A and B launch together; C, D and E are switched on per series by data | Proposed | 2026-10-08 |
+
+## D-001 Python and FFmpeg
+
+**Why.** Every speech, image, video and platform SDK ships a Python client first; FFmpeg is the one
+renderer that runs the same on Windows, a Pi and a CI runner. The owner's .NET skills are not wasted: a
+.NET port using FFMpegCore and the Google YouTube client is viable for rungs A and B, and the job JSON
+contract makes a language swap possible stage by stage. **Reversible:** yes, per stage.
+
+## D-002 Job files, no database
+
+**Why.** One folder per video with a `job.json` that validates against `examples/script-schema.json` is
+enough state for years at one video a day, survives any crash, diffs cleanly, and needs no server.
+**Revisit when:** more than a few thousand jobs, or more than one machine writes at once.
+
+## D-003 ASS captions through FFmpeg
+
+**Why.** Deterministic styling, no Node toolchain, works on Windows with a bundled font. Remotion is the
+upgrade for animated captions and is free for individuals and companies with up to three employees under
+its licence. **Reversible:** yes; captions are a separate stage.
+
+## D-004 Sixty-second cap
+
+**Why.** YouTube blocks any Short over one minute that carries an active Content ID claim, so staying
+under 60 seconds removes a whole class of silent failure. Sixty seconds also keeps the same file eligible
+as a short-form post on every other platform. The cap is configuration; a series can raise it
+deliberately. Source and date in `docs/DISTRIBUTION.md`.
+
+## D-005 YouTube first, Data API, audit early
+
+**Why.** YouTube is the stated channel and its API is the most workable of the big platforms for one
+developer. The trap is that uploads from an unaudited API project are forced private; so phase 2 submits
+the Audit and Quota Extension form as soon as the first private upload works, and the runner uploads as
+private with a `publishAt` either way. Fallback until the audit passes: the owner flips videos public by
+hand, which is a one-tap job. Sources in `docs/DISTRIBUTION.md`.
+
+## D-006 Public-domain scripture
+
+**Why.** The King James Version is public domain outside the United Kingdom; the World English Bible and
+the Berean Standard Bible are public domain by their publishers' statements. A licensed translation such
+as the ESV may be quoted without written permission up to 500 verses with its full copyright notice and,
+in audio and video, a spoken credit. That notice does not fit in a 55-second video, so the default is
+public domain, and the script generator is told so. Sources in `docs/CONTENT_STRATEGY.md`.
+
+## D-007 Phase 1 voice (open)
+
+**Options.** (a) A local open-weight model (Kokoro-class) on CPU: no cost, no terms-of-service
+exposure, consistent voice, needs a one-time install. (b) `edge-tts`: free and instant, but it uses an
+unofficial route to Microsoft's online voices, so it can stop working or raise terms questions.
+(c) A paid API (ElevenLabs, OpenAI, Google, Azure): best quality, pennies per video, needs a key.
+**Recommendation pending** the TTS comparison in `docs/RESEARCH.md`: start with (a) as primary and (b)
+as fallback, add (c) only for a series that earns it.
+
+## D-008 Two models
+
+**Why.** A judge grading its own writer's output is a weak gate. Use a different provider or at least a
+different model family for the quality judge. Costs pennies.
+
+## D-009 Windows PC first
+
+**Why.** $0, no deployment, the owner can watch it work. The PC must be awake when the runner fires;
+YouTube's `publishAt` means it does not have to be awake at publish time. GitHub Actions is the next
+step when the PC stops being reliable, with the caveat that scheduled workflows in a public repo switch
+off after 60 days without repository activity (the journal commits count as activity).
+
+## D-010 Aggregator or direct APIs (open)
+
+**Options.** Direct TikTok and Instagram APIs both require an app audit or review and, for Instagram, a
+public URL for the file. A self-hosted scheduler (Postiz or Mixpost) or a paid aggregator removes the
+per-platform integration work but may still need the owner's own app credentials on some platforms.
+**Recommendation pending** the comparison in `docs/RESEARCH.md`.
+
+## D-011 Review mode
+
+**Why.** The brief asks for 100 percent automation, so `none` is the default. For the first two weeks
+`notify` sends every rendered video to the owner before it posts, with no wait, so mistakes are seen
+the same day.
+
+## D-012 Budget caps
+
+**Why.** Free first, expand later, in the owner's words. Caps are enforced by the budget guard in the
+runner, not by discipline.
+
+## D-013 No voice cloning in v1
+
+**Why.** A consistent licensed AI voice is simpler, avoids any likeness question, and YouTube treats
+cloning one's own voice as a minor edit anyway, so the option stays open.
+
+## D-014 Comply with monetisation policy regardless
+
+**Why.** YouTube's inauthentic content policy targets mass-produced, repetitive content. Complying is the
+same thing as making the channel worth watching, so it costs nothing extra and keeps the door open.
+
+## D-015 Launch on rungs A and B
+
+**Why.** Both are free, both are robust, and together they cover every pillar. Paid rungs are turned on
+per series once there are 30 days of retention data to justify them. See `docs/VIDEO_CONCEPTS.md`.

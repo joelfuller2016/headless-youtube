@@ -1,0 +1,97 @@
+# Roadmap
+
+Phases are ordered so that each one ships something that runs on its own. Checkboxes are the task
+list; tick them in the pull request that does the work and journal the result. "Done when" is the
+acceptance test and is not negotiable by the person doing the work.
+
+## Phase 0 — Plan (this pull request)
+
+- [x] Capture the owner's idea verbatim (`docs/BRAIN_DUMP.md`)
+- [x] Research tools, prices, APIs and policies with links and dates (`docs/RESEARCH.md`)
+- [x] Design the pipeline (`docs/ARCHITECTURE.md`) and the format ladder (`docs/VIDEO_CONCEPTS.md`)
+- [x] Write the content and safety rules (`docs/CONTENT_STRATEGY.md`)
+- [x] Write the job schema, a sample, and the three prompts (`examples/`)
+- [x] Record decisions and open questions (`docs/DECISIONS.md`)
+- [ ] Owner reviews the plan and accepts or changes D-001 to D-006
+
+**Done when:** the plan is merged and the owner has answered the open questions in `docs/BRAIN_DUMP.md`.
+
+## Phase 1 — Walking skeleton, $0, local only
+
+- [ ] `src/hy` package with a `run` command and the stage loop from `docs/ARCHITECTURE.md`
+- [ ] Intake from the CLI (`hy new "idea"`) writing `output/<id>/job.json`
+- [ ] Script stage with the generator prompt and schema validation (one retry)
+- [ ] Gate stage: deterministic checks plus the judge prompt on a second model
+- [ ] Voice stage with the chosen local TTS and a fallback provider
+- [ ] Visual stage, rung A only: twelve brand backgrounds, three colour themes
+- [ ] Caption stage producing an ASS file with word timing and emphasis colouring
+- [ ] Render stage with FFmpeg: bumper, scenes, captions, music bed, loudness normalisation, thumbnail
+- [ ] Dry-run flag that stops before publish, on by default
+- [ ] `tests/`: schema test, golden render of `examples/sample-script.json`
+
+**Done when:** `hy new` followed by `hy run` turns the sample idea into a 50 to 60 second MP4 on the
+owner's Windows PC in under two minutes, with no network call except the LLM.
+
+## Phase 2 — YouTube, unattended
+
+- [ ] Google Cloud project, YouTube Data API enabled, OAuth consent screen set to **In production**
+- [ ] One-time OAuth flow that stores the refresh token outside the repo
+- [ ] Publish stage for YouTube: private upload, `publishAt`, `selfDeclaredMadeForKids=false`,
+      `containsSyntheticMedia` from the render tier, title and description rules
+- [ ] Submit the YouTube API Audit and Quota Extension form
+- [ ] Windows Task Scheduler job running `hy run` hourly; a `PAUSE` file honoured
+- [ ] Daily summary to Telegram or email; failure alert with the stage and error
+- [ ] `review_mode=notify` for the first two weeks
+
+**Done when:** seven consecutive days of automatic uploads with no manual step except, until the audit
+passes, flipping the video to public.
+
+## Phase 3 — The content system
+
+- [ ] Six pillars and the series catalogue from `docs/CONTENT_STRATEGY.md` as configuration
+- [ ] Self-feeding idea generator with the rotation calendar and the last-30-ideas memory
+- [ ] Crisis-resource block appended automatically for high-sensitivity topics
+- [ ] Scripture lookup from a public-domain translation file so references are never invented
+- [ ] Brand kit: fonts, colours, bumper, end card, licensed music bed with its licence file in `assets/`
+- [ ] Telegram (or GitHub issue form) intake so ideas can be sent from a phone
+
+**Done when:** thirty days unattended with no more than two failed jobs and zero rejected-for-safety
+videos published.
+
+## Phase 4 — Rung B and the feedback loop
+
+- [ ] Stock adapter for Pexels (portrait video search, cache by term, allow-list per mood) and Pixabay
+- [ ] Downgrade ladder B → A exercised by a test
+- [ ] Track stage: YouTube Analytics pull on days 1, 3, 7, 28 into `output/metrics.csv`
+- [ ] Series scoreboard in the daily summary; the idea generator reads the top series
+
+**Done when:** every pillar has at least five published videos on rung B and the scoreboard shows
+retention per series.
+
+## Phase 5 — More platforms
+
+- [ ] Decide D-010 from the comparison in `docs/RESEARCH.md`
+- [ ] Public hosting for the MP4 for a few minutes (release asset or object storage) if direct APIs are used
+- [ ] TikTok adapter (or aggregator) and the TikTok audit; Instagram and Facebook Reels next
+- [ ] Per-platform metadata rules from `docs/DISTRIBUTION.md`
+- [ ] Budget guard live, cap $25 a month
+
+**Done when:** one upload fans out to at least three platforms automatically for fourteen days.
+
+## Phase 6 — Paid quality rungs
+
+- [ ] Image adapter (rung C) with prompt caching and a fixed style
+- [ ] Hybrid (rung E) for the top two series by retention
+- [ ] Video adapter (rung D) for hook scenes only, behind the budget guard, cap $100 a month
+- [ ] Disclosure flag set automatically from the tier
+
+**Done when:** a 30-day comparison shows whether the paid rungs beat rung B on retention per dollar.
+
+## Phase 7 — Hardening
+
+- [ ] Backup of `output/*/job.json` and `metrics.csv` to the repo or object storage
+- [ ] GitHub Actions runner as a second host, with secrets in the Actions store
+- [ ] Runbook: what to do when a token expires, a provider changes its price, or a platform changes a rule
+- [ ] Quarterly re-check of every dated claim in `docs/RESEARCH.md` and `docs/DISTRIBUTION.md`
+
+**Done when:** the channel survives a full week with the owner's PC switched off.
