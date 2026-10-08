@@ -387,8 +387,8 @@ always baked into the MP4 before upload.
 - Music: a curated local library of 20 to 30 tracks from the YouTube Audio Library (attribution-free
   filter) and Pixabay, with licence URL and attribution stored per track and written into the job file;
   Kevin MacLeod only with the credit block templated into the description. Move to a $10-a-month
-  safelisting subscription in phase 5 when three platforms are live. ElevenLabs Music is the generated
-  option if a bed per video is ever wanted.
+  safelisting subscription in phase 5 when three platforms are live. For a generated bed per video, ACE-Step
+  1.5 (MIT, local, under 4 GB of VRAM; section 12) is the $0 option and ElevenLabs Music the hosted one.
 - Add a post-publish claim check to the track stage: poll each new YouTube video for Content ID claims
   and either replace the track or dispute with the stored licence text, and never let claims accumulate
   silently.
@@ -396,3 +396,104 @@ always baked into the MP4 before upload.
 **Open questions.** Whether the Audio Library's standard licence allows the same tracks on TikTok and
 Instagram (read the in-Studio licence text); current Epidemic Sound, Artlist and Uppbeat prices (pages
 are JavaScript-only or rate-limited); whether whisper.cpp ships Windows binaries.
+
+## 12. Hugging Face: models, Spaces, datasets and the free GPU minutes (checked 2026-10-08)
+
+Joel asked for a look at Hugging Face. The Hub was searched through its own API on 2026-10-08 for every
+pipeline stage; licences, dates and download counts below are from the model and dataset records, and the
+platform rules are from Hugging Face's documentation. Four things change the plan: a licence-clean local
+music generator exists, a newer Apache-licensed voice with emotion control exists, an Apache-licensed image
+model with good text rendering exists, and a free account gets five GPU minutes a day on shared Spaces,
+which is enough to render a short's images or one clip without owning a GPU.
+
+### The platform
+
+| Fact | Value | Source |
+|---|---|---|
+| Inference Providers | one Hugging Face token reaches fal, Replicate, DeepInfra, WaveSpeed and others at pass-through prices with "no markup"; **free accounts get no monthly credits** and must buy them; PRO accounts get $2 a month of compute credits | [Pricing and billing](https://huggingface.co/docs/inference-providers/pricing) |
+| ZeroGPU Spaces | any public Gradio Space on shared NVIDIA RTX Pro 6000 Blackwell GPUs (48 GB) can be called as an API; included daily GPU quota: 2 minutes unauthenticated, **5 minutes for a free account**, 40 minutes for PRO (extensible at $1 per 10 minutes); the quota resets 24 hours after first use; a free account in good standing (verified email, older than 30 days) may **host two ZeroGPU Spaces of its own** | [Spaces ZeroGPU](https://huggingface.co/docs/hub/spaces-zerogpu) |
+| Calling a Space | every Gradio Space is an API: `gradio_client` in Python, `@gradio/client` in JavaScript, or two curl calls against `/gradio_api/call/<endpoint>`; an OpenAPI spec is served at `<space>.hf.space/gradio_api/openapi.json`; authenticating with a token spends your own quota and gets better rate limits; many Spaces also expose an MCP server (`mcp-server` tag) | [Spaces as API endpoints](https://huggingface.co/docs/hub/spaces-api-endpoints) |
+| PRO | $9 a month: 8x ZeroGPU quota and highest queue priority, $2 of inference credits, up to 10 hosted ZeroGPU Spaces | [Pricing](https://huggingface.co/pricing) |
+
+What this buys the project: a **GPU-free host** (the owner's PC without a graphics card, or GitHub Actions
+in Concept 2) can still run rung C and rung D by calling a ZeroGPU Space, within five free minutes a day,
+or by routing to fal or Replicate through Inference Providers at the same prices as section 3.
+
+### Voice
+
+| Model | Licence | Activity | Notes |
+|---|---|---|---|
+| [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) | Apache-2.0 | 129M downloads; live on fal and DeepInfra through Inference Providers | the phase-1 primary (D-007); demo at [hexgrad/Kokoro-TTS](https://huggingface.co/spaces/hexgrad/Kokoro-TTS) |
+| [Qwen3-TTS 1.7B CustomVoice](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice) and the 0.6B variants | Apache-2.0 | released 2026-01-21, 16.5M downloads | nine preset voices with a natural-language `instruct` for tone and emotion ("warm, unhurried"), a VoiceDesign model that builds a voice from a description, and a Base model for 3-second cloning; ten languages; `pip install qwen-tts`; the README's examples assume a CUDA GPU in bfloat16, and GGUF conversions exist for CPU. **Added to the D-007 listening test** as the Apache option with emotion control that Kokoro lacks. |
+| [Chatterbox](https://huggingface.co/ResembleAI/chatterbox) | MIT | 23M downloads; fal, Replicate, DeepInfra | the expressive option from section 2; demos at [chatterbox-turbo-demo](https://huggingface.co/spaces/ResembleAI/chatterbox-turbo-demo) |
+| [VibeVoice-1.5B](https://huggingface.co/microsoft/VibeVoice-1.5B) (Microsoft) | MIT | 3.7M downloads | long-form, podcast-style multi-speaker English and Chinese; more than this channel needs |
+| [Fun-CosyVoice3-0.5B](https://huggingface.co/FunAudioLLM/Fun-CosyVoice3-0.5B-2512) | Apache-2.0 | 2025-12 | nine languages, ONNX available |
+| [OmniVoice](https://huggingface.co/k2-fsa/OmniVoice), [VoxCPM2](https://huggingface.co/openbmb/VoxCPM2), [XTTS-v2](https://huggingface.co/coqui/XTTS-v2) | no licence tag, no licence tag, non-commercial | | not used until a licence is stated |
+| Leaderboards | | | [open_tts_leaderboard](https://huggingface.co/spaces/hf-audio/open_tts_leaderboard) and [TTS-Spaces-Arena](https://huggingface.co/spaces/Pendrokar/TTS-Spaces-Arena) for the bake-off |
+
+### Images (rung C)
+
+| Model | Licence | Activity | Notes |
+|---|---|---|---|
+| [FLUX.1-schnell](https://huggingface.co/black-forest-labs/FLUX.1-schnell) | Apache-2.0 (gated: accept the terms once) | 23.3M downloads; live on nscale, fal, WaveSpeed | section 3's default |
+| [Z-Image-Turbo](https://huggingface.co/Tongyi-MAI/Z-Image-Turbo) (Alibaba Tongyi) | Apache-2.0 | released 2025-11-25, 9.3M downloads; fal, Replicate, WaveSpeed | 6B parameters, 8 steps, "fits comfortably within 16G VRAM consumer devices", photorealism and English and Chinese text rendering. **The second rung-C model**, and the one to try first for quote cards because of the text rendering. Demo at [Tongyi-MAI/Z-Image-Turbo](https://huggingface.co/spaces/Tongyi-MAI/Z-Image-Turbo). |
+| [Ming-Image-0.1-Design](https://huggingface.co/inclusionAI/Ming-Image-0.1-Design) | MIT | 2026-09-17 | 6B model for posters, infographics and other text-rich design with transparent-background output; validated on an 80 GB GPU, so only through a hosted Space ([demo](https://huggingface.co/spaces/hugging-apps/ming-image-0-1-design-demo)); interesting for scripture cards later |
+| [Qwen-Image-2.1](https://huggingface.co/Qwen/Qwen-Image-2.1), [Krea-2-Turbo](https://huggingface.co/krea/Krea-2-Turbo), [FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) | "other" or non-commercial | the trending models of the moment | read the licence before any commercial use; not adopted |
+
+### Video (rung D)
+
+| Model | Licence | Hardware | Notes |
+|---|---|---|---|
+| [Wan2.1-T2V-1.3B](https://huggingface.co/Wan-AI/Wan2.1-T2V-1.3B) | Apache-2.0 | "requires only 8.19 GB VRAM", a 5-second 480p clip in about 4 minutes on an RTX 4090 | **the consumer-GPU local option** section 3 was missing; 480p output needs upscaling for 1080x1920 |
+| [Wan2.2-TI2V-5B](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B) | Apache-2.0 | 24 GB | from section 3; live on fal, Replicate, WaveSpeed |
+| [LTX-2](https://huggingface.co/Lightricks/LTX-2), [LTX-2.3](https://huggingface.co/Lightricks/LTX-2.3), [LTX-2.5](https://huggingface.co/Lightricks/LTX-2.5) | "other" (community licence) | large; GGUF quantisations and ComfyUI workflows exist | the most active open video family on the Hub (LTX-2.5: 3.4M downloads since July 2026, gated); audio and video together; licence terms must be read |
+| [MiniMax-H3](https://huggingface.co/MiniMaxAI/MiniMax-H3) | "other" | 33B parameters | the trending model of the week with synchronised audio; hosted only (fal, WaveSpeed) |
+| [SANA-Video 2.0 5B 720p](https://huggingface.co/Efficient-Large-Model/SANA-Video_2.0_5B_720p) | Apache-2.0 | | 2026-08; worth a test |
+| [LongCat-Video](https://huggingface.co/meituan-longcat/LongCat-Video) | MIT | | live on fal |
+| Free Spaces with an API | | within the ZeroGPU quota | [Wan2.2 14B Fast](https://huggingface.co/spaces/zerogpu-aoti/wan2-2-fp8da-aoti-faster) (image-to-video, 3,710 likes, MCP server), [LTX Video Fast](https://huggingface.co/spaces/Lightricks/ltx-video-distilled) (MCP server). One hook clip a day fits in five free minutes. |
+
+### Music
+
+| Model | Licence | Hardware | Notes |
+|---|---|---|---|
+| [ACE-Step 1.5](https://huggingface.co/ACE-Step/Ace-Step1.5) | **MIT**, with the model card stating it is "designed for creators" and that generated music may be used "strictly ... for commercial purposes", trained on licensed, royalty-free and synthetic data | "runs locally with less than 4GB of VRAM"; a full song in under 10 seconds on an RTX 3090; the GitHub README lists a **Windows portable package**, a REST API server (`uv run acestep-api`) and CPU support | released 2026-01-23, 453K downloads. **This changes section 4's conclusion:** an instrumental bed can be generated locally for $0 under a permissive licence, which no other generator offered. Demo at [Ace-Step-v1.5](https://huggingface.co/spaces/ACE-Step/Ace-Step-v1.5); the earlier [ACE-Step v1 3.5B](https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B) is Apache-2.0. |
+| [Stable Audio Open 1.0](https://huggingface.co/stabilityai/stable-audio-open-1.0) | community licence (gated) | | 47-second clips, from section 4 |
+| [MiniMax-Music3](https://huggingface.co/MiniMaxAI/MiniMax-Music3), [YuE2-3B](https://huggingface.co/m-a-p/YuE2-3B), [MusicGen](https://huggingface.co/facebook/musicgen-large) | no licence tag, CC-BY-NC, CC-BY-NC | | not usable |
+
+A generated bed still needs the same care as a downloaded one: keep the prompt, seed and model version
+with the job so a Content ID dispute has evidence, and run the post-publish claim check.
+
+### Speech recognition for alignment
+
+[nvidia/parakeet-tdt-0.6b-v3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3) (CC-BY-4.0, 25
+European languages, word timestamps through NeMo, 3.2M downloads, live on Together) is a fast alternative
+to Whisper for the forced-alignment fallback in section 4.
+
+### Datasets
+
+| Dataset | What it is | Notes |
+|---|---|---|
+| [k-mktr/world_english_bible_en](https://huggingface.co/datasets/k-mktr/world_english_bible_en) | the World English Bible, 29.7K verse rows, 1.8 MB parquet, columns for book, chapter, verse number, verse id and text | public-domain translation; **the scripture lookup file for phase 3** |
+| [k-mktr/berean_standard_bible_en](https://huggingface.co/datasets/k-mktr/berean_standard_bible_en) | the Berean Standard Bible, 31.1K rows, 1.3 MB, same schema | public domain (CC0) |
+| [JDRJ/kjv-bible](https://huggingface.co/datasets/JDRJ/kjv-bible) | the King James Version, 31.1K rows, 2.3 MB, book, chapter, verse, text | public domain outside the UK |
+| [geosfero/positivequotation-public-domain-quotes](https://huggingface.co/datasets/geosfero/positivequotation-public-domain-quotes) | 30 proverbs, each matched to a numbered entry in a public-domain source, with source title, compiler and URL | tiny, but the **model for the verified quote file**: every row carries its provenance |
+| [Abirate/english_quotes](https://huggingface.co/datasets/Abirate/english_quotes), [asuender/motivational-quotes](https://huggingface.co/datasets/asuender/motivational-quotes), [jstet/quotes-500k](https://huggingface.co/datasets/jstet/quotes-500k), [c2p-cmd/Good-Quotes-Authors](https://huggingface.co/datasets/c2p-cmd/Good-Quotes-Authors) | scraped quote collections (Goodreads and similar) with author labels | **candidates only, never sources**: user-submitted attributions are exactly the misattribution problem in `docs/CONTENT_STRATEGY.md`; a quote from these enters the verified file only after a human finds the primary source |
+
+### What this section decides
+
+- Music: add ACE-Step 1.5 as the generated-bed option at $0, local, licence-clean (D-018). The curated
+  library from section 4 remains the launch default because it needs no GPU.
+- Voice: Qwen3-TTS joins Kokoro, Chirp 3 HD, `gpt-4o-mini-tts` and ElevenLabs in the D-007 listening test.
+- Images: Z-Image-Turbo is the second rung-C model and the first to try for text-bearing cards.
+- Video: Wan2.1-T2V-1.3B is the local option for an 8 GB card; the ZeroGPU Spaces are the $0 hosted
+  option for one clip a day.
+- Hosting: a GPU-free host can call a ZeroGPU Space (5 free minutes a day, 40 on PRO at $9 a month) or
+  route to fal and Replicate through Inference Providers with one token; the owner may also host two
+  ZeroGPU Spaces of his own for free, which is a way to run Kokoro, Z-Image-Turbo or ACE-Step as a private
+  API without a local GPU.
+- Scripture: the three public-domain translations are downloaded once as parquet files into `assets/`.
+
+**Open questions.** Qwen3-TTS speed on CPU and whether it returns timestamps; whether the LTX community
+licence permits this use; ACE-Step 1.5 quality for calm instrumental beds (its benchmark claims are
+song-oriented); which Spaces stay up, since a Space is someone's hobby unless it belongs to the model's
+authors.

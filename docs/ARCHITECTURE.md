@@ -155,7 +155,10 @@ All sources produce the same thing: an idea string, an optional pillar and serie
 ## 8. Hosting shapes
 
 The runner is one process with FFmpeg and Python on the path. It has no GPU requirement at rungs A to C
-when image generation is an API call. Four shapes, detailed in `docs/PROJECT_PLAN.md`:
+when image generation is an API call, and a host without a GPU can borrow one: a free Hugging Face
+account can call shared ZeroGPU Spaces for five minutes a day through the Gradio API, host two such
+Spaces of its own, or route to fal and Replicate through Inference Providers with one token
+(`docs/RESEARCH.md` section 12). Four shapes, detailed in `docs/PROJECT_PLAN.md`:
 
 1. **Owner's Windows PC** with Task Scheduler. $0, but the PC must be on at publish time (or publish via
    `publishAt` ahead of time).

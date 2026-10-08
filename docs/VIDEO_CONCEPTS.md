@@ -69,8 +69,10 @@ cents per video through an API or zero on a local GPU.
 
 **How it is made.** The scene's visual prompt plus a fixed style suffix goes to an image API
 (FLUX.1 schnell through fal.ai at $0.003 a megapixel, OpenAI's mini image model at about $0.006 a
-portrait frame, or Google's Nano Banana at about $0.034) or to a local ComfyUI install on a Windows GPU
-with a 4 GB card, where the Apache-licensed FLUX.1 schnell weights cost nothing. The image is generated at 1080x1920 or upscaled, and
+portrait frame, or Google's Nano Banana at about $0.034) or to a local ComfyUI install on a Windows GPU,
+where the Apache-licensed FLUX.1 schnell weights run on a 4 GB card and Z-Image-Turbo (Apache-2.0, better
+text rendering) on a 16 GB card, both for nothing. Without a local GPU, a Hugging Face ZeroGPU Space
+renders a short's images inside the five free minutes a day (`docs/RESEARCH.md` section 12). The image is generated at 1080x1920 or upscaled, and
 FFmpeg's `zoompan` adds the move. Images are cached by prompt hash.
 
 **Risks.** Hands, text and faces still go wrong; a stylised, people-light look avoids most of it. A

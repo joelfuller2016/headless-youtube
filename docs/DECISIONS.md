@@ -24,6 +24,7 @@ recommendation is pending evidence.
 | D-015 | Visual rungs A and B launch together; C, D and E are switched on per series by data | Proposed | 2026-10-08 |
 | D-016 | HeyGen (AI presenter) and ChatCut (agent-driven editor) are deferred: HeyGen is a phase-6 optional rung F after a one-series test; ChatCut is used interactively for prototyping and reconsidered as a rung-D provider once its automation terms are confirmed | Proposed | 2026-10-08 |
 | D-017 | MiroFish (swarm-simulation prediction engine) is not part of the pipeline; it may be tried after phase 4 as an audience rehearsal for ranking series concepts, under the budget guard | Proposed | 2026-10-08 |
+| D-018 | Hugging Face assets adopted: ACE-Step 1.5 as the $0 generated music bed, Qwen3-TTS in the voice bake-off, Z-Image-Turbo as the second rung-C model, Wan2.1-T2V-1.3B as the small-GPU local video model, ZeroGPU Spaces and Inference Providers as the GPU-free hosted path, public-domain scripture parquet files for the lookup stage | Proposed | 2026-10-08 |
 
 ## D-001 Python and FFmpeg
 
@@ -146,3 +147,14 @@ predicts how a simulated population reacts to seed material; it produces no vide
 is thousands of LLM calls plus a cloud memory service, its interface is interactive, and the phase-4
 analytics loop measures the real audience for free. It stays an optional experiment for ranking series
 concepts, never a gate on a daily video. **Reversible:** yes.
+
+## D-018 Hugging Face assets
+
+**Why.** A survey of the Hub on 2026-10-08 (`docs/RESEARCH.md` section 12) found four things the earlier
+research had missed or ruled out: a licence-clean local music generator (ACE-Step 1.5, MIT, under 4 GB of
+VRAM, Windows package), an Apache-licensed voice with instruction-driven emotion (Qwen3-TTS), an
+Apache-licensed 6B image model with text rendering that fits a 16 GB card (Z-Image-Turbo), and a
+1.3B Apache-licensed video model that runs in 8 GB (Wan2.1-T2V-1.3B). The platform itself gives a free
+account five GPU minutes a day on shared Spaces and lets it host two Spaces, and one token reaches the
+same hosted providers section 3 priced. Each is an option behind an existing interface, not a new stage.
+**Reversible:** yes.

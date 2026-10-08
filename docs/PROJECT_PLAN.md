@@ -90,7 +90,7 @@ secret store.
 
 **Monthly cost:** $0 on a public repo (standard runners are free for public repositories; a private repo
 gets 2,000 free minutes a month on the Free plan). **Catch:** no GPU, so local TTS runs on CPU and AI
-images must be API calls; scheduled workflows in a public repo switch off after 60 days without
+images are API calls or a Hugging Face ZeroGPU Space inside the free five minutes a day; scheduled workflows in a public repo switch off after 60 days without
 repository activity, so the journal commits matter; artifact storage is 500 MB on the Free plan, so
 media go to releases. **Best for:** phase 7 as the second host, or phase 1 if the owner's PC is
 unreliable.
