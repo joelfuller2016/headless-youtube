@@ -232,16 +232,22 @@ platforms; and among AI music generators only one has a documented API with comm
 | [ElevenLabs](https://elevenlabs.io/docs/api-reference/text-to-speech/convert-with-timestamps) | character-level start and end times from the `with-timestamps` endpoint; group characters into words yourself | API reference |
 | [Azure AI Speech](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/how-to-speech-synthesis) | a `WordBoundary` event per word, punctuation and sentence with offset and duration; first-class .NET SDK | docs |
 | [Google Cloud TTS](https://docs.cloud.google.com/text-to-speech/docs/reference/rest/v1beta1/text/synthesize) | timepoints only for SSML `<mark>` tags on the `v1beta1` endpoint; `v1` has none, and [Chirp 3 HD](https://docs.cloud.google.com/text-to-speech/docs/chirp3-hd) ignores `<mark>`, so word timing is effectively unavailable on Google's newest voices | reference pages |
-| OpenAI TTS | no word timestamps (not confirmed on the reference page, which refused the fetch) | open question |
+| OpenAI TTS | no word timestamps: `gpt-4o-mini-tts` and `tts-1` return audio only, and on the transcription side only `whisper-1` returns word times (confirmed by the verification pass on the OpenAI reference pages, 2026-10-08) | a separate alignment step is mandatory if OpenAI's voice is chosen |
 
 ### Forced alignment and transcription fallbacks
+
+The pipeline always knows the exact script before the voice is made, so the order of preference is:
+word times from the voice engine itself; then a forced aligner that is given the script (WhisperX's
+`align()`, torchaudio's `MMS_FA`, `ctc-forced-aligner`); and only last a transcription of the pipeline's
+own audio, which is the slowest and least accurate route because it has to guess words it was told.
+`stable-ts` offered `align()` too but is archived.
 
 | Tool | Licence | Status | Notes |
 |---|---|---|---|
 | [faster-whisper](https://github.com/SYSTRAN/faster-whisper) | MIT | 1.2.1 on 2025-10-31 | `word_timestamps=True`; CPU int8 is fine for 60-second clips; GPU on Windows needs cuBLAS and cuDNN from a third-party archive. **Local fallback.** |
 | [WhisperX](https://github.com/m-bain/whisperX) | BSD-2 | 3.8.6 on 2026-05-25 | wav2vec2 forced alignment; heavier install; alignment models for en, fr, de, es, it |
 | [stable-ts](https://github.com/jianfch/stable-ts) | MIT | **archived 2026-05-30** | `align()` of a known script plus ASS karaoke export; pin 2.19.1 if used |
-| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | MIT | v1.9.5 (6 Oct) | word timestamps via `-ml 1` (experimental); what Remotion's installer wraps |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | MIT | v1.9.5 (6 Oct) | word timestamps via `-ml 1` (experimental); what Remotion's installer wraps; the tagged releases carry only source archives, and prebuilt Windows binaries land on the `b####` pre-releases, so pin one or build with CMake (verification pass, 2026-10-08) |
 | [OpenAI `whisper-1`](https://developers.openai.com/api/docs/pricing) | | | $0.006 a minute with word granularity; the cheaper `gpt-4o-mini-transcribe` returns **no** word timestamps |
 | [Deepgram](https://deepgram.com/pricing) | | | $200 free credit, then $0.0043 a minute; word start and end in the response; C# SDK |
 | [AssemblyAI](https://www.assemblyai.com/pricing) | | | $50 free credit, then $0.15 an hour; word times in milliseconds |
@@ -258,6 +264,16 @@ platforms; and among AI music generators only one has a documented API with comm
   `createTikTokStyleCaptions` pages word tokens; `@remotion/install-whisper-cpp` provides timings. Free
   under Remotion's licence for an individual; the upgrade for animated captions.
 - MoviePy 2.x `TextClip` takes a font file path, no ImageMagick; slower than libass.
+- **Windows FFmpeg builds:** the `subtitles` filter needs a build configured with `--enable-libass`; the
+  gyan.dev and BtbN release builds are reported to include libass with DirectWrite font selection
+  (verification pass; not read first-hand), which removes the fontconfig workaround above. Record the
+  build used in the job file.
+- **Safe zone:** Shorts, Reels and TikTok draw their own controls over the bottom fifth and the right
+  edge, so captions sit in the middle band (`MarginV` in `force_style` or the ASS style), never the
+  lower third.
+- **Fonts:** burned-in captions ship the font with the video, so use fonts under the SIL Open Font
+  License from [Google Fonts](https://fonts.google.com/) (Montserrat, Poppins and the like); the
+  "Hormozi-style" favourite The Bold Font is licensed for personal use only.
 - No maintained open-source "Hormozi-style" captioner exists ([captacity](https://github.com/unconv/captacity)
   last released 2024-06; captify has three commits); [Submagic](https://www.submagic.co/pricing) is the
   hosted option from $12 a month annual. Generate the ASS file in-house.
@@ -273,18 +289,24 @@ platforms; and among AI music generators only one has a documented API with comm
 | Uppbeat | free plan gives 3 downloads then 1 a month (search snippet; the site returned 429 to every fetch) | per-video credit | | cannot feed a daily channel |
 | [Epidemic Sound](https://www.epidemicsound.com/pricing/), [Artlist](https://artlist.io/blog/artlist-personal-plan/) | about $10 a month on annual billing (third-party trackers and a 2021 Artlist post; the price cards are JavaScript-only) | none | channel safelisting; content published while subscribed stays cleared, content soundtracked after cancelling is exposed | one channel each on YouTube, Facebook, Instagram, TikTok |
 | [ElevenLabs Music API](https://elevenlabs.io/docs/api-reference/music/compose) | 900 credits a minute of music (Starter $6 a month for downloads; Creator $22 for no attribution) | required on Free, none from Creator up | | the only generator with a documented API and [self-serve commercial terms](https://elevenlabs.io/eleven-music-model-specific-terms); `force_instrumental` for beds |
-| [Suno](https://suno.com/pricing) | Pro $8 a month for commercial rights | | | **no public API**, and the [terms](https://suno.com/terms) ban scraping; unofficial wrappers are a violation |
-| Udio | | | | **excluded**: downloads disabled after the UMG settlement per late-2025 reports |
+| [Suno](https://suno.com/pricing) | Pro $8 a month for commercial rights | | | an official API portal exists at [platform.suno.com](https://platform.suno.com/) ("Make music with the Suno API ... behind a simple REST API", read 2026-10-08 by the verification pass); pricing, docs, limits and whether API output carries commercial rights sit behind a login and are unknown; the [terms](https://suno.com/terms) still ban scraping, so unofficial wrappers remain a violation |
+| Udio | | | | **excluded**: downloads disabled after the UMG settlement per late-2025 reports; udio.com/pricing renders no text to a fetcher, so every Udio figure in circulation is third-party |
 | [MusicGen](https://github.com/facebookresearch/audiocraft) | free | | | **excluded**: weights are CC-BY-NC |
 | [Stable Audio Open 1.0](https://huggingface.co/stabilityai/stable-audio-open-1.0) | free under the community licence below $1M revenue | | | 47-second clips, better at sound effects than music; loopable for ambient beds |
 
 Two platform notes from search snippets, to verify before phase 5: Meta's Sound Collection is licensed
 only inside Facebook and Instagram, and TikTok's own library caps music at 60 seconds, so the music is
 always baked into the MP4 before upload.
+The consequence, whatever those two checks find: each platform's own library clears music only on that
+platform (Meta's [Sound Collection terms](https://www.facebook.com/sound/collection/terms), last modified
+2022-03-16 per the verification pass, limit use to the Meta products; TikTok's commercial library is
+in-app only), so the only cross-posting-safe choice is one track burned in at render time whose licence
+covers every platform: Pixabay, CC BY with the credit, ACE-Step, or ElevenLabs Music.
 
 ### What this section decides
 
-- Captions come from Kokoro-FastAPI's captioned endpoint at the $0 tier, from the paid engine's own
+- Captions come from Kokoro-FastAPI's captioned endpoint at the $0 tier (English only, so a
+  non-English expansion needs the aligner), from the paid engine's own
   timings later, and from `faster-whisper` forced alignment only as a fallback. The script is ground
   truth; the pipeline never transcribes blind.
 - Render with FFmpeg and a generated ASS file; Remotion only for animated page-style captions.
@@ -299,7 +321,8 @@ always baked into the MP4 before upload.
 
 **Open questions.** Whether the Audio Library's standard licence allows the same tracks on TikTok and
 Instagram (read the in-Studio licence text); current Epidemic Sound, Artlist and Uppbeat prices (pages
-are JavaScript-only or rate-limited); whether whisper.cpp ships Windows binaries.
+are JavaScript-only or rate-limited, so capture them with a headless browser in phase 7); the Epidemic
+Sound help centre now lives at epidemicsoundhelp.com and its TikTok 60-second article refused fetches.
 
 ## 5. YouTube API and policy (checked 2026-10-08)
 

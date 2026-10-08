@@ -192,7 +192,9 @@ coping strategies in the video and the description, and avoid naming methods or 
 ## 9. Voice and brand
 
 - One narrator voice, warm, unhurried, mid-register, chosen once and never changed without a decision.
-- Brand kit: one display font and one caption font, three palettes (dawn, day, night), a 0.3 s bumper, an
+- Brand kit: one display font and one caption font, both under the SIL Open Font License from Google Fonts
+  because the captions are burned into every video (the popular "Hormozi" caption font is personal-use
+  only), three palettes (dawn, day, night), a 0.3 s bumper, an
   end card that reads "come back tomorrow", and a licensed music bed with its licence file committed next
   to it. The licence must cover every platform the video goes to, not only YouTube (see
   `docs/VIDEO_CONCEPTS.md`).
