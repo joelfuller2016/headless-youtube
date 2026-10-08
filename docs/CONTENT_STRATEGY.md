@@ -114,7 +114,8 @@ coping strategies in the video and the description, and avoid naming methods or 
   > local lines. You matter.
 
   Source for 988: [988lifeline.org](https://988lifeline.org/) (call, text, or chat; 24/7/365).
-  The international directory link is to be verified before phase 3 ships.
+  [Find A Helpline](https://findahelpline.com/) is run by ThroughLine as a public service and lists
+  verified crisis lines by country across more than 175 countries (checked 2026-10-08).
 - **Phrase scanner.** A deterministic list of phrases the gate rejects outright regardless of the judge
   (method words, medication names, "cure", "just pray harder"). It lives in config, not in a prompt, so it
   cannot be talked out of.
