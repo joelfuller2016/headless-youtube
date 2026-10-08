@@ -21,7 +21,7 @@ acceptance test and is not negotiable by the person doing the work.
 - [ ] `src/hy` package with a `run` command and the stage loop from `docs/ARCHITECTURE.md`
 - [ ] Intake from the CLI (`hy new "idea"`) writing `output/<id>/job.json`
 - [ ] Script stage with the generator prompt and schema validation (one retry)
-- [ ] Gate stage in the researched order: schema and stop reason, word count and hook length, banned-phrase regex, attribution allowlist, profanity, free moderation call, judge on a second model, audio duration
+- [ ] Gate stage in the researched order: schema and stop reason, word count and hook length, banned-phrase regex, attribution allowlist, distinctness score against the last 30 scripts, profanity, free moderation call, judge on a second model, audio duration
 - [ ] Voice stage with the chosen local TTS and a fallback provider
 - [ ] Visual stage, rung A only: twelve brand backgrounds, three colour themes
 - [ ] Caption stage producing an ASS file with word timing and emphasis colouring
@@ -45,12 +45,16 @@ owner's Windows PC in under two minutes, with no network call except the LLM.
 
 **Done when:** seven consecutive days of automatic uploads with no manual step except, until the audit
 passes, flipping the video to public.
+- [ ] Comment safety on heavy videos: YouTube hold-for-review with the crisis keyword list, the resource block as the pinned first comment, a daily owner sweep; the bot never replies to a crisis comment
 
 ## Phase 3 — The content system
 
 - [ ] Six pillars and the series catalogue from `docs/CONTENT_STRATEGY.md` as configuration
 - [ ] Self-feeding idea generator with the rotation calendar and the last-30-ideas memory
 - [ ] Crisis-resource block appended automatically for high-sensitivity topics
+- [ ] Heavy-topic gate: keyword-checked classifier, safe-messaging lint, help-seeking close, `review_mode: approve` for that video (D-019)
+- [ ] Read section 8 of Orygen's #chatsafe guidelines (US edition) by hand and paraphrase the influencer rules into the writer prompt; the PDF is copyrighted and too large to fetch
+- [ ] Confirm NIV terms in a browser before any NIV use; ESV and NIV stay off until then (D-006)
 - [ ] Scripture lookup from a public-domain translation file so references are never invented
 - [ ] An eval set of 20 to 30 scripts with human pass or fail labels, re-run against the judge whenever a prompt, model or threshold changes
 - [ ] GitHub issue form as the one idea queue; Telegram polling and self-feed open issues into it

@@ -147,9 +147,11 @@ format, the scripture card), in `docs/VIDEO_CONCEPTS.md`.
 ## 7. Content, in short
 
 Six pillars (hope, prayer, mental health, job and career, encouragement, happiness) on a daily rotation,
-twelve repeatable series, 130 to 160 spoken words a video, written to one specific person, scripture
+sixteen repeatable series, 125 to 150 spoken words a video, written to one specific person, scripture
 looked up from public-domain translations, named quotes only from a verified file, a banned-phrase list
-the judge cannot be talked out of, and a crisis-resource block appended automatically on heavy topics.
+the judge cannot be talked out of, a crisis-resource block appended automatically on heavy topics, and a
+heavy-topic gate that holds suicide, self-harm and similar scripts for the owner's approval even when
+the rest of the channel runs unattended.
 Full rules in `docs/CONTENT_STRATEGY.md`.
 
 ## 8. Distribution, in short

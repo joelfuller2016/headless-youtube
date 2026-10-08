@@ -48,9 +48,16 @@ visual rung, and its target length.
 | 10 | `night-prayer` | prayer | 40 s, slower pace, darker palette, for the end of the day | "A prayer before you close your eyes tonight" | A |
 | 11 | `you-are-not-behind` | hope | unpicks one comparison trap | "You're not behind, you're on a different page" | B or C |
 | 12 | `thank-you-for` | happiness | a short gratitude prayer that names ordinary things | "Thank you for the coffee and the people who stayed" | B |
+| 13 | `breathe-with-me` | mental-health | a box-breathing or 4-7-8 guide drawn on screen, one line or one verse per breath, loops cleanly | "Breathe with me before you open that email" | A (breathing overlay) |
+| 14 | `sixty-second-story` | hope | a scripture story retold in plain words from the public-domain text, told as a hope story | "Elijah under the broom tree", "Hagar, seen in the desert" | B or C |
+| 15 | `pray-with-me` | prayer | call-and-response: the narrator prays a line, the caption invites the viewer to say it; the close asks for an "amen" in the comments | "Pray this with me before your shift" | A or B |
+| 16 | `younger-self` | hope | what the narrator would tell their younger self at one specific age, original lines only | "At 25 nobody told me this" | B |
 
-Twelve series on a six-pillar rotation gives roughly 60 distinct videos a month before any series repeats
-a shape with the same pillar, and every video still has a unique person and moment at its centre.
+Sixteen series on a six-pillar rotation give more distinct shapes than a month has days, and every video
+still has a unique person and moment at its centre. Series 13 to 16 were added from the market notes in
+`docs/RESEARCH.md` section 9: the call-and-response prayer is the highest-engagement format on the big
+prayer channels, and a scripture story needs no modern testimony whose copyright or truth would have to
+be checked.
 
 ## 4. Script rules (enforced by the generator prompt and the judge)
 
@@ -92,10 +99,16 @@ pastor's or a poet's mouth loses trust in one comment. The rules:
    Berean Standard Bible read naturally aloud; the King James Version is for the lines everyone knows.
 3. **Licensed translations only within their gratis terms.** Crossway's
    [ESV permissions](https://www.crossway.org/permissions/) allow up to 500 verses without written
-   permission, with the full copyright notice and, for audio and video, a spoken "ESV" credit. Biblica's
-   NIV permissions page could not be fetched on 2026-10-08 (HTTP 403), so the NIV is not used until its
-   terms are read. In practice the notice does not fit in a 55-second short, so licensed translations
-   stay off by default (decision D-006).
+   permission, with the full copyright notice and, for audio and video, a spoken "ESV" credit; the same
+   page requires written permission for "digital artwork", cards and calendars, which a verse card
+   arguably is. Biblica's and HarperCollins's NIV pages refused automated fetches on 2026-10-08 (HTTP
+   403); a verbatim mirror of Biblica's notice allows 500 verses "in any form" with the full notice, and a
+   search snippet of the HarperCollins page excludes "scripture on a product in which the verse stands
+   alone", so the NIV stays off until the terms are read in a browser. In practice the notice does not
+   fit in a 55-second short, so licensed translations stay off by default (decision D-006). Whether the
+   King James Version's UK Crown patent reaches a digital video viewable in the UK is unresolved
+   (`docs/RESEARCH.md` section 9); the World English Bible and the Berean Standard Bible carry no such
+   question, which is one more reason they are the default.
 4. **Named-person quotes** come only from a small, hand-verified quote file (public-domain authors,
    with a source line each; [Project Gutenberg](https://www.gutenberg.org/policy/permission.html) texts
    need no permission to quote). Anything else is rewritten as an original line with no attribution.
@@ -127,6 +140,22 @@ coping strategies in the video and the description, and avoid naming methods or 
 - **Phrase scanner.** A deterministic list of phrases the gate rejects outright regardless of the judge
   (method words, medication names, "cure", "just pray harder"). It lives in config, not in a prompt, so it
   cannot be talked out of.
+- **Safe-messaging lint**, from the [Recommendations for Reporting on Suicide](https://www.save.org/media/media-recommendations/)
+  and the [988 press guidance](https://988lifeline.org/professionals/for-the-press/): "died by suicide",
+  never "committed"; no method, no note, no "successful" or "failed attempt"; no "epidemic" or
+  "skyrocketing"; a help-seeking close on every heavy video. The lint rewrites the wording it can and
+  rejects the rest.
+- **Heavy-topic gate.** A classifier (the judge's `sensitivity` field, checked against a keyword list so
+  it cannot be missed) routes suicide, self-harm, eating disorders, abuse, addiction and acute grief to
+  the heavy template: the lint above, the resource block in the description *and* in a pinned first
+  comment (what 988 asks the press to do), and `review_mode: approve` for that one video even when the
+  channel otherwise runs unattended. Decision D-019.
+- **Comment safety.** On heavy videos YouTube's hold-for-review is set with a crisis keyword list, the
+  owner sweeps held comments daily, and the bot never replies to a comment that reads as a crisis;
+  people answer people.
+- **Encouragement, not advice.** The writer is a peer, never a clinician. A 2022 physician review of
+  500 TikTok mental-health-advice videos rated 83.7 percent misleading (`docs/RESEARCH.md` section 9); the
+  channel's answer is to give no advice at all, only encouragement and the number to call.
 - **Mental-health content is "allowed with context" on YouTube**; the channel's context is recovery and
   hope, which is the allowed side of the line. Recovery content can still be age-restricted if it has
   triggering detail, so the rules above keep detail out.
@@ -137,17 +166,24 @@ coping strategies in the video and the description, and avoid naming methods or 
   job." Never clickbait words, never all caps, never emoji in the first 40 characters.
 - **Description**: the hook as the first line, two lines on what the video is, the series name, the
   crisis block when flagged, then hashtags. On YouTube the first 100 characters show in feeds.
-- **Hashtags**: 6 to 10 on YouTube (`#shorts` plus the pillar and series tags), 3 to 5 on TikTok and
-  Facebook, up to 10 on Instagram. Lowercase, no spaces. A rotating pool per pillar so no two videos
-  carry an identical tag list.
-- **AI disclosure**: set per platform from the render tier, see `docs/DISTRIBUTION.md`. The description
-  never hides that the voice is synthetic if asked; the channel description says the videos are made with
-  AI tools and written for one person at a time.
+- **Hashtags**: 3 to 5 everywhere (`#shorts` plus the pillar and series tags on YouTube). YouTube shows
+  three by the title and ignores every hashtag on a video that carries more than 60; Instagram's own
+  advice is 3 to 5 (sources in `docs/RESEARCH.md` section 9). Lowercase, no spaces. A rotating pool per
+  pillar so no two videos carry an identical tag list.
+- **Two standing footer lines** in every description: "This is encouragement, not medical or
+  mental-health advice." and "Made with AI tools, written for one person at a time."
+- **AI disclosure**: the AI label is set on every platform whenever the visuals are generated (rung C
+  photoreal, rung D, rung F), which is required for realistic content on YouTube, TikTok and Meta and
+  over-complies for the rest; a generic synthetic voice over stock needs no label on YouTube or TikTok
+  (their pages say so), and the footer line says it anyway. Per-platform flags are in
+  `docs/DISTRIBUTION.md`.
 
 ## 8. Posting rhythm
 
 - One video a day, same local time, seven days a week. Daily is what the pipeline is for; consistency
-  matters more than the slot.
+  matters more than the slot. The seed slot is 4 p.m. in the owner's time zone, where two vendor studies
+  agree (they disagree on the day); after 30 days of data the scheduler follows the channel's own YouTube
+  Studio audience hours instead (`docs/RESEARCH.md` section 9).
 - Sunday is `night-prayer` or `one-verse-one-minute`. Monday is `monday-reset`. The rest follow the
   rotation.
 - After 60 published videos the analytics loop may propose a second daily slot for the strongest pillar;
@@ -168,6 +204,10 @@ coping strategies in the video and the description, and avoid naming methods or 
 - Saves and shares over likes: this content is saved for later and sent to a friend; those are the
   signals the idea generator weights highest once the analytics stage exists.
 - Comments that say "I needed this today". Those are read by the owner, not by the machine.
+- Expectations, so nobody reads slow growth as failure: in a 2026 study of 799,718 videos only 11 percent
+  of accounts under 10,000 subscribers moved up a tier in a year, and 83 percent of a video's
+  interactions came in its first 10 days (`docs/RESEARCH.md` section 9). The 7-day and 28-day checks in
+  the tracking stage are sized to that.
 
 ## 11. Variety rules, because the Spam policy names this exact pipeline
 
@@ -182,8 +222,14 @@ enforced by the render and gate stages, not by taste:
   and generated beds (ACE-Step) get a fresh prompt and seed per video.
 - **Visuals.** No stock clip or generated image is reused within 30 days; brand cards use at least 12
   backgrounds and 3 palettes and never run two days in a row on the same series.
-- **Structure.** Twelve series with different shapes, on a six-pillar rotation; the judge rejects a
+- **Structure.** Sixteen series with different shapes, on a six-pillar rotation; the judge rejects a
   script whose structure matches the previous day's video.
+- **Visual templates.** At least four rotating layouts (calm clip with captions, kinetic typography, the
+  breathing overlay, the letter typewriter, verse-and-reflection split, three-step list), so the same
+  series does not look the same two days running.
+- **Distinctness score.** The gate embeds each script with a small local model and rejects one whose
+  nearest neighbour among the last 30 scripts is closer than the threshold set in config; the judge's
+  originality score is the second opinion, not the only one (`docs/ARCHITECTURE.md`, gate stage).
 - **Narrative.** Every video has a hook, a turn and a close, written to one person. A quote on a
   background with no reflection is not a video; the scripture card always carries the reflection.
 - **The owner's perspective.** Each series carries a recurring framing that is Joel's, not the model's:

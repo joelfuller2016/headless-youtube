@@ -215,9 +215,9 @@ free plan as the TikTok bridge.
 
 | Platform | Title | Description | Hashtags | AI flag | Schedule |
 |---|---|---|---|---|---|
-| YouTube | ≤100 chars | full description plus crisis resources when flagged | 6 to 10 in description | `containsSyntheticMedia` when render tier is D or photoreal C | `publishAt` with `privacyStatus=private` |
-| TikTok | caption only (title field is the caption) | first 100 chars matter | 3 to 5 in caption | TikTok's AI-generated content toggle where the API exposes it | post time chosen by the runner |
-| Instagram | none | caption, first line is the hook | up to 10 | Meta's AI label where exposed | container then publish; the runner picks the time |
+| YouTube | ≤100 chars | full description plus crisis resources when flagged, and the same block as a pinned first comment on heavy videos | 3 to 5 in description (YouTube shows three and ignores all of them past 60) | `containsSyntheticMedia` when render tier is D or photoreal C; YouTube's exemption list covers a synthetic voice over stock | `publishAt` with `privacyStatus=private` |
+| TikTok | caption only (title field is the caption) | first 100 chars matter | 3 to 5 in caption | TikTok's AI-generated content toggle where the API exposes it; the August 2026 guidelines require it for realistic AI scenes and exempt generic text-to-speech narration (`docs/RESEARCH.md` section 9) | post time chosen by the runner |
+| Instagram | none | caption, first line is the hook | 3 to 5 (Instagram's own advice) | Meta's AI label where exposed; required for photorealistic video or realistic-sounding audio, with penalties stated for not labelling | container then publish; the runner picks the time |
 | Facebook | title | description | 3 to 5 | as Instagram | as Instagram |
 
 ## 6. The one-slot-a-day rhythm

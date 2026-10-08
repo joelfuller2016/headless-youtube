@@ -25,6 +25,7 @@ recommendation is pending evidence.
 | D-016 | HeyGen (AI presenter) and ChatCut (agent-driven editor) are deferred: HeyGen is a phase-6 optional rung F after a one-series test; ChatCut is used interactively for prototyping and reconsidered as a rung-D provider once its automation terms are confirmed | Proposed | 2026-10-08 |
 | D-017 | MiroFish (swarm-simulation prediction engine) is not part of the pipeline; it may be tried after phase 4 as an audience rehearsal for ranking series concepts, under the budget guard | Proposed | 2026-10-08 |
 | D-018 | Hugging Face assets adopted: ACE-Step 1.5 as the $0 generated music bed, Qwen3-TTS in the voice bake-off, Z-Image-Turbo as the second rung-C model, Wan2.1-T2V-1.3B as the small-GPU local video model, ZeroGPU Spaces and Inference Providers as the GPU-free hosted path, public-domain scripture parquet files for the lookup stage | Proposed | 2026-10-08 |
+| D-019 | Heavy-topic videos (suicide, self-harm, eating disorders, abuse, addiction, acute grief) run through the safe-messaging lint, carry the crisis block in the description and the pinned first comment, and wait for the owner's approval even when the channel runs unattended | Proposed | 2026-10-08 |
 
 ## D-001 Python and FFmpeg
 
@@ -174,3 +175,15 @@ Apache-licensed 6B image model with text rendering that fits a 16 GB card (Z-Ima
 account five GPU minutes a day on shared Spaces and lets it host two Spaces, and one token reaches the
 same hosted providers section 3 priced. Each is an option behind an existing interface, not a new stage.
 **Reversible:** yes.
+
+## D-019 Heavy-topic videos wait for the owner
+
+**Why.** The platforms allow recovery and encouragement content and remove anything that promotes or
+instructs self-harm, and the gap between the two is wording a lint can catch most of the time but not
+always. The 988 press guidance asks for a referral number, a safe-commenting policy and the number in
+the first comment; the Recommendations for Reporting on Suicide name the phrases to avoid. Those become
+code. What code cannot judge is whether a particular script, on a particular day, is the one that should
+not go out, so the one class of video where a mistake can hurt someone gets a human look, and the bot
+never answers a crisis comment. Evidence in `docs/RESEARCH.md` section 9; rules in
+`docs/CONTENT_STRATEGY.md` section 6. **Reversible:** yes, by changing `review_mode` for the heavy
+template, though the default should not change without a reason written here.
