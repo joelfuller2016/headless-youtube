@@ -36,7 +36,10 @@ end-to-end concepts that combine them live in `docs/PROJECT_PLAN.md`.
   licence, a voice plan, an aggregator, a VPS) are billed whether or not the runner calls them, so the
   guard only alerts on those; switching them is the owner's decision (D-012).
 - **Secrets never touch the repo.** Tokens live in environment variables, the OS credential store, or the
-  CI secret store. `.gitignore` already excludes the usual files.
+  CI secret store. `.gitignore` already excludes the usual files. A token that rotates on use (TikTok's
+  refresh token) cannot be written back by the Actions job's own `GITHUB_TOKEN` (which cannot update
+  repository secrets; not re-verified this session), so the refresh job keeps it in an encrypted file in
+  `state/` or uses a personal access token scoped to secrets.
 - **Automation is the default, review is optional.** A `review_mode` setting of `none`, `notify`, or
   `approve` controls whether the owner is told, or asked, before publishing. The default is `none`.
 
@@ -71,7 +74,7 @@ flowchart LR
 | 7 | **Render** | visuals, voice, captions, music bed, brand bumpers | `final.mp4` (1080x1920 after scaling or padding visuals that arrive smaller, since no generator emits that size natively; 30 fps, H.264, AAC, loudness normalised), `thumb.jpg`, `render.actual_duration_s`, `render.cost_usd`; `state=rendered` | duration over the platform limit, silent gap, FFmpeg error | trim close, re-render once |
 | 8 | **Metadata** | title, description, hashtags, safety flags | per-platform title/description with crisis resources appended when `crisis_resources` is true and the same block posted as the first comment after upload through `commentThreads.insert` (50 units; the Data API cannot pin a comment, so pinning is on the owner's approval checklist), the two standing footer lines, AI-disclosure flags; `state=ready` | title over 100 chars | truncate at a word boundary |
 | 9 | **Publish** | `final.mp4`, metadata, platform config | `publish.<platform>.{status, remote_id, url, scheduled_for}`; `state=published` when every enabled platform is `published` or `scheduled` | platform quota, auth expiry, upload error | retry per platform; others proceed |
-| 10 | **Track** | remote ids, days 3, 7, 28 (YouTube's reports omit the most recent days) | `metrics.json` and a row in `state/metrics.csv`; on day 1 the YouTube upload's `videos.list` status (`status.uploadStatus`, `rejectionReason`, `contentDetails.licensedContent`), which is all the Data API exposes about claims, and the deletion of the public copy; `state=tracked` | analytics API error; a rejected or claimed upload | retry next day; on a claim, alert the owner with the stored licence text, because disputes and track replacement exist only in YouTube Studio; a re-upload is the owner's call, since it means a new video id |
+| 10 | **Track** | remote ids, days 3, 7, 28 (YouTube's reports omit the most recent days); non-YouTube platforms are not measured in version one beyond the ledger's post counts | `metrics.json` and a row in `state/metrics.csv`; on day 1 the YouTube upload's `videos.list` status (`status.uploadStatus`, `rejectionReason`, `contentDetails.licensedContent`), which is all the Data API exposes about claims, and the deletion of the public copy; `state=tracked` | analytics API error; a rejected or claimed upload | retry next day; on a claim, alert the owner with the stored licence text, because disputes and track replacement exist only in YouTube Studio; a re-upload is the owner's call, since it means a new video id |
 
 Two side states exist: `failed` (terminal, owner alerted, job kept for inspection) and `awaiting-approval`
 (only in `approve` review mode; on timeout the job fails by default, a config switch may let an ordinary job
@@ -96,7 +99,11 @@ successful run recorded in `state/` for the last 36 hours.
 3. For each published job with a due tracking day, pull metrics (with a three-day offset for YouTube).
    Also enforce the variety rules before rendering: a job whose music bed, visual set or structure
    repeats a recent video is sent back to the visuals stage with a different draw.
-4. Send the daily summary if one has not been sent today.
+4. Keep the buffer full: render ahead until about seven gate-passed, unpublished videos exist, so a day
+   whose job is held for approval, fails its gates three times, or finds no distinct idea still has a
+   video to publish (skip-and-substitute: the held job waits, the next job runs, and the weekly digest
+   lists everything waiting so the human loop is batched, never blocking).
+5. Send the daily summary if one has not been sent today.
 
 Because every stage is idempotent and every side effect is written down before it happens, a crash
 halfway through leaves nothing to clean up; the next run picks up where the last one stopped, and a job
@@ -123,7 +130,9 @@ scene is downgraded last, because it is the one that decides whether anyone watc
 
 Captions are the product at the $0 tier, so they get their own stage.
 
-- **Timing source, in order of preference:** word timestamps from the voice provider (the `kokoro`
+- **Timing source, in order of preference:** word timestamps from the voice provider, which the
+  `VoiceProvider` interface returns or declares absent so a voice without them (any non-English Kokoro
+  voice, Gemini TTS) falls through to the aligner (the `kokoro`
   library in-process at the $0 tier, whose pipeline sets `start_ts` and `end_ts` per token, so the runner
   needs no server running in a user session; Kokoro-FastAPI's captioned endpoint when one already runs; ElevenLabs' character timings or Azure's word-boundary events on
   paid voices; Google's newest voices give none), then forced alignment of the voice file against the
@@ -149,7 +158,9 @@ Captions are the product at the $0 tier, so they get their own stage.
   master is about 60 MB and a Telegram bot cannot send a file over 50 MB; `notify` and `approve` send
   the review copy or the private YouTube link, never the master.
 - Timeline: 0.3 s brand bumper, scenes cut on voice boundaries with a 0.2 s crossfade, 0.5 s hold on the
-  last frame, optional 0.5 s end card. Music bed ducked under the voice.
+  last frame, optional 0.5 s end card. Mastering in FFmpeg: silence trimmed from the voice files,
+  the music bed ducked under the voice with `sidechaincompress`, and the mix normalised with
+  `loudnorm` to the -14 LUFS target, so every video sounds the same.
 - Hard limits are configuration, not code: `max_duration_s` defaults to 60 so a video qualifies as a Short
   on every platform regardless of the current YouTube limit (see `docs/DISTRIBUTION.md`).
 - The thumbnail is the hook frame with the title overlaid; most platforms ignore it for shorts, and
@@ -236,6 +247,12 @@ n8n Concept 3, the always-on box hosts Concept 4, and GPU bursts serve any of th
 - A `PAUSE` file (or env var) stops publishing but keeps rendering, for when something looks wrong.
 - A dead-man's switch: the last step of every run pings a free healthchecks.io check, so a scheduler
   that silently never fires (the PC asleep, a disabled workflow) is reported within a day.
+- A circuit breaker (D-021): an hour after each `publishAt` the runner reads the video back with
+  `videos.list`; a `rejected` upload, a `rejectionReason`, a privacy status that is still `private`
+  after the publish time, or a YouTube strike email under the Gmail label trips it, and tripped means
+  publishing pauses on every platform (rendering continues into the buffer) until the owner clears it.
+  A first strike sets scheduled public videos to private for a week, so a pipeline that kept scheduling
+  would feed the next strike; YouTube never tells the API about a strike, only the inbox.
 - `review_mode=approve` parks the job as `awaiting-approval` with `review.deadline` (48 hours by
   default) and sends the review copy to the owner. The decision travels through the job's GitHub issue,
   an `approve` or `reject` label (or a `workflow_dispatch` with the job id) that the next run reads,

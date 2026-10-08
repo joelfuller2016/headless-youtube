@@ -27,6 +27,7 @@ recommendation is pending evidence.
 | D-018 | Hugging Face assets adopted: ACE-Step 1.5 as the $0 generated music bed, Qwen3-TTS in the voice bake-off, Z-Image-Turbo as the second rung-C model, Wan2.1-T2V-1.3B as the small-GPU local video model, ZeroGPU Spaces and Inference Providers as the GPU-free hosted path, public-domain scripture parquet files for the lookup stage | Proposed | 2026-10-08 |
 | D-019 | Heavy-topic videos (suicide, self-harm, eating disorders, abuse, addiction, acute grief) run through the safe-messaging lint, carry the crisis block in the description and in the first comment (pinned by the owner at approval), and wait for the owner's approval even when the channel runs unattended; the approve timeout can never publish one | Proposed | 2026-10-08 |
 | D-020 | AI labels: every platform's flag is set whenever any scene is generated (rungs C, D, F, hybrid with a generated hook) or the video is mostly generated music; for a synthetic narrator over stock, YouTube's and TikTok's flags stay off and Meta's label is set wherever the API exposes it until Meta's help page is read in a browser | Proposed | 2026-10-08 |
+| D-021 | A circuit breaker pauses publishing on every platform when a published video reads back as rejected, claimed or still private, or a strike email arrives; a buffer of about seven gate-passed videos and skip-and-substitute keep a held or failed job from emptying a day; the owner resumes by hand | Proposed | 2026-10-08 |
 
 ## D-001 Python and FFmpeg
 
@@ -217,3 +218,16 @@ cost of over-labelling is a small badge; the cost of under-labelling is a remova
 carries the render tier, so the metadata stage can set the flags without a human. Generated music under
 narration is not "the main focus" in YouTube's words, so it alone sets nothing; a video that is mostly
 music does. **Reversible:** yes, once Meta's page is read; record the reading here.
+
+## D-021 Circuit breaker and buffer
+
+**Why.** YouTube's first strike blocks uploads for a week and sets scheduled public videos to private,
+and it tells nobody through the API; a pipeline that kept scheduling would walk into the second strike
+inside the 90-day window, and three remove the channel. The only signals a program can see are the
+video's own status read back after its publish time and the strike email in the inbox, so the runner
+reads both and stops everything on the first bad one, since a strike on YouTube is a warning about the
+same content everywhere. The brief asks for a fully unattended channel, and the heavy-topic hold
+(D-019), a failed gate or an exhausted self-feed would each leave a day empty; a buffer of about seven
+pre-rendered videos and the rule that a held job waits while the next one runs keep the daily slot
+filled without putting a human on the critical path. Both are $0. Evidence in `docs/RESEARCH.md`
+section 9 and the completeness critique that raised them. **Reversible:** yes.

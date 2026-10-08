@@ -130,7 +130,13 @@ Checked 2026-10-08 against Google's developer and help pages.
   This is the single biggest policy risk to the project, because that example is the naive version of
   this pipeline. The content rules in `docs/CONTENT_STRATEGY.md` section 11 exist to keep the channel on
   the right side of it: no two videos share a music bed and a visual set, structures rotate, and every
-  script carries the owner's own perspective.
+  script carries the owner's own perspective. What a strike does, per the
+  [strike basics](https://support.google.com/youtube/answer/2802032) (read 2026-10-08): the first
+  violation is a warning; a first strike blocks uploads and scheduling for a week and sets scheduled
+  public videos to private for that week; a second inside 90 days blocks posting for two weeks; three
+  in 90 days may remove the channel; the notice comes by email and in Studio, never through the API.
+  That is why the runner reads every video back after its publish time and watches the inbox, and why
+  one bad signal pauses every platform (D-021).
 - **Inauthentic content (15 July 2025).** YouTube renamed its "repetitious content" policy to "inauthentic
   content" and clarified that it covers content that is "repetitive or mass-produced". Content must "be
   your original creation" and "not be mass-produced, generic, repetitive, or manipulative. It should be
@@ -279,7 +285,9 @@ paid aggregator.
 | Bluesky | app password | no expiry | keep it out of the repo |
 
 A token that expires silently is the usual way a "100 percent automated" pipeline stops, so the ledger
-records each token's expiry and the daily summary shows the days left (lifetimes per the verification
+records each token's expiry, a weekly refresh job rotates what can be rotated (writing TikTok's rotating
+refresh token to an encrypted file in `state/`, since the Actions job token cannot update repository
+secrets), and the daily summary shows the days left (lifetimes per the verification
 pass, 2026-10-08, against each platform's token page).
 
 ## 5. Per-platform metadata rules the metadata stage applies

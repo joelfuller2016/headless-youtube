@@ -221,6 +221,11 @@ coping strategies in the video and the description, and avoid naming methods or 
 
 ## 10. What success looks like (so the loop has a target)
 
+- Three numbers, set before launch, decide every expansion: median `averageViewPercentage` over the
+  last 30 videos (target 70 percent on a 55-second video), saves plus shares per 1,000 views, and
+  subscribers at day 90. A paid voice is tried when the bake-off shows Kokoro loses on warmth; TikTok's
+  $24 route when the three numbers say reach is the constraint; rung D only when retention is limited
+  by the visuals rather than the hook or the script (`docs/VIDEO_CONCEPTS.md` section 5).
 - Retention: average view duration above 70 percent on a 55-second video.
 - Saves and shares over likes: this content is saved for later and sent to a friend; those are the
   signals the idea generator weights highest once the analytics stage exists.
@@ -256,7 +261,11 @@ enforced by the render and gate stages, not by taste:
   originality score is the second opinion, not the only one (`docs/ARCHITECTURE.md`, gate stage).
 - **Narrative.** Every video has a hook, a turn and a close, written to one person. A quote on a
   background with no reflection is not a video; the scripture card always carries the reflection.
-- **The owner's perspective.** Each series carries a recurring framing that is Joel's, not the model's:
+- **The owner's perspective.** This bullet is also the legal one: under the Copyright Office's Part 2
+  report (2025-01-29) a video whose expressive elements a machine determined is not copyrightable and a
+  prompt alone is not authorship, so without a human layer the owner could not defend a re-upload of
+  his own video (`docs/RESEARCH.md` section 9). Each series carries a recurring framing that is Joel's,
+  not the model's:
   a short set of lines, images and stances the owner writes once and the generator is told to draw on,
   so the channel sounds like a person with a point of view. These live in `config/perspective.md`.
 - **Volume.** One video a day, at most three, so the channel is a daily word, not a flood.

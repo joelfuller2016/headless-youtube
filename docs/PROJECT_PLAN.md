@@ -130,7 +130,10 @@ dependency that can change its price or its terms; the downgrade ladder is what 
 Start with Concept 1 for phases 1 and 2, make Concept 2 the scheduler of record from phase 3 with the
 PC as backup, send GPU steps to Modal's free credit or Hugging Face Jobs, and borrow Concept 4's paid
 providers one stage at a time, per series, behind the budget guard. Concept 3 is an alternative front
-end for the same stages rather than a different destination. Decision D-009.
+end for the same stages rather than a different destination. Decision D-009. The rule for moving: a
+paid voice when the bake-off shows Kokoro loses on warmth; the $24 TikTok route when the three launch
+numbers in `docs/CONTENT_STRATEGY.md` section 10 say reach is the constraint; rung D only when those
+numbers show retention limited by the visuals rather than the hook or the script.
 
 ## 6. The format ladder, in short
 
@@ -187,6 +190,8 @@ Task-level checklists in `docs/ROADMAP.md`.
 |---|---|---|
 | Videos stay private because the YouTube API audit is slow or refused | high at first | upload private with `publishAt`; owner flips to public by hand until the audit passes; submit the form in phase 2, week one |
 | The OAuth refresh token expires after seven days | certain if the app is left in Testing | set the consent screen to In production before the first unattended run |
+| A strike sets the scheduled videos to private for a week and the pipeline keeps scheduling into the next strike | low per video, real over a year | the circuit breaker reads every video back an hour after publish and watches the inbox; one bad signal pauses every platform until the owner resumes (D-021) |
+| A held or failed job leaves a day with no video, and a string of such days reads as an abandoned channel | medium | a buffer of about seven gate-passed videos and skip-and-substitute; a weekly digest of everything held (D-021) |
 | A free TTS or model endpoint changes or disappears | medium over a year | every stage has a fallback provider; the runner alerts on fallback use |
 | The channel trips the Spam policy's mass-production rule (strikes) or reads as inauthentic (demonetised) | medium, and the naive pipeline is the policy's own example | the variety rules in `docs/CONTENT_STRATEGY.md` section 11: no shared music bed or visual set between videos, rotating structures, narrative in every video, the owner's own perspective layer, one to three videos a day, provenance logged |
 | A fabricated or misattributed quote is published | medium without controls, low with them | scripture from a file, quotes from a verified list, judge rejects unverifiable quotes |
@@ -200,7 +205,8 @@ Task-level checklists in `docs/ROADMAP.md`.
 
 Listed with the assumption used so far in `docs/BRAIN_DUMP.md`, section 3. The two that most change the
 build: which platforms beyond YouTube matter in the first three months, and whether the first two weeks
-should run in `notify` or `approve` review mode.
+should run in `notify` or `approve` review mode. One that decides whether any local GPU tier exists:
+what graphics card the PC has, if any, and how much memory (`nvidia-smi` answers it).
 
 ## 12. Resources
 

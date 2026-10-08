@@ -45,6 +45,7 @@ endpoints.
 - [ ] Windows Task Scheduler job running `hy run` hourly as the owner's account with "run whether user is logged on or not" (the System account cannot read the owner's credential store); a `PAUSE` file honoured
 - [ ] Daily summary to Telegram or email; failure alert with the stage and error
 - [ ] Dead-man's switch: ping healthchecks.io (free Hobbyist plan) at the end of every run so a day without a run raises an email
+- [ ] Circuit breaker: read each video back an hour after `publishAt`; a rejected, claimed or still-private upload, or a strike email under the Gmail label, pauses publishing everywhere until the owner resumes (D-021)
 - [ ] `review_mode=notify` for the first two weeks
 
 **Done when:** seven consecutive days of automatic uploads with no manual step except, until the audit
@@ -54,6 +55,7 @@ passes, flipping the video to public.
 
 - [ ] Six pillars and the series catalogue from `docs/CONTENT_STRATEGY.md` as configuration
 - [ ] Self-feeding idea generator with the rotation calendar and the last-30-ideas memory
+- [ ] Buffer of about seven gate-passed, unpublished videos; skip-and-substitute when a job is held or fails; weekly digest of everything waiting (D-021)
 - [ ] Crisis-resource block appended automatically for high-sensitivity topics
 - [ ] Heavy-topic gate: keyword-checked classifier, safe-messaging lint, help-seeking close, `review_mode: approve` for that video (D-019)
 - [ ] Durable approval: `awaiting-approval` jobs read an `approve` or `reject` label on their GitHub issue; 48-hour deadline; the review copy (720x1280, under 50 MB) is what Telegram sends

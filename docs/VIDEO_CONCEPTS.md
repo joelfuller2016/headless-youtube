@@ -152,6 +152,8 @@ uncanny-valley risk is highest on prayer and grief topics. See `docs/RESEARCH.md
 ## 5. How to climb
 
 1. Launch on Rung A and B together (brand cards for scripture and prayer, stock loops for the rest).
+   Rung A alone is a development tier: the published floor rotates at least four layouts across the two
+   rungs, because a channel of one card style under one voice is the Spam policy's own example.
 2. After 30 published videos, compare retention per series.
 3. Turn on Rung C for the two best series, measure for 30 days.
 4. Only then try Rung D, and only for hook scenes.

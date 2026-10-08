@@ -53,6 +53,7 @@ against the source. Everything below the first section is interpretation and can
 | How explicitly Christian? | Faith-forward but welcoming: scripture and prayer appear, never preachy, never partisan. | `docs/CONTENT_STRATEGY.md` |
 | Does Joel want to approve videos before they post? | No, by default (100 percent automated): `notify` for the first two weeks (D-011), then `none`; heavy-topic videos always wait for approval (D-019). | `docs/DECISIONS.md` |
 | What does "succeed in life" mean here? | Progress and small wins, not money or hustle; it lives in the Hope and job pillars, and financial advice is banned. | `docs/CONTENT_STRATEGY.md` |
+| Does the PC have a GPU, and how much memory? | Unknown; the plan assumes CPU only, so every local tier that needs a card is marked as conditional. Run `nvidia-smi`. | `docs/RESEARCH.md` |
 | Where does it run? | Joel's Windows PC or GitHub Actions at the $0 tier; a small VPS or n8n later. | `docs/PROJECT_PLAN.md` |
 | Monetization? | Not a goal. The plan still avoids anything that would block it later. | `docs/DISTRIBUTION.md` |
 
