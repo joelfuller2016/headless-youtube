@@ -141,7 +141,7 @@ known, which is what decides whether the GPU-only local voices are even candidat
 
 **Summary.** Three tiers with a clean cost gap between them. Stock clips are free and licence-clean
 from two APIs. AI stills for a Ken Burns format cost a fraction of a cent to a few cents each, so eight
-per video is roughly two to thirty cents. AI video costs about $0.04 to $0.10 per generated second on the
+per video is roughly two to seventy cents, Ideogram at the top. AI video costs about $0.04 to $0.10 per generated second on the
 budget models and $0.40 on Google's top model with audio, so a 60-second short built from six to eight
 clips is roughly $2.40 to $6.40 on budget models and over $25 on Veo 3.1 Standard. No video API has a
 free tier. The market churns monthly (OpenAI's Sora 2 API was shut down on 2026-09-24; Google's original
@@ -162,7 +162,7 @@ Nano Banana image model was shut down on 2026-10-02), so every generator sits be
 
 | Option | Price per image | Free | Notes |
 |---|---|---|---|
-| [FLUX.1 schnell on fal.ai](https://fal.ai/models/fal-ai/flux/schnell) | $0.003 per megapixel, rounded up, commercial rights included; [Replicate](https://replicate.com/pricing) $3 per 1,000 | none hosted; **$0 locally** (weights are [Apache-2.0](https://huggingface.co/black-forest-labs/FLUX.1-schnell)) in ComfyUI on a 4 GB NVIDIA card | **phase-6 default**; pick 704x1408 (0.99 MP) so fal bills one megapixel, not two |
+| [FLUX.1 schnell on fal.ai](https://fal.ai/models/fal-ai/flux/schnell) | $0.003 per megapixel, rounded up, commercial rights included; [Replicate](https://replicate.com/pricing) $3 per 1,000 | none hosted; **$0 locally** (weights are [Apache-2.0](https://huggingface.co/black-forest-labs/FLUX.1-schnell)) in ComfyUI on a 4 GB NVIDIA card | **phase-6 default**; generate at 1024x1536 (2 MP, $0.006) and scale to 1080x1920 in the render stage; 704x1408 would bill one megapixel at $0.003 but needs a 1.5x upscale |
 | [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/platform/pricing/) running `@cf/black-forest-labs/flux-1-schnell` | 4.80 neurons per 512x512 tile plus 9.60 per step: a 1024x1536 image at 4 steps is 6 tiles and 4 steps, 67.2 neurons, about $0.0007 on the paid plan ($0.011 per 1,000 neurons) | **10,000 neurons a day free on the Workers Free plan**, about 148 such images a day, read 2026-10-08 | the cheapest hosted FLUX and a genuine $0 rung C; added after the verification pass flagged it; generate at 1024x1536 and scale to 1080x1920 in the render stage |
 | FLUX.1 dev and 1.1 pro ([fal](https://fal.ai/models/fal-ai/flux-pro/v1.1), Replicate, [Together](https://www.together.ai/pricing)) | $0.025 and $0.04 per megapixel or image | none; local dev weights are under a [non-commercial licence](https://huggingface.co/black-forest-labs/FLUX.1-dev) | better prompt adherence and text |
 | [OpenAI GPT Image](https://developers.openai.com/api/docs/guides/image-generation) | `gpt-image-1-mini` low $0.006 for 1024x1536 portrait; `gpt-image-2` low $0.005 to high $0.165 | none | strongest text rendering; organisation verification may be required |
@@ -204,7 +204,7 @@ Hosting keys: [fal.ai](https://fal.ai/pricing) covers almost every model above b
   mini image model or Ideogram only for frames that need legible text.
 - Rung D: one `VideoClipProvider` adapter with Veo 3.1 Lite, Pika 2.5 and Kling behind it; prefer
   image-to-video from the rung-C still so the Ken Burns fallback is identical; generate audio-off; pin
-  clip lengths to each vendor's billing block (Veo 8 s, Kling and Luma 10 s).
+  clip lengths to each vendor's billing block (Veo 8 s, Kling and Luma 5 s).
 - Record provider, model, licence tag, cost and watermark flag per clip in the job file so disclosure
   and licence questions can be answered later.
 
@@ -480,7 +480,7 @@ owner's Windows PC is the right development runner and manual backup but a poor 
 - **Phases 1 and 2** run on the owner's Windows PC from Task Scheduler with `/ru System`, as the
   development loop and manual backup; YouTube's `publishAt` means the PC need not be awake at publish time.
 - **From phase 3 the scheduler of record is a GitHub Actions workflow in a private repository** (2,000
-  free minutes a month is about 130 ten-minute runs): cron at an odd minute, `workflow_dispatch` with
+  free minutes a month is about 200 ten-minute runs): cron at an odd minute, `workflow_dispatch` with
   idea text and a publish flag, an `issues` trigger for the phone, FFmpeg installed each run, state
   committed back with the job token, a Discord or Telegram message per run.
 - **GPU steps** (AI video, local image models) go to Modal under `modal.Cron` inside the $30 credit, or
@@ -510,7 +510,7 @@ Assumes about 1,200 input and 700 output tokens for the writer and 1,500 and 200
 | Model | Price per million tokens (input, output) | About per video | Notes | Source |
 |---|---|---|---|---|
 | Claude Haiku 5.5 (`claude-haiku-5-5`) | $0.10, $0.50 for prompts up to 100K tokens | $0.0007 | the cheapest capable writer; batch is half | [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) |
-| Claude Sonnet 5.5 (`claude-sonnet-5-5`) | $2, $10 | $0.014 | a strong judge from a different family than the writer | same |
+| Claude Sonnet 5.5 (`claude-sonnet-5-5`) | $2, $10 | $0.014 | a stronger same-family writer for a series that earns it; not the judge, which D-008 puts in another family | same |
 | Claude Opus 5.5 (`claude-opus-5-5`) | $4, $20 | $0.03 (under $1 a month at one a day) | Anthropic's recommended default; affordable even here | same |
 | OpenAI `gpt-5-nano`, `gpt-5-mini` | $0.05, $0.40 and $0.25, $2.00 | $0.0005 and $0.002 | | [OpenAI pricing](https://developers.openai.com/api/docs/pricing) |
 | Gemini Flash and Flash-Lite | free tier "free of charge" on the current Flash models; paid 2.5 Flash-Lite $0.10, $0.40 | $0 | free-tier limits are shown only inside AI Studio and free-tier prompts may be used to improve Google's products | [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing), [Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) |
@@ -542,21 +542,26 @@ TTS voice's measured words per minute feeds back into the budget.
 3. A regex banned-claims list: diagnosis, cure, medication, vaccine, invest, stock, crypto, guarantee,
    "God will give you the job". YouTube's monetisation page also bans "AI-generated podcast hosts
    offering financial guidance", so the job pillar never gives financial advice.
-4. Attribution gate: a `public_domain` attribution must fuzzy-match the local allowlist (the World
+4. Attribution gate: a `public-domain` attribution must fuzzy-match the local allowlist (the World
    English Bible file, [Project Gutenberg](https://www.gutenberg.org/policy/permission.html) entries, whose
    quotes need no permission) at 0.95 similarity or better; any other named-person attribution fails.
-5. Profanity: [alt-profanity-check](https://pypi.org/pypi/alt-profanity-check/json) 1.9.1 (2026-09-14) in
+5. Safe-messaging lint on heavy topics (section 9): wording replacements and rejections from the
+   Recommendations for Reporting on Suicide, run only when the classifier marks the script heavy.
+6. Distinctness score: embed the script with a small local model and reject it if its nearest
+   neighbour among the last 30 scripts is closer than the configured threshold (the measured defence
+   against the inauthentic-content and Spam rules).
+7. Profanity: [alt-profanity-check](https://pypi.org/pypi/alt-profanity-check/json) 1.9.1 (2026-09-14) in
    Python, with an allowlist for scripture and place names.
-6. OpenAI's [moderation endpoint](https://developers.openai.com/api/docs/guides/moderation), which is
-   free, for self-harm, harassment and hate flags; a flag sends the job to the review queue.
-7. The LLM judge on a different model than the writer, grading one script against a rubric with a
-   constrained PASS or FAIL plus 1 to 5 subscores, requiring PASS and originality of 4 or more.
+8. OpenAI's [moderation endpoint](https://developers.openai.com/api/docs/guides/moderation), which is
+   free, for self-harm, harassment and hate flags; a flag forces `review_mode: approve` for that job, the same path D-019 uses for heavy topics.
+9. The LLM judge on a different model than the writer, grading one script against a rubric with a
+   constrained pass, revise or reject verdict plus 1 to 5 subscores, requiring pass and originality of 4 or more.
    [Zheng et al. 2023](https://arxiv.org/abs/2306.05685) documents position, verbosity and
    self-enhancement biases in LLM judges, which is why the judge is a different model and never compares
    two scripts side by side.
-8. Synthesised audio between 45 and 60 seconds.
+10. Synthesised audio between 45 and 60 seconds.
 
-Every verdict is logged next to the script id, and a 20-to-30-script eval set with human PASS or FAIL
+Every verdict is logged next to the script id, and a 20-to-30-script eval set with human pass, revise or reject
 labels is kept from day one so the judge can be re-run whenever the prompt, model or thresholds change.
 
 ### Idea intake for one person
@@ -572,10 +577,11 @@ labels is kept from day one so the judge can be re-run whenever the prompt, mode
 
 ### What this section decides
 
-- Writer: Claude Haiku 5.5 or Opus 5.5 behind one client interface, with a $0 fallback chain (Gemini
-  Flash free tier, OpenRouter free models, Ollama) so a quota error never stops the daily post. Judge: a
+- Writer: the $0 chain (Gemini Flash free tier, OpenRouter free models, Ollama) is primary through phase
+  4 under D-012's cap; from phase 5 Claude Haiku 5.5 or Opus 5.5 becomes primary behind the same client
+  interface with the $0 chain as the fallback, so a quota error never stops the daily post. Judge: a
   different model family (D-008). A month of scripts costs under $1 on Opus at one video a day and
-  about $4 at three a day with a Sonnet judge; the cost sheets in section 10 show the lines.
+  about $3 at three a day with a `gpt-5-mini` judge; the cost sheets in section 10 show the lines.
 - The script carries a required `original_angle` field and the generator is given three recent hooks to
   avoid, as the written defence against the inauthentic-content and spam rules.
 - Length is 125 to 150 words, enforced in code and by the audio.
@@ -662,6 +668,7 @@ Studio audience data after 30 days.
 | YouTube inauthentic content (YPP) | renamed from "repetitious content" on 2025-07-15; "channels where content feels interchangeable from video to video are not allowed to monetize"; examples include "image slideshows, templated storylines, or scrolling text with minimal or no narrative" and "AI-generated content made with generic or unoriginal templates"; series with a shared intro are fine when each video has its own storyline or focus | [policy](https://support.google.com/youtube/answer/1311392) (fetched); [Plagiarism Today, 2025-07-08](https://www.plagiarismtoday.com/2025/07/08/youtube-targets-inauthentic-content/) |
 | YouTube Partner Program thresholds | 1,000 subscribers with 4,000 watch hours in 12 months, or with 10M Shorts views in 90 days; Shorts-feed watch time does not count toward the 4,000; updated terms must be accepted by 2027-01-31 | [YPP](https://support.google.com/youtube/answer/72851) (fetched); detail in `docs/DISTRIBUTION.md` |
 | YouTube hashtags and titles | more than 60 hashtags and all are ignored; three are shown by the title; misleading tags can remove the video; titles up to 100 characters; Shorts up to 3 minutes since 2024-10-15 | [hashtags](https://support.google.com/youtube/answer/6390658), [Shorts help](https://support.google.com/youtube/answer/10059070), [YouTube blog 2024-10-03](https://blog.youtube/news-and-events/tall-updates-coming-to-shorts/) (all fetched) |
+| Instagram hashtags | Instagram's creators account advised 3 to 5 relevant hashtags in September 2021 and said 10 to 20 "will not help you get additional distribution" | [Social Media Today](https://www.socialmediatoday.com/news/new-study-looks-at-optimal-hashtag-usage-in-instagram-feed-posts-based-on/610377) (snippet; 2021 advice, so a house rule more than a platform limit) |
 | TikTok integrity and authenticity, August 2026 version (effective 2026-09-24) | labels are required for "AI-generated or significantly edited content that shows realistic-looking scenes or people" and for audio that mimics a real person's voice; not required for "generic text-to-speech (TTS) narration, when the TTS isn't a recognizable voice of a known individual" or for artistic styles; unlabelled content "may be removed, restricted, or labeled"; self-harm content is removed | [guidelines](https://www.tiktok.com/community-guidelines/en/integrity-authenticity) (fetched through curl; the page renders with JavaScript); auto-labelling through C2PA since 2024-05-09 per [TikTok newsroom](https://newsroom.tiktok.com/en-us/partnering-with-our-industry-to-advance-ai-transparency-and-literacy) |
 | Meta suicide, self-injury and eating disorders | removes encouraging content, graphic self-injury and mocking; allows awareness, support and recovery, which may sit behind an 18+ sensitivity screen; directs people who post or search such content to local support; change log last dated 2026-02-27 | [standard](https://transparency.meta.com/policies/community-standards/suicide-self-injury/) (fetched) |
 | Meta AI labels | "AI info" label (renamed 2024-07-01) is applied on industry signals or self-disclosure; the Instagram help page requires labelling photorealistic video or realistic-sounding audio, not images, and says "there may be penalties" for not doing so | [Meta newsroom](https://about.fb.com/news/2024/04/metas-approach-to-labeling-ai-generated-content-and-manipulated-media/) (fetched); [Instagram help](https://help.instagram.com/761121959519495) (snippet; the page returned 400 and 403) |
@@ -730,9 +737,9 @@ the notice in the description and, for ESV, the spoken credit.
 - Scheduling seeds from Buffer's Friday 4 to 7 p.m. and the 4 p.m. agreement, then follows YouTube
   Studio audience data after 30 days; success is judged on retention, shares and saves, not subscriber
   count, because most small accounts do not move up a tier in a year.
-- Series candidates from this pass that `docs/CONTENT_STRATEGY.md` did not already have are added
-  there as candidates: letters ("Dear you who got the rejection email today"), permission slips,
-  thought rewrites, breathe-with-me, scripture stories in 60 seconds, and call-and-response prayer.
+- Four series from this pass that `docs/CONTENT_STRATEGY.md` did not already have were added there as
+  series 13 to 16: breathe-with-me, a scripture story in sixty seconds, call-and-response prayer, and a
+  younger-self letter. Letters, permission slips and thought rewrites already existed as series 2, 7 and 5.
 
 ### Open questions
 
@@ -764,7 +771,7 @@ pages the platform app reviews ask for can sit on GitHub Pages at $0.
 | Stage | $0 option | Paid option and price | Per video (paid) | Per month at 30 | Section |
 |---|---|---|---|---|---|
 | Script writer | Gemini Flash free tier, OpenRouter `:free` models (50 requests a day), Ollama | Claude Haiku 5.5 about $0.0007 a script; Opus 5.5 about $0.03 | $0.0007 to $0.03 | $0.02 to $0.90 | [8](#8-script-generation-quality-gates-and-idea-intake-checked-2026-10-08), [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) |
-| Judge (different model family) | a local Ollama model | Claude Sonnet 5.5 about $0.014 a judgement | $0.014 | $0.42 | same |
+| Judge (a different model family from the writer, D-008) | Gemini Flash free tier or a local Ollama model | OpenAI `gpt-5-mini` about $0.002 a judgement | $0.002 | $0.06 | [8](#8-script-generation-quality-gates-and-idea-intake-checked-2026-10-08), [OpenAI pricing](https://developers.openai.com/api/docs/pricing) |
 | Voice | Kokoro-82M on the CPU; Google Cloud Text-to-Speech inside its free 1M characters a month (the channel uses about 21,000) | Cartesia Pro $5 a month for 100,000 characters; ElevenLabs Starter $6 for 30,000 credits (about one month at one video a day, no headroom), Creator $22 for 121,000 | | $5 to $22 | [2](#2-text-to-speech-checked-2026-10-08), [Google](https://cloud.google.com/text-to-speech/pricing), [Cartesia](https://cartesia.ai/pricing), [ElevenLabs](https://elevenlabs.io/pricing) |
 | Visuals, rungs A and B | brand cards; Pexels and Pixabay | | $0 | $0 | [3](#3-visuals-stock-ai-images-ai-video-checked-2026-10-08) |
 | Visuals, rung C (eight AI images) | Cloudflare Workers AI's 10,000 free neurons a day (about 148 FLUX schnell images at 1024x1536); FLUX.1 schnell locally in ComfyUI; a ZeroGPU Space inside five free minutes a day | FLUX.1 schnell on fal at $0.003 a megapixel, rounded up, so about $0.05 for eight 1024x1536 images (a 1080x1920 request rounds to 3 megapixels and costs $0.009 each); OpenAI `gpt-image-1-mini` low quality about the same; Ideogram $0.027 to $0.09 an image | $0.05 to $0.72 | $1.50 to $21.60 | [fal](https://fal.ai/models/fal-ai/flux/schnell), [Ideogram on fal](https://fal.ai/models/fal-ai/ideogram/v3) |
@@ -795,7 +802,7 @@ artifact and R2 lines (`docs/DISTRIBUTION.md`, encoding row).
 | Scheduler | Windows Task Scheduler on the PC | $0 |
 | **Total** | | **$0** |
 
-Optional lines: the Haiku-plus-Sonnet writer and judge pair adds $0.44 a month, Opus plus Sonnet $1.32.
+Optional lines: a Haiku writer with a `gpt-5-mini` judge adds $0.08 a month, Opus with the same judge $0.96.
 At three a day nothing changes except the LLM lines, which triple. The cost that is real but not on the
 sheet is the PC being on at the scheduled minute.
 
@@ -810,9 +817,9 @@ sheet is the PC being on at the scheduled minute.
 | GPU steps when rung C or D is used | Modal cron inside the $30 credit, or a ZeroGPU Space | $0 |
 | **Total** | | **$0** |
 
-With the optional paid lines (Opus and Sonnet $1.32, fal FLUX images $1.50) the month is under $3. At
+With the optional paid lines (Opus and `gpt-5-mini` $0.96, fal FLUX images $1.50) the month is under $3. At
 three a day: 900 of 2,000 minutes, artifacts need a 1-day retention or R2 only, and the LLM and image
-lines triple to about $8.50. The Actions spending limit stays at $0 so an overage fails the run rather
+lines triple to about $7.50. The Actions spending limit stays at $0 so an overage fails the run rather
 than billing.
 
 ### Concept 3, "Low-code with n8n"
@@ -839,19 +846,19 @@ which `docs/PROJECT_PLAN.md` does not recommend.
 | Images (rung C, eight a video) | FLUX.1 schnell on fal | $1.50 | Ideogram on fal | $21.60 |
 | Hook clip (one 8-second clip a video) | Pika 2.5 at 720p | $9.60 | Veo 3.1 Lite | $12.00 |
 | Music | Pixabay or ACE-Step | $0.00 | Epidemic Sound | $10.00 |
-| Writer and judge | Opus 5.5 and Sonnet 5.5 | $1.32 | same | $1.32 |
+| Writer and judge | Opus 5.5 and `gpt-5-mini` | $0.96 | same | $0.96 |
 | Captions, render, YouTube, R2, tracking | as Concept 2 | $0.00 | same | $0.00 |
-| **Total at one a day** | | **$47.42** | | **$101.92** |
+| **Total at one a day** | | **$47.06** | | **$101.56** |
 
 So the plan's "roughly $50 to $120" holds for a hook clip only. Rung D on the whole video adds $72 to $192
 a month on the budget models, which no configuration of D-012's $100 phase-6 cap survives; it stays a
-per-series exception. The high configuration is also $1.92 over the cap: the budget guard drops Ideogram
+per-series exception. The high configuration is also $1.56 over the cap: the budget guard drops Ideogram
 for FLUX first, which saves $20.10.
 
 At three a day: the aggregators are unlimited (Blotato allows 900 TikTok posts a month) and the host is
 unchanged; Cartesia's 100,000 characters still cover the 63,000 needed, ElevenLabs Starter does not;
-images, hook clips and LLM triple. Low becomes about $72 (24 + 6 + 5 + 4.50 + 28.80 + 0 + 3.96), high about
-$172, so three a day on the managed stack is only possible in the low configuration.
+images, hook clips and LLM triple. Low becomes about $71 (24 + 6 + 5 + 4.50 + 28.80 + 0 + 2.88), high about
+$171, so three a day on the managed stack is only possible in the low configuration.
 
 ### Limits that bind before money does
 
@@ -870,7 +877,8 @@ $172, so three a day on the managed stack is only possible in the low configurat
 ### What this section decides
 
 - D-012's caps are consistent with the sheets: Concepts 1 and 2 are $0 through phase 4; phase 5 at up to
-  $25 buys exactly upload-post Basic ($24, or $16 on annual billing); phase 6 at up to $100 buys Concept 4
+  $25 covers Buffer Free for TikTok plus the $10 music safelisting subscription, or upload-post Basic
+  ($24, or $16 on annual billing) with no subscription, never both; phase 6 at up to $100 buys Concept 4
   in its low configuration with about $50 of headroom, or the high configuration minus Ideogram.
 - The downgrade order the budget guard follows, cheapest saving first: Ideogram to FLUX ($20.10), Epidemic
   to Pixabay ($10), ElevenLabs Creator to Cartesia ($17), Veo Lite to Pika ($2.40) to no hook clip
@@ -1055,7 +1063,7 @@ to Whisper for the forced-alignment fallback in section 4.
 
 - Music: add ACE-Step 1.5 as the generated-bed option at $0, local, licence-clean (D-018). The curated
   library from section 4 remains the launch default because it needs no GPU.
-- Voice: Qwen3-TTS joins Kokoro, Chirp 3 HD, `gpt-4o-mini-tts` and ElevenLabs in the D-007 listening test.
+- Voice: Qwen3-TTS joins Kokoro, Chirp 3 HD, Gemini 3.8 Flash TTS, `gpt-4o-mini-tts` and ElevenLabs in the D-007 listening test.
 - Images: Z-Image-Turbo is the second rung-C model and the first to try for text-bearing cards.
 - Video: Wan2.1-T2V-1.3B is the local option for an 8 GB card; the ZeroGPU Spaces are the $0 hosted
   option for one clip a day.

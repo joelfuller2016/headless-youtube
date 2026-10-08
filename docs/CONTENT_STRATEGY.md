@@ -46,7 +46,7 @@ visual rung, and its target length.
 | 7 | `permission-slip` | encouragement | "You have permission to..." affirmations, kinetic typography | "You have permission to rest before you've earned it" | A (kinetic) |
 | 8 | `interview-day` | job-career | a prayer plus one practical tip for a specific work moment | "Before you walk into the interview" | B |
 | 9 | `grief-is` | mental-health | gentle, no fixes, one true sentence at a time; always resources | "Grief is love with nowhere to go, and that's allowed" | B, high sensitivity |
-| 10 | `night-prayer` | prayer | 40 s, slower pace, darker palette, for the end of the day | "A prayer before you close your eyes tonight" | A |
+| 10 | `night-prayer` | prayer | 45 s (the shortest the voice stage accepts), slower pace, darker palette, for the end of the day | "A prayer before you close your eyes tonight" | A |
 | 11 | `you-are-not-behind` | hope | unpicks one comparison trap | "You're not behind, you're on a different page" | B or C |
 | 12 | `thank-you-for` | happiness | a short gratitude prayer that names ordinary things | "Thank you for the coffee and the people who stayed" | B |
 | 13 | `breathe-with-me` | mental-health | a box-breathing or 4-7-8 guide drawn on screen, one line or one verse per breath, loops cleanly | "Breathe with me before you open that email" | A (breathing overlay) |
@@ -54,8 +54,8 @@ visual rung, and its target length.
 | 15 | `pray-with-me` | prayer | call-and-response: the narrator prays a line, the caption invites the viewer to say it; the close asks for an "amen" in the comments | "Pray this with me before your shift" | A or B |
 | 16 | `younger-self` | hope | what the narrator would tell their younger self at one specific age, original lines only | "At 25 nobody told me this" | B |
 
-Sixteen series on a six-pillar rotation give more distinct shapes than a month has days, and every video
-still has a unique person and moment at its centre. Series 13 to 16 were added from the market notes in
+Sixteen series across the four or more visual layouts in section 11 give more combinations than a month
+has days, and every video still has a unique person and moment at its centre. Series 13 to 16 were added from the market notes in
 `docs/RESEARCH.md` section 9: the call-and-response prayer is the highest-engagement format on the big
 prayer channels, and a scripture story needs no modern testimony whose copyright or truth would have to
 be checked.

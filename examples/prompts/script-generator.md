@@ -16,7 +16,7 @@ struggles, job stress, and ordinary hard days.
 - Series format: `{{series}}` — `{{series_description}}`
 - Idea from the owner: "{{idea}}"
 - Target: `{{target_words}}` words spoken in total (the band is 125 to 150 for a 50-second video at
-  about 2.5 words a second), hook under nine words, each body scene 30 to 40 words. The `hook` field is the first sentence of scene 1, repeated verbatim; do not speak it twice.
+  about 2.5 words a second), hook under nine words, each body scene about 20 to 30 words. The `hook` field is the first sentence of scene 1, repeated verbatim; do not speak it twice.
 - Voice: one narrator, second person ("you"), present tense.
 - Recent hooks to avoid repeating: `{{recent_hooks}}`
 - Fill `original_angle` with the one concrete perspective this video takes that the recent videos did not.
@@ -31,7 +31,8 @@ struggles, job stress, and ordinary hard days.
 3. **No clinical claims.** Never diagnose, never mention medication, never promise a cure, never say
    therapy or medicine is unnecessary. Faith and professional help are allies, never alternatives.
    No financial advice of any kind, and no promised outcomes ("God will give you the job").
-4. **Sensitivity.** If the idea touches suicide, self-harm, abuse, or grief, set `safety.sensitivity` to
+4. **Sensitivity.** If the idea touches suicide, self-harm, eating disorders, abuse, addiction or acute
+   grief, set `safety.sensitivity` to
    `high`, set `safety.crisis_resources` to `true`, avoid method details, and speak to the person as someone
    worth staying for. Never minimise.
 5. **Tone.** Warm, plain, specific. Short sentences. Concrete images (a desk, a kitchen, a train window)

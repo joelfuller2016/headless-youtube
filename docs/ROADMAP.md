@@ -21,7 +21,7 @@ acceptance test and is not negotiable by the person doing the work.
 - [ ] `src/hy` package with a `run` command and the stage loop from `docs/ARCHITECTURE.md`
 - [ ] Intake from the CLI (`hy new "idea"`) writing `output/<id>/job.json`
 - [ ] Script stage with the generator prompt and schema validation (one retry)
-- [ ] Gate stage in the researched order: schema and stop reason, word count and hook length, banned-phrase regex, attribution allowlist, distinctness score against the last 30 scripts, profanity, free moderation call, judge on a second model, audio duration
+- [ ] Gate stage in the researched order: schema and stop reason, word count and hook length, banned-phrase regex, attribution allowlist, safe-messaging lint on heavy topics, distinctness score against the last 30 scripts, profanity, free moderation call, judge on a second model, audio duration
 - [ ] Voice stage with the chosen local TTS and a fallback provider
 - [ ] Visual stage, rung A only: twelve brand backgrounds, three colour themes
 - [ ] Caption stage producing an ASS file with word timing and emphasis colouring
@@ -29,7 +29,7 @@ acceptance test and is not negotiable by the person doing the work.
 - [ ] Dry-run flag that stops before publish, on by default
 - [ ] `tests/`: schema test, golden render of `examples/sample-script.json`
 
-**Done when:** `hy new` followed by `hy run` turns the sample idea into a 50 to 60 second MP4 on the
+**Done when:** `hy new` followed by `hy run` turns the sample idea into a 45 to 60 second MP4 on the
 owner's Windows PC in under two minutes, with no network calls except the model, judge and moderation
 endpoints.
 
@@ -40,6 +40,7 @@ endpoints.
 - [ ] One real API upload before the publish stage is built, to see whether the private-until-audit rule still applies; record the result in `docs/DECISIONS.md`
 - [ ] Publish stage for YouTube: private upload, `publishAt`, `selfDeclaredMadeForKids=false`,
       `containsSyntheticMedia` from the render tier, title and description rules
+- [ ] One-page site with a privacy policy on a domain the owner controls (GitHub Pages is enough), because the audit form asks for both
 - [ ] Submit the YouTube API Audit and Quota Extension form
 - [ ] Windows Task Scheduler job running `hy run` hourly as System (not with a saved password); a `PAUSE` file honoured
 - [ ] Daily summary to Telegram or email; failure alert with the stage and error
@@ -47,7 +48,6 @@ endpoints.
 
 **Done when:** seven consecutive days of automatic uploads with no manual step except, until the audit
 passes, flipping the video to public.
-- [ ] Comment safety on heavy videos: hold-for-review with the crisis keyword list set once in Studio, the resource block posted as the first comment by the API and pinned by the owner at approval, a daily owner sweep; the bot never replies to a crisis comment
 
 ## Phase 3 — The content system
 
@@ -55,6 +55,7 @@ passes, flipping the video to public.
 - [ ] Self-feeding idea generator with the rotation calendar and the last-30-ideas memory
 - [ ] Crisis-resource block appended automatically for high-sensitivity topics
 - [ ] Heavy-topic gate: keyword-checked classifier, safe-messaging lint, help-seeking close, `review_mode: approve` for that video (D-019)
+- [ ] Comment safety on heavy videos: hold-for-review with the crisis keyword list set once in Studio, the resource block posted as the first comment by the API and pinned by the owner at approval, a daily owner sweep; the bot never replies to a crisis comment
 - [ ] Read section 8 of Orygen's #chatsafe guidelines (US edition) by hand and paraphrase the influencer rules into the writer prompt; the PDF is copyrighted and too large to fetch
 - [ ] Confirm NIV terms in a browser before any NIV use; ESV and NIV stay off until then (D-006)
 - [ ] Scripture lookup from a public-domain translation file so references are never invented
@@ -64,14 +65,14 @@ passes, flipping the video to public.
 - [ ] Telegram (or GitHub issue form) intake so ideas can be sent from a phone
 - [ ] GitHub Actions workflow in a private repository as the scheduler of record: cron at an odd minute, `workflow_dispatch` with idea and publish inputs, FFmpeg install step, state committed back, 25-minute job timeout, Discord or Telegram report; the PC becomes the backup
 
-**Done when:** thirty days unattended with no more than two failed jobs and zero rejected-for-safety
-videos published.
+**Done when:** thirty days unattended, including a full week with the owner's PC switched off, with no
+more than two failed jobs and zero rejected-for-safety videos published.
 
 ## Phase 4 — Rung B and the feedback loop
 
 - [ ] Stock adapter for Pexels (portrait video search, cache by term, allow-list per mood) and Pixabay
 - [ ] Downgrade ladder B → A exercised by a test
-- [ ] Track stage: YouTube Analytics pull on days 1, 3, 7, 28 into `output/metrics.csv`
+- [ ] Track stage: Content ID claim check on day 1; YouTube Analytics pull on days 3, 7, 28 into `output/metrics.csv`
 - [ ] Series scoreboard in the daily summary; the idea generator reads the top series
 
 **Done when:** every pillar has at least five published videos on rung B and the scoreboard shows
@@ -106,4 +107,5 @@ retention per series.
 - [ ] Runbook: what to do when a token expires, a provider changes its price, or a platform changes a rule
 - [ ] Quarterly re-check of every dated claim in `docs/RESEARCH.md` and `docs/DISTRIBUTION.md`
 
-**Done when:** the channel survives a full week with the owner's PC switched off.
+**Done when:** a restore from the backup onto a fresh host publishes a video within a day, and the
+quarterly re-check has run once with its corrections journaled.

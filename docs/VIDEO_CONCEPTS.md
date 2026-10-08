@@ -64,7 +64,7 @@ fetched twice and the monthly budget is never touched.
 a grief prayer) is worse than a brand card. The mitigation is a curated allow-list of search terms per
 mood and a fallback to Rung A when the search returns nothing with the right mood.
 
-### Rung C — AI image with motion (cost: two to thirty cents per video)
+### Rung C — AI image with motion (cost: two to seventy cents per video)
 
 **What the viewer sees.** One generated image per scene in a consistent painterly or soft-photographic
 style (never photoreal people), with a Ken Burns move, and the captions over it.
@@ -102,6 +102,11 @@ video. No video API has a free tier. Prices with dates in `docs/RESEARCH.md` sec
 the clearest disclosure obligation. Reserve it for the hook scene of top-performing series, and never
 let a job depend on it: a failed clip drops the scene to Rung C.
 
+### Rung E — Hybrid (cost: pennies to about half a dollar)
+
+Rung D or C for the hook scene, Rung B elsewhere, Rung A for the scripture or closing card. This is the
+expected steady state once the channel has data on which series earn the spend.
+
 ### Optional rung F — AI presenter (cost: about $1 to $4 per video, deferred)
 
 A lip-synced AI presenter (HeyGen or similar) reads the script to camera. It is the one rung that puts a
@@ -109,16 +114,11 @@ face on a faceless channel, so it is not part of the launch plan. It may suit on
 person speaking to camera beats b-roll; it always needs YouTube's synthetic-media disclosure, and the
 uncanny-valley risk is highest on prayer and grief topics. See `docs/RESEARCH.md` section 11 and D-016.
 
-### Rung E — Hybrid (cost: pennies to dimes)
-
-Rung D or C for the hook scene, Rung B elsewhere, Rung A for the scripture or closing card. This is the
-expected steady state once the channel has data on which series earn the spend.
-
 ## 2. Comparison
 
 | | A brand card | B stock loop | C AI image | D AI video | E hybrid |
 |---|---|---|---|---|---|
-| Marginal cost per video | $0 | $0 | about $0.02 to $0.30 for eight images | about $2.40 to $6.40 on budget models, $25 on the best | pennies to a dollar |
+| Marginal cost per video | $0 | $0 | about $0.02 to $0.72 for eight images | about $2.40 to $6.40 on budget models, $25 on the best | pennies to about half a dollar |
 | External dependency | none | stock API | image API or GPU | video API | mixed |
 | Render time on a laptop | under 1 min | 1 to 2 min | 2 to 5 min | provider-bound | mixed |
 | Disclosure needed | no | no | only if photoreal | usually yes | depends on hook |

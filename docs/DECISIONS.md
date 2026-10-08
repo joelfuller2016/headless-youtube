@@ -79,8 +79,9 @@ zero-cost cloud fallback. `edge-tts` works and is free, but it reaches Microsoft
 unofficial route that Microsoft staff have said may breach their terms for commercial use, and it
 breaks when the Edge endpoint changes, so it is kept for prototyping only. Several open models were
 ruled out because their weights forbid commercial use (XTTS-v2, F5-TTS, Fish Speech), and two hosted
-services are gone or going (PlayHT, Hume). Paid voices with emotion control (OpenAI's
-`gpt-4o-mini-tts`, ElevenLabs Starter) are the phase-6 upgrade; ElevenLabs' free plan is
+services are gone or going (PlayHT, Hume). Paid voices with emotion control (Cartesia Pro at $5 and
+ElevenLabs Creator at $22, both priced in the section 10 cost sheets, with `gpt-4o-mini-tts` as a
+bake-off candidate) are the phase-6 upgrade; ElevenLabs' free plan is
 non-commercial and requires a credit in the title, so it is never used. Sources and prices with dates
 in `docs/RESEARCH.md`. **Reversible:** yes, the voice provider is an interface.
 
@@ -89,8 +90,8 @@ in `docs/RESEARCH.md`. **Reversible:** yes, the voice provider is an interface.
 **Why.** A judge grading its own writer's output is a weak gate, and LLM judges have documented position,
 verbosity and self-enhancement biases, so the judge is a different model family grading one script
 against a rubric with a constrained verdict. Cost is not the constraint: Claude Haiku 5.5 writes a script
-for about $0.0007 and Opus 5.5 for about $0.03, so a month at three videos a day stays under $2 on any
-of them; a free chain (Gemini Flash free tier, OpenRouter free models, a local Ollama model) sits behind
+for about $0.0007 and Opus 5.5 for about $0.03, so a month costs under $1 on Opus at one video a day and
+about $3 at three a day with a `gpt-5-mini` judge; a free chain (Gemini Flash free tier, OpenRouter free models, a local Ollama model) sits behind
 the same client interface so a quota error never stops the daily post. Prices and sources in
 `docs/RESEARCH.md` section 8.
 

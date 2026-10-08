@@ -1,7 +1,8 @@
 # Prompt: quality judge
 
 Used by the **gate** stage, after the cheap deterministic gates (schema, word count, banned phrases,
-attribution allowlist, profanity, moderation) have passed, with a different model family from the one
+attribution allowlist, safe-messaging lint on heavy topics, distinctness score, profanity, moderation)
+have passed, with a different model family from the one
 that wrote the script, so the judge is not grading its own work and its known biases (position,
 verbosity, self-preference) are limited. It grades one script against the rubric, never two side by
 side. The judge never rewrites; it returns a verdict and reasons. `revise` sends the reasons back to the
@@ -26,7 +27,8 @@ script costs nothing; a published mistake costs trust.
    person who did not say it? If you are not certain a quote is real, fail it.
 3. **Clinical claims.** Any diagnosis, medication advice, cure language, or suggestion that faith replaces
    professional help?
-4. **Sensitivity.** If the topic is suicide, self-harm, abuse or grief: is `sensitivity` set to `high`, is
+4. **Sensitivity.** If the topic is suicide, self-harm, eating disorders, abuse, addiction or acute
+   grief: is `sensitivity` set to `high`, is
    `crisis_resources` true, and is the language safe (no methods, no romanticising, no "you'll be fine")?
 5. **Tone.** Does it sound like a person or like a motivational poster? Flag clichés, hustle language,
    shouting, or anything that could shame the viewer.

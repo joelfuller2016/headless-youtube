@@ -143,7 +143,7 @@
     "description": {
       "type": "string",
       "maxLength": 5000,
-      "description": "Platform description. The publish stage appends crisis resources when safety.crisis_resources is true."
+      "description": "Platform description. The metadata stage appends crisis resources when safety.crisis_resources is true."
     },
     "hashtags": {
       "type": "array",
@@ -202,7 +202,7 @@
             "medium",
             "high"
           ],
-          "description": "high = suicide, self-harm, abuse, grief; triggers stricter language rules and crisis resources."
+          "description": "high = suicide, self-harm, eating disorders, abuse, addiction, acute grief; triggers stricter language rules, crisis resources and owner approval (D-019)."
         },
         "crisis_resources": {
           "type": "boolean"

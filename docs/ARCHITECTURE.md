@@ -49,7 +49,7 @@ flowchart LR
 |---|---|---|---|---|---|
 | 1 | **Intake** | an idea from any source, or nothing (self-feed) | `job.json` with `id`, `idea`, `pillar`, `series`, `source`; `state=queued` | malformed idea | drop with a note |
 | 2 | **Script** | idea, pillar, series, the generator prompt | `title`, `hook`, `scenes[]`, `close`, `description`, `hashtags`, `safety.quotes`; `state=scripted` | JSON invalid after one retry | `failed` |
-| 3 | **Gate** | the script | cheapest first: schema and stop-reason check, word count (125 to 150) and hook length, banned-phrase regex, attribution allowlist match at 0.95, safe-messaging lint on heavy topics, distinctness score (cosine distance to the last 30 scripts with a small local embedding model such as `all-MiniLM-L6-v2`, Apache-2.0, 22.7M parameters, checked on Hugging Face 2026-10-08) above the configured threshold, profanity check, a free moderation call, then the judge on a different model (PASS plus originality of 4 or more); a heavy topic forces `review_mode: approve` for this job (D-019); `safety.judge_verdict`, `judge_notes`; `state=gated` | `reject`, or second `revise` | `failed` + alert |
+| 3 | **Gate** | the script | cheapest first: schema and stop-reason check, word count (125 to 150) and hook length, banned-phrase regex, attribution allowlist match at 0.95, safe-messaging lint on heavy topics, distinctness score (cosine distance to the last 30 scripts with a small local embedding model such as `all-MiniLM-L6-v2`, Apache-2.0, 22.7M parameters, checked on Hugging Face 2026-10-08) above the configured threshold, profanity check, a free moderation call (a flag forces `review_mode: approve` for the job, the same path as D-019), then the judge on a different model (PASS plus originality of 4 or more); a heavy topic forces `review_mode: approve` for this job (D-019); `safety.judge_verdict`, `judge_notes`; `state=gated` | `reject`, or second `revise` | `failed` + alert |
 | 4 | **Voice** | scene texts, voice config | `voice/scene-N.wav` (or one file with marks), word timings when the provider returns them, measured duration (must be 45 to 60 s); `state=voiced` | provider down after retries; duration out of range | next voice provider in the list; a long script goes back to the script stage once with the measured count |
 | 5 | **Visuals** | each scene's `visual` | `visuals/scene-N.mp4` or `.png` at 1080x1920; `render.tier`; `state=visualized` | provider down, budget spent, no stock match | step down the ladder for that scene only |
 | 6 | **Captions** | voice files, word timings (or forced alignment if none) | `captions.ass` with 1 to 3 words per card and the emphasis words highlighted, placed in the middle band because the bottom fifth and the right rail are covered by the platforms' own controls; `state=captioned` | alignment drifts more than 300 ms | fall back to sentence-level captions |
@@ -91,7 +91,7 @@ scene, so one expensive scene can sit next to five cheap ones.
 | B | `stock-clip` | A licensed stock clip or photo, cropped to 9:16, with a slow push or pan | $0 | a stock API key |
 | C | `ai-image` | A generated image for the scene with a Ken Burns move | cents | an image API or a local GPU |
 | D | `ai-video` | A generated 5 to 8 second clip | tens of cents to dollars | a video API |
-| E | hybrid | Any mix; typically C for the hook and B elsewhere | pennies to dimes | both |
+| E | hybrid | Any mix; typically C for the hook and B elsewhere | pennies to about half a dollar | both |
 
 Rules: a scene downgrades when its provider errors twice, when the stock search returns nothing usable,
 or when the budget guard says no. A job's `render.tier` records the highest rung actually used. The hook
@@ -172,7 +172,8 @@ The runner is one process with FFmpeg and Python on the path. It has no GPU requ
 when image generation is an API call, and a host without a GPU can borrow one: a free Hugging Face
 account can call shared ZeroGPU Spaces for five minutes a day through the Gradio API, host two such
 Spaces of its own, or route to fal and Replicate through Inference Providers with one token
-(`docs/RESEARCH.md` section 12). Four shapes, detailed in `docs/PROJECT_PLAN.md`:
+(`docs/RESEARCH.md` section 12). Five shapes, detailed in `docs/PROJECT_PLAN.md` (the PC is Concept 1 there, GitHub Actions Concept 2,
+n8n Concept 3, the always-on box hosts Concept 4, and GPU bursts serve any of them):
 
 1. **Owner's Windows PC** with Task Scheduler (`/ru System`). $0; the development runner and manual
    backup. Sleep, update reboots and password changes skip runs, so it is not the production scheduler.

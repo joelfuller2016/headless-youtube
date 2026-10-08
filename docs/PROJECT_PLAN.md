@@ -92,7 +92,7 @@ another workflow, so there is no recursion), the rendered MP4 is kept as a workf
 to public object storage for the platforms that fetch by URL, and a Discord or Telegram message reports
 each run. Secrets live in the Actions secret store.
 
-**Monthly cost:** $0 (2,000 free minutes a month on a private repository is about 130 ten-minute runs;
+**Monthly cost:** $0 (2,000 free minutes a month on a private repository is about 200 ten-minute runs;
 standard runners are free on a public one). **Catch:** no GPU, so local TTS runs on CPU and image or
 video generation is an API call, a Hugging Face ZeroGPU Space inside the free five minutes a day, or a
 Modal function inside its $30 monthly credit; cron fires late at the top of the hour, so use an odd
@@ -139,8 +139,8 @@ end for the same stages rather than a different destination. Decision D-009.
 | A brand card | branded background, animated captions | $0 | launch |
 | B stock loop | calm real-world clip per scene, captions | $0 | launch |
 | C AI image | generated image per scene with motion | cents | after 30 videos, top series |
-| D AI video | generated 5 to 8 s clips | $0.50 to several dollars | hooks only, after data |
-| E hybrid | D or C for the hook, B elsewhere, A for cards | pennies to dimes | steady state |
+| D AI video | generated 5 to 8 s clips | $0.32 to $0.40 for the hook clip; $2.40 to $6.40 for every scene | hooks only, after data |
+| E hybrid | D or C for the hook, B elsewhere, A for cards | pennies to about half a dollar | steady state |
 
 Full treatment, including the three formats that cost nothing extra (kinetic typography, the letter
 format, the scripture card), in `docs/VIDEO_CONCEPTS.md`.
