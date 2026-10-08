@@ -150,9 +150,12 @@ Full rules in `docs/CONTENT_STRATEGY.md`.
 
 YouTube Shorts first through the Data API: 100 uploads a day in the default quota, scheduled with
 `publishAt`, the made-for-kids and synthetic-media flags set per video, and the compliance audit
-submitted early because unaudited projects' uploads are forced private. TikTok and Instagram next, both
-of which also require an audit or review, through direct APIs or an aggregator (decision D-010). Facts,
-quotas and sources in `docs/DISTRIBUTION.md`.
+submitted early because unaudited projects' uploads are forced private. Phase 5 adds Instagram Reels,
+Facebook Reels, Threads and Bluesky through their own APIs at no cost and with no review for the owner's
+own accounts, with the MP4 served from public object storage behind the owner's domain; TikTok goes
+through Buffer's free plan or a paid aggregator because its audit does not accept personal upload
+tools; Pinterest and LinkedIn follow their paperwork (decision D-010). Facts, quotas and sources in
+`docs/DISTRIBUTION.md`.
 
 ## 9. Phases
 
