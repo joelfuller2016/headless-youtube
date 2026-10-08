@@ -504,3 +504,69 @@ to Whisper for the forced-alignment fallback in section 4.
 licence permits this use; ACE-Step 1.5 quality for calm instrumental beds (its benchmark claims are
 song-oriented); which Spaces stay up, since a Space is someone's hobby unless it belongs to the model's
 authors.
+
+## 6. Other platforms and schedulers (checked 2026-10-08)
+
+**Summary.** Every platform in scope has a free HTTPS publishing API that works from Windows; what decides
+automation is each platform's access rules, not code. Meta's three surfaces are the friendliest for a
+single owner: Instagram Reels through the Instagram-Login flavour of the API needs no Facebook Page and
+Standard Access is enough for your own professional account; Facebook Reels post to a Page; Threads
+publishes with no App Review once the owner is added as a tester. All three fetch the MP4 from a public
+URL, so the pipeline needs public object storage. Bluesky needs no registration at all. Pinterest and
+LinkedIn are automatable but gated by paperwork. TikTok is the real blocker: unaudited apps post
+privately only, and TikTok's own guidelines list "a utility tool to help upload contents to the
+account(s) you or your team manages" as unacceptable for the audit, so a personal headless tool should
+not expect to pass. The cheapest way to make TikTok hands-off is an aggregator with pre-approved apps.
+
+### Direct platform APIs
+
+| Platform | Access for one owner | Daily ceiling | Video rules | Catch | Source |
+|---|---|---|---|---|---|
+| **Instagram Reels** | Instagram API with Instagram Login: professional account, **no Facebook Page needed**, Standard Access suffices "if the app only serves your Instagram professional account"; scopes `instagram_business_basic`, `instagram_business_content_publish` | 100 API posts per 24 h (the carousel section says 50) | MP4 or MOV, `moov` first, H.264 or HEVC, AAC 48 kHz, 23 to 60 fps, max 1920 wide, 9:16 recommended, 3 s to 15 min, 300 MB | the video is fetched from a public URL; long-lived tokens last 60 days, so a refresh job is needed | [Overview](https://developers.facebook.com/docs/instagram-platform/overview), [Instagram Login](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login), [Content publishing](https://developers.facebook.com/docs/instagram-platform/content-publishing) |
+| **Facebook Reels** | Page access token with `pages_show_list`, `pages_read_engagement`, `pages_manage_posts`; Pages only | 30 API-published Reels per 24 h | 9:16, 1080x1920, 24 to 60 fps, **3 to 90 s**, H.264 or HEVC, closed GOP 2 to 5 s, AAC 48 kHz | a hosted `file_url` must allow the `facebookexternalhit/1.1` user agent; scheduling 10 minutes to 29 days ahead | [Reels publishing](https://developers.facebook.com/docs/video-api/guides/reels-publishing) |
+| **Threads** | Meta app with the Threads use case; add yourself as a **Threads Tester** and publish without App Review; `threads_basic`, `threads_content_publish` | 250 posts per 24 h | MP4 or MOV, max 1920 wide, 9:16 recommended, up to 300 s, 1 GB | fetched from a public URL; wait about 30 s after creating the container; tokens 60 days | [Posts](https://developers.facebook.com/docs/threads/posts), [Get started](https://developers.facebook.com/docs/threads/get-started) |
+| **Bluesky** | open protocol, no app registration or review; email-verified account | 25 videos and 10 GB a day at launch (September 2024), "we may tweak this limit"; check `getUploadLimits` | `video/mp4` up to 300 MB, aspect ratio required, up to 20 VTT caption files | upload goes to `video.bsky.app` with a service-auth token | [Video tutorial](https://raw.githubusercontent.com/bluesky-social/bsky-docs/main/docs/tutorials/video.mdx), [embed.video lexicon](https://raw.githubusercontent.com/bluesky-social/atproto/main/lexicons/app/bsky/embed/video.json), [launch post](https://bsky.social/about/blog/09-11-2024-video) |
+| **TikTok** | Direct Post needs an audited app; unaudited apps post `SELF_ONLY` with at most 5 posting users per 24 h; the Upload (inbox) route needs no audit but a human must open the inbox notification and finish the post | about 15 posts a day per creator across all clients; 6 requests a minute per token | MP4 preferred, 23 to 60 fps, 360 to 4096 px, 4 GB | the [content sharing guidelines](https://developers.tiktok.com/doc/content-sharing-guidelines) list "a utility tool to help upload contents to the account(s) you or your team manages" as unacceptable; app review needs a demo video, a public website with privacy and terms pages, and "must not be for private or personal use"; `PULL_FROM_URL` needs a verified domain with no redirects | [Get started](https://developers.tiktok.com/doc/content-posting-api-get-started), [Upload](https://developers.tiktok.com/doc/content-posting-api-get-started-upload-content), [App review](https://developers.tiktok.com/doc/app-review-guidelines), [Direct Post](https://developers.tiktok.com/doc/content-posting-api-reference-direct-post) |
+| **Pinterest** | Trial access by application; **Trial Pins are sandbox entities visible only to their creator**; Standard access needs a demo video of the OAuth flow "even if you are the only intended user" and an app tied to a Business account | per-day app limit on Trial, unspecified | MP4, MOV or M4V, 4 s to 15 min, 2 GB, 9:16 recommended | apps registered on or after 2026-09-14 may be refused for non-business users | [Access tiers](https://developers.pinterest.com/docs/key-concepts/access-tiers/), [FAQ](https://community.pinterest.biz/t/frequently-asked-questions-pinterest-api/2083), [Product specs](https://help.pinterest.com/en/business/article/pinterest-product-specs) |
+| **X** | pay-per-usage credits only: $0.015 per post create ($0.20 if the post contains a URL), $20 of starter credit with a saved card; no free tier for new developers | 3 million post reads a cycle before Enterprise | | needs a card; media upload cost not stated on the pricing page; even aggregators now require your own X app | [Pricing](https://docs.x.com/x-api/getting-started/pricing), [About](https://docs.x.com/x-api/getting-started/about-x-api) |
+| **LinkedIn** | "Share on LinkedIn" (`w_member_social`, legacy `ugcPosts`, doc last updated 2023-12-14) for a personal profile, or the Community Management API Development tier (500 calls an app a day, 100 a member, 12 months to finish integration) | 150 requests a member a day on the legacy path | 3 s to 30 min, up to 500 MB on the spec page | versioned headers required; the 202510 API version sunsets 2026-10-15 | [Share on LinkedIn](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/share-on-linkedin), [Access tiers](https://learn.microsoft.com/en-us/linkedin/marketing/increasing-access), [Videos API](https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/videos-api) |
+
+### Schedulers and aggregators
+
+| Service | Price | TikTok without your own audited app | API | Notes | Source |
+|---|---|---|---|---|---|
+| [Postiz](https://github.com/gitroomhq/postiz-app) self-hosted | free, AGPL-3.0; Postgres, Redis and storage on your box | **no**: its TikTok provider forces `SELF_ONLY` until TikTok audits *your* app | yes, 90 requests an hour by default | 36.9k stars, v2.25.0 on 2 Oct; "you create your own developer apps on each platform and go through their approval (Meta, YouTube, TikTok can take weeks)"; Cloud from $29 a month uses pre-approved apps | [README](https://github.com/gitroomhq/postiz-app), [TikTok provider](https://docs.postiz.com/providers/tiktok), [Public API](https://docs.postiz.com/public-api), [Cloud pricing](https://postiz.com/pricing) |
+| [Mixpost](https://mixpost.app/pricing) | Lite free (MIT) but only Facebook Pages, X and Mastodon; Pro $299 one-time for Instagram, YouTube, TikTok, Pinterest, Threads, Bluesky, LinkedIn and an API | no, same constraint | Pro and up | Laravel app; TikTok direct post "may require an additional audit" | [Pricing](https://mixpost.app/pricing), [TikTok guide](https://docs.mixpost.app/services/social/tik-tok/), [API](https://docs.mixpost.app/api/) |
+| [Buffer](https://buffer.com/pricing) | Free: 3 channels, 10 queued posts a channel, API key with 3,000 requests a month; Essentials $5 a channel a month | **yes**, Buffer's own approved apps | yes | channels include TikTok, Instagram, Facebook, YouTube Shorts, Threads, Pinterest, Bluesky, LinkedIn, X; one post a day through the API keeps the queue under ten. **The $0 TikTok bridge.** | [Pricing](https://buffer.com/pricing) |
+| [upload-post](https://www.upload-post.com/llms-full.txt) | Free 10 uploads a month without TikTok; Basic $24 a month ($16 annual) unlimited uploads, 5 profiles, 22 platforms | **yes**: "no TikTok developer app or audited-client review needed" and no Meta app review either | yes, one REST call with the file or a URL | the service MoneyPrinterTurbo uses; Make users report occasional unknown final status on heavy files | same |
+| [Blotato](https://www.blotato.com/pricing) | Starter $29 a month: 20 accounts, up to 900 TikTok posts a month, API, n8n and Make nodes, hosted MCP | yes | yes | markets itself as avoiding "OAuth apps to get approved" | same |
+| [Ayrshare](https://www.ayrshare.com/pricing/) | Premium $149 a month (1 profile, 14 networks, unlimited posts) | yes, except X now needs your own app | yes | TikTok caps apply (6 a minute, 15 a day) | [Pricing](https://www.ayrshare.com/pricing/), [TikTok notes](https://www.ayrshare.com/docs/apis/post/social-networks/tiktok) |
+| [Publer](https://publer.com/help/en/article/what-are-publers-plans-and-pricing-15h4yqh/) | Free: 3 accounts, 10 pending posts an account; Professional from $5 an account | yes | only for eligible Business customers | no API on the free plan | same |
+| [Metricool](https://metricool.com/pricing/) | Free: 1 brand, 20 posts a month, no LinkedIn or X; Starter from $20 | yes | only on Advanced and above | the free plan is ten posts short of daily | same |
+| [Later](https://later.com/pricing/), [SocialBee](https://socialbee.com/pricing/) | from $18.75 and $29 a month; no free plan | yes | none mentioned | | same |
+| [Repurpose.io](https://repurpose.io/pricing) | $35 a month; 10 free videos to try | yes | none mentioned | drop an MP4 in Google Drive or Dropbox and it fans out | same |
+| [Zapier](https://zapier.com/pricing), [Make](https://www.make.com/en/pricing) | free tiers of 100 tasks and 1,000 credits a month | **no native TikTok publishing** on either; Make's TikTok app has ads actions only | | glue only, around Buffer or an aggregator | [Make TikTok app](https://www.make.com/en/integrations/tiktok) |
+
+### What this section decides (D-010 resolved)
+
+- **One master file for every platform:** MP4, H.264 and AAC 48 kHz, 1080x1920, 30 fps, closed GOP, `moov`
+  first, 3 to 60 s, under 100 MB. That fits inside every limit above at once.
+- **Phase 5, $0 and fully automatic:** direct adapters for Instagram Reels (Instagram Login flavour,
+  Standard Access), Facebook Reels (the owner's Page), Threads (tester role) and Bluesky. Each rendered
+  file goes to public HTTPS object storage behind a domain the owner controls, because Meta fetches by
+  URL and TikTok needs a verified domain later.
+- **TikTok:** do not plan on passing the Direct Post audit with a personal tool. Use Buffer's free plan
+  (its own approved app, 3 channels, one post a day keeps the queue under ten) as the $0 bridge, or
+  upload-post Basic at $24 a month when the budget guard allows. The inbox route is the fallback if a
+  daily tap is acceptable.
+- **Pinterest and LinkedIn:** phase 5b, after the paperwork (a one-minute OAuth demo video and a Business
+  account for Pinterest; the self-serve share product or the Development tier for LinkedIn).
+- **X:** skipped until there is a reason; it is cheap but needs a card and has the least reach for
+  vertical video.
+- **A distribution ledger** in the runner: per-platform daily counters (Instagram 100, Facebook 30,
+  Threads 250, TikTok 15, Bluesky 25), a 60-day Meta token refresher, the Threads 30-second wait, and
+  every remote post id, so a re-run never double-posts.
+
+**Open questions.** How long a TikTok audit takes and whether a channel with a public website could pass
+(third-party claims only); whether the legacy LinkedIn share product is still granted to new apps;
+Instagram's 100 versus 50 daily limit; Bluesky's current API-enforced limits (call `getUploadLimits`).

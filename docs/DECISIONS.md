@@ -16,7 +16,7 @@ recommendation is pending evidence.
 | D-007 | Phase 1 voice: Kokoro-82M locally as primary, Google Cloud TTS free tier as fallback; `edge-tts` for prototyping only | Proposed | 2026-10-08 |
 | D-008 | Script model and judge model are different models | Proposed | 2026-10-08 |
 | D-009 | Phase 1 and 2 run on the owner's Windows PC from Task Scheduler; GitHub Actions is the phase-3 option | Proposed | 2026-10-08 |
-| D-010 | Platforms beyond YouTube go through an aggregator or scheduler unless a direct API is cheap to keep | Open | 2026-10-08 |
+| D-010 | Phase 5 publishes directly to Instagram Reels, Facebook Reels, Threads and Bluesky at $0; TikTok goes through Buffer's free plan (or upload-post at $24 a month); Pinterest and LinkedIn after their paperwork; X skipped | Proposed | 2026-10-08 |
 | D-011 | `review_mode` defaults to `none`; `notify` for the first two weeks | Proposed | 2026-10-08 |
 | D-012 | Budget caps: $0 for phases 1 to 4, up to $25 a month in phase 5, up to $100 a month in phase 6 | Proposed | 2026-10-08 |
 | D-013 | No voice cloning of the owner in v1 | Proposed | 2026-10-08 |
@@ -95,12 +95,17 @@ YouTube's `publishAt` means it does not have to be awake at publish time. GitHub
 step when the PC stops being reliable, with the caveat that scheduled workflows in a public repo switch
 off after 60 days without repository activity (the journal commits count as activity).
 
-## D-010 Aggregator or direct APIs (open)
+## D-010 Direct APIs where they are free, an aggregator only for TikTok
 
-**Options.** Direct TikTok and Instagram APIs both require an app audit or review and, for Instagram, a
-public URL for the file. A self-hosted scheduler (Postiz or Mixpost) or a paid aggregator removes the
-per-platform integration work but may still need the owner's own app credentials on some platforms.
-**Recommendation pending** the comparison in `docs/RESEARCH.md`.
+**Why.** The comparison in `docs/RESEARCH.md` section 6 showed that Instagram Reels (through the
+Instagram-Login flavour, which needs no Facebook Page and no App Review for the owner's own account),
+Facebook Reels, Threads (tester role) and Bluesky can all be published to by a personal app for nothing
+and with no review, provided the MP4 sits at a public URL. TikTok cannot: unaudited apps post privately,
+and TikTok's guidelines name personal upload utilities as unacceptable for the audit, so a self-hosted
+scheduler with the owner's own TikTok app would stay private too. Buffer's free plan uses Buffer's own
+approved TikTok app and allows one post a day within its queue cap, so it is the $0 bridge; upload-post
+Basic ($24 a month) is the paid one. Pinterest and LinkedIn wait for their paperwork, X is skipped.
+**Reversible:** yes; adapters are independent.
 
 ## D-011 Review mode
 

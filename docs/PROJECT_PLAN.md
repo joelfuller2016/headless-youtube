@@ -111,8 +111,8 @@ the owner who wants to see the pipeline rather than read logs.
 
 The same pipeline with paid providers behind the expensive stages: a premium TTS voice, AI images on
 every scene and an AI video clip on the hook, and a paid aggregator that posts to YouTube, TikTok,
-Instagram, Facebook and Pinterest from one upload and handles their app audits. Hosted on a small VPS so
-the PC is out of the loop.
+Instagram, Facebook and Pinterest from one upload and handles their app audits (upload-post at $24 a
+month or Blotato at $29). Hosted on a small VPS so the PC is out of the loop.
 
 **Monthly cost:** roughly $50 to $120 at one video a day, dominated by the aggregator and AI video; the
 exact line items and their dates are in `docs/RESEARCH.md`. **Catch:** every paid provider is a

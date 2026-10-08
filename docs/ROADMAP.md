@@ -70,11 +70,14 @@ retention per series.
 
 ## Phase 5 — More platforms
 
-- [ ] Decide D-010 from the comparison in `docs/RESEARCH.md`
-- [ ] Public hosting for the MP4 for a few minutes (release asset or object storage) if direct APIs are used
-- [ ] TikTok adapter (or aggregator) and the TikTok audit; Instagram and Facebook Reels next
+- [x] Decide D-010 from the comparison in `docs/RESEARCH.md` (direct Meta and Bluesky adapters; Buffer for TikTok)
+- [ ] Public HTTPS object storage behind a domain the owner controls, with a short-lived copy per publish
+- [ ] Meta app with the Instagram Login flavour (professional account, Standard Access), the owner's Facebook Page, and the Threads tester role
+- [ ] Adapters: Instagram Reels, Facebook Reels, Threads, Bluesky; distribution ledger with daily counters, token refresh and remote ids
+- [ ] Buffer free plan connected for TikTok, posting one a day through its API; upload-post as the paid alternative
 - [ ] Per-platform metadata rules from `docs/DISTRIBUTION.md`
 - [ ] Budget guard live, cap $25 a month
+- [ ] Phase 5b: Pinterest Trial then Standard (demo video, Business account); LinkedIn share product
 
 **Done when:** one upload fans out to at least three platforms automatically for fourteen days.
 

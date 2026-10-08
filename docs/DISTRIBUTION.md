@@ -156,8 +156,16 @@ Checked 2026-10-08 against TikTok for Developers.
   the video to the user's inbox as a draft). Source:
   [Content Posting API, get started](https://developers.tiktok.com/doc/content-posting-api-get-started).
 - **"All content posted by unaudited clients will be restricted to private viewing mode."** To lift it,
-  the API client must pass an audit. Same source. Same shape as the YouTube trap, so the plan treats TikTok
-  as phase 2 and submits the audit as soon as the app works.
+  the API client must pass an audit. Same source. Unaudited clients may also have at most 5 posting users
+  per 24 hours, each token is limited to 6 requests a minute, and a creator can post about 15 times a
+  day across all clients. The [content sharing guidelines](https://developers.tiktok.com/doc/content-sharing-guidelines)
+  list "a utility tool to help upload contents to the account(s) you or your team manages" as
+  unacceptable, and [app review](https://developers.tiktok.com/doc/app-review-guidelines) requires a
+  demo video and a public website and says apps "must not be for private or personal use". So a
+  personal pipeline should not expect to pass the audit. The Upload (inbox) route needs no audit, but the
+  creator must open the inbox notification and finish the post by hand
+  ([Upload guide](https://developers.tiktok.com/doc/content-posting-api-get-started-upload-content)).
+  Decision D-010: TikTok goes through Buffer's free plan or a paid aggregator with its own approved app.
 - Video limits: MP4 preferred (H.264), up to 4 GB, 23 to 60 fps, 360 to 4096 pixels on each side; all
   creators can post 3-minute videos. Pulling from a URL requires a **verified domain** that the developer
   owns; uploading the file bytes avoids that. Source:
@@ -168,25 +176,40 @@ Checked 2026-10-08 against TikTok for Developers.
 Checked 2026-10-08 against Meta for Developers.
 
 - Reels are published by creating a media container with `media_type=REELS` and a **`video_url` on a public
-  server**, then publishing it. The account must be an Instagram professional account; with Facebook Login
-  it must be connected to a Facebook Page. Permissions: `instagram_business_content_publish` (Instagram
-  Login) or `instagram_content_publish` plus `instagram_basic` and `pages_read_engagement` (Facebook
-  Login), with Advanced or Standard Access. Source:
-  [Content publishing](https://developers.facebook.com/docs/instagram-platform/content-publishing).
+  server**, then publishing it. The account must be an Instagram professional account. With the
+  **Instagram Login** flavour of the API no Facebook Page is needed and **Standard Access is enough when
+  the app only serves your own professional account**, so no App Review; with Facebook Login the account
+  must be connected to a Page. Permissions: `instagram_business_basic` and
+  `instagram_business_content_publish` (Instagram Login) or `instagram_content_publish` plus
+  `instagram_basic` and `pages_read_engagement` (Facebook Login). Long-lived tokens last 60 days, so the
+  runner refreshes them. Sources:
+  [Content publishing](https://developers.facebook.com/docs/instagram-platform/content-publishing),
+  [Instagram Login](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login),
+  [Overview](https://developers.facebook.com/docs/instagram-platform/overview).
 - **100 API-published posts per 24 hours**, checkable via the `content_publishing_limit` endpoint. Same
   source.
 - Reels spec: MP4 or MOV, H.264 or HEVC, 23 to 60 fps, max width 1920, 9:16 recommended, AAC audio,
   3 seconds to 15 minutes, 300 MB. Source:
   [IG User Media reference](https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media).
-- Design consequence: the pipeline needs somewhere public to host the MP4 for a few minutes (a GitHub
-  release asset, an S3 or R2 bucket, or the scheduler's own storage). Facebook Reels use the same public
-  URL pattern through the Pages API. Both are phase 2.
+- Facebook Reels publish to a Page with `pages_manage_posts`, 30 API-published Reels per 24 hours,
+  **3 to 90 seconds**, 1080x1920 recommended; a hosted `file_url` must allow the `facebookexternalhit/1.1`
+  user agent. Source: [Reels publishing](https://developers.facebook.com/docs/video-api/guides/reels-publishing).
+- Threads publishes from the same Meta app once the owner is added as a Threads Tester, with no App
+  Review, 250 posts per 24 hours, videos up to 300 seconds fetched from a public URL. Source:
+  [Threads posts](https://developers.facebook.com/docs/threads/posts).
+- Design consequence: the pipeline needs public HTTPS object storage behind a domain the owner controls
+  (Cloudflare R2 or Azure Blob with a custom domain), because Meta fetches by URL and TikTok's pull
+  route needs a verified domain. All of this is phase 5.
 
 ## 4. Everything else
 
-Pinterest, X, LinkedIn, Threads, Bluesky and the scheduler and aggregator comparison (self-hosted Postiz
-and Mixpost, Buffer, Metricool, Publer, Ayrshare, upload-post, Blotato) are covered with prices and links
-in `docs/RESEARCH.md` under *Distribution*, and the choice for phase 2 is recorded in `docs/DECISIONS.md`.
+Bluesky needs no registration (MP4 up to 300 MB, 25 videos a day at launch). Pinterest's trial tier
+makes Pins visible only to their creator until a Standard upgrade that requires a demo video and a
+Business account. X is pay-per-use at $0.015 a post with a card on file. LinkedIn is free but gated by
+tiers. The scheduler and aggregator comparison (Postiz, Mixpost, Buffer, upload-post, Blotato, Ayrshare,
+Publer, Metricool, Later, SocialBee, Repurpose, Zapier, Make) is in `docs/RESEARCH.md` section 6, and
+the choice is D-010 in `docs/DECISIONS.md`: direct adapters for the Meta surfaces and Bluesky, Buffer's
+free plan as the TikTok bridge.
 
 ## 5. Per-platform metadata rules the metadata stage applies
 

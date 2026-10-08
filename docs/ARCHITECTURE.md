@@ -132,6 +132,13 @@ Captions are the product at the $0 tier, so they get their own stage.
 Each platform is an adapter with the same three methods: `authenticate`, `upload(job) -> remote_id`,
 `status(remote_id)`. Adapters are independent; a TikTok failure never blocks YouTube.
 
+A **distribution ledger** sits under every adapter: per-platform daily counters (Instagram 100,
+Facebook 30, Threads 250, TikTok 15, Bluesky 25, YouTube 100), token expiry dates with a refresh job
+(Meta's long-lived tokens last 60 days), the platform-specific waits (Threads asks for about 30 seconds
+between creating and publishing a container), and every remote post id, so a re-run never double-posts.
+Rendered files that a platform fetches by URL are copied to public object storage behind the owner's
+domain for the few minutes the publish takes.
+
 Two ways to reach the long tail of platforms, both designed in:
 
 - **Direct APIs** for the platforms that matter most and whose APIs are workable for a single developer
