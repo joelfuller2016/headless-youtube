@@ -26,7 +26,8 @@ pocket change, and built so it keeps running when the owner is busy living his o
 **Non-goals**
 
 - Selling anything. No products, no courses, no affiliate links.
-- A web dashboard, a database, comment management, or voice cloning in version one.
+- A web dashboard, a database, comment management (beyond posting the crisis block as a first comment
+  and a one-time hold-for-review setting), or voice cloning in version one.
 - Chasing monetisation. The channel complies with monetisation rules because that is the same as being
   good, not because it needs the money.
 

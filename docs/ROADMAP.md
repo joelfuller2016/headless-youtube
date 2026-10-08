@@ -30,7 +30,8 @@ acceptance test and is not negotiable by the person doing the work.
 - [ ] `tests/`: schema test, golden render of `examples/sample-script.json`
 
 **Done when:** `hy new` followed by `hy run` turns the sample idea into a 50 to 60 second MP4 on the
-owner's Windows PC in under two minutes, with no network call except the LLM.
+owner's Windows PC in under two minutes, with no network calls except the model, judge and moderation
+endpoints.
 
 ## Phase 2 — YouTube, unattended
 
@@ -46,7 +47,7 @@ owner's Windows PC in under two minutes, with no network call except the LLM.
 
 **Done when:** seven consecutive days of automatic uploads with no manual step except, until the audit
 passes, flipping the video to public.
-- [ ] Comment safety on heavy videos: YouTube hold-for-review with the crisis keyword list, the resource block as the pinned first comment, a daily owner sweep; the bot never replies to a crisis comment
+- [ ] Comment safety on heavy videos: hold-for-review with the crisis keyword list set once in Studio, the resource block posted as the first comment by the API and pinned by the owner at approval, a daily owner sweep; the bot never replies to a crisis comment
 
 ## Phase 3 — The content system
 

@@ -16,7 +16,7 @@ struggles, job stress, and ordinary hard days.
 - Series format: `{{series}}` — `{{series_description}}`
 - Idea from the owner: "{{idea}}"
 - Target: `{{target_words}}` words spoken in total (the band is 125 to 150 for a 50-second video at
-  about 2.5 words a second), hook under nine words, each body scene 30 to 40 words.
+  about 2.5 words a second), hook under nine words, each body scene 30 to 40 words. The `hook` field is the first sentence of scene 1, repeated verbatim; do not speak it twice.
 - Voice: one narrator, second person ("you"), present tense.
 - Recent hooks to avoid repeating: `{{recent_hooks}}`
 - Fill `original_angle` with the one concrete perspective this video takes that the recent videos did not.
@@ -41,7 +41,7 @@ struggles, job stress, and ordinary hard days.
 7. **Visual prompts** describe what to show, never text to render. Prefer calm, natural, human scenes.
    Set `visual.type` to `{{default_visual_type}}` unless a scene truly needs a brand card.
 8. **Titles** are under 70 characters, say who it is for, and never use clickbait words.
-9. **Hashtags**: 6 to 10, lowercase, no spaces, always including `#shorts`.
+9. **Hashtags**: 3 to 5, lowercase, no spaces, always including `#shorts`.
 
 ## Output
 

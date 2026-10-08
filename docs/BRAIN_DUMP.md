@@ -47,11 +47,12 @@ against the source. Everything below the first section is interpretation and can
 
 | Question | Assumption used in the plan | Change it in |
 |---|---|---|
-| Which platforms beyond YouTube? | YouTube Shorts first, then TikTok, Instagram Reels, Facebook Reels, Pinterest. | `docs/DISTRIBUTION.md` |
+| Which platforms beyond YouTube? | YouTube Shorts first; then Instagram, Facebook, Threads and Bluesky directly, TikTok through Buffer's free plan, Pinterest deferred (D-010). | `docs/DECISIONS.md` |
 | How often? | One video per day to start; the pipeline must not care. | `docs/PROJECT_PLAN.md` |
 | Voice: male, female, Joel's own cloned voice? | One consistent AI voice chosen once; cloning is a later option. | `docs/DECISIONS.md` |
 | How explicitly Christian? | Faith-forward but welcoming: scripture and prayer appear, never preachy, never partisan. | `docs/CONTENT_STRATEGY.md` |
-| Does Joel want to approve videos before they post? | No, by default (100 percent automated), but a one-tap approval mode is designed in as an optional gate. | `docs/ARCHITECTURE.md` |
+| Does Joel want to approve videos before they post? | No, by default (100 percent automated): `notify` for the first two weeks (D-011), then `none`; heavy-topic videos always wait for approval (D-019). | `docs/DECISIONS.md` |
+| What does "succeed in life" mean here? | Progress and small wins, not money or hustle; it lives in the Hope and job pillars, and financial advice is banned. | `docs/CONTENT_STRATEGY.md` |
 | Where does it run? | Joel's Windows PC or GitHub Actions at the $0 tier; a small VPS or n8n later. | `docs/PROJECT_PLAN.md` |
 | Monetization? | Not a goal. The plan still avoids anything that would block it later. | `docs/DISTRIBUTION.md` |
 

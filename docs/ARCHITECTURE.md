@@ -54,12 +54,14 @@ flowchart LR
 | 5 | **Visuals** | each scene's `visual` | `visuals/scene-N.mp4` or `.png` at 1080x1920; `render.tier`; `state=visualized` | provider down, budget spent, no stock match | step down the ladder for that scene only |
 | 6 | **Captions** | voice files, word timings (or forced alignment if none) | `captions.ass` with 1 to 3 words per card and the emphasis words highlighted, placed in the middle band because the bottom fifth and the right rail are covered by the platforms' own controls; `state=captioned` | alignment drifts more than 300 ms | fall back to sentence-level captions |
 | 7 | **Render** | visuals, voice, captions, music bed, brand bumpers | `final.mp4` (1080x1920 after scaling or padding visuals that arrive smaller, since no generator emits that size natively; 30 fps, H.264, AAC, loudness normalised), `thumb.jpg`, `render.actual_duration_s`, `render.cost_usd`; `state=rendered` | duration over the platform limit, silent gap, FFmpeg error | trim close, re-render once |
-| 8 | **Metadata** | title, description, hashtags, safety flags | per-platform title/description with crisis resources appended when `crisis_resources` is true and the same block queued as the pinned first comment, the two standing footer lines, AI-disclosure flags; `state=ready` | title over 100 chars | truncate at a word boundary |
+| 8 | **Metadata** | title, description, hashtags, safety flags | per-platform title/description with crisis resources appended when `crisis_resources` is true and the same block posted as the first comment after upload through `commentThreads.insert` (50 units; the Data API cannot pin a comment, so pinning is on the owner's approval checklist), the two standing footer lines, AI-disclosure flags; `state=ready` | title over 100 chars | truncate at a word boundary |
 | 9 | **Publish** | `final.mp4`, metadata, platform config | `publish.<platform>.{status, remote_id, url, scheduled_for}`; `state=published` when every enabled platform is `published` or `scheduled` | platform quota, auth expiry, upload error | retry per platform; others proceed |
 | 10 | **Track** | remote ids, days 3, 7, 28 (YouTube's reports omit the most recent days) | `metrics.json` and a row in `output/metrics.csv`; on day 1 also the Content ID claim status of the YouTube upload; `state=tracked` | analytics API error; a claim that blocks the video | retry next day; on a claim, replace the track from the licensed library or file the stored dispute text, and alert |
 
 Two side states exist: `failed` (terminal, owner alerted, job kept for inspection) and `awaiting-approval`
-(only in `approve` review mode; a timeout can either publish or fail, by config).
+(only in `approve` review mode; on timeout the job fails by default, a config switch may let an ordinary job
+publish instead, and a job routed by the heavy-topic gate ignores that switch: it can only fail or keep
+waiting, never publish, per D-019).
 
 ### What the runner does
 
@@ -162,7 +164,7 @@ All sources produce the same thing: an idea string, an optional pillar and serie
 | Google Sheet | an Apps Script trigger opens an issue when a row's status is `ready` | planning a week at once |
 | Email to a label | the runner polls the label via IMAP or the Gmail API and opens an issue | low-tech |
 | Notion, Airtable, forms | through a small relay (a Cloudflare Worker calling `repository_dispatch`) or polling | only if already in use |
-| Self-feed | once a day when no human idea is pending: pillar by weekday, five candidates, one chosen by diversity against the last 60, opened as an issue | 100 percent automation |
+| Self-feed | once a day when no human idea is pending: the pillar rotation and calendar hooks from `docs/CONTENT_STRATEGY.md` section 2, the last 30 ideas shown to the generator, one idea returned, the distinctness gate as the diversity check; opened as an issue | 100 percent automation |
 
 ## 8. Hosting shapes
 
@@ -189,8 +191,9 @@ Spaces of its own, or route to fal and Replicate through Inference Providers wit
 - One log line per stage per job with elapsed time and cost; `output/metrics.csv` for the feedback loop.
 - A daily summary message (Telegram, Discord webhook or email): jobs made, published, failed, spend to date.
 - A `PAUSE` file (or env var) stops publishing but keeps rendering, for when something looks wrong.
-- `review_mode=approve` posts the rendered video to the owner and waits for a reaction; the timeout
-  behaviour is configurable.
+- `review_mode=approve` posts the rendered video to the owner and waits for a reaction; on timeout the
+  job fails by default, and the switch that lets it publish instead never applies to a heavy-topic job
+  (D-019).
 
 ## 10. Repository layout once code exists
 
@@ -219,4 +222,6 @@ not a requirement.
 - No web dashboard in version one. The job folders and the daily summary are the dashboard.
 - No database. The job files and one CSV are enough until there are thousands of videos.
 - No voice cloning of the owner in version one; a consistent licensed AI voice is simpler and safer.
-- No comment replies or community management; that is a different product.
+- No comment replies or community management; that is a different product. The only comment features
+  are posting the crisis block as the first comment on heavy videos and the one-time Studio
+  hold-for-review setting.

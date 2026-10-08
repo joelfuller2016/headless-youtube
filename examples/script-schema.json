@@ -148,7 +148,7 @@
     "hashtags": {
       "type": "array",
       "minItems": 3,
-      "maxItems": 15,
+      "maxItems": 5,
       "items": {
         "type": "string",
         "pattern": "^#[A-Za-z0-9_]+$"

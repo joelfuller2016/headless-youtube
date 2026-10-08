@@ -30,8 +30,9 @@ script costs nothing; a published mistake costs trust.
    `crisis_resources` true, and is the language safe (no methods, no romanticising, no "you'll be fine")?
 5. **Tone.** Does it sound like a person or like a motivational poster? Flag clichés, hustle language,
    shouting, or anything that could shame the viewer.
-6. **Length.** Count the words in `hook` plus every `scenes[].text` plus `close`. Is it within 125 to
-   150 (or within 10 of `targets.words`), and is the hook under nine words?
+6. **Length.** Count the words in every `scenes[].text` plus `close` (the `hook` is the first sentence
+   of scene 1, so it is counted once). Is it within 125 to 150 (or within 10 of `targets.words`), and is
+   the hook under nine words?
 7. **Platform safety.** Anything that could be read as hate, politics, medical misinformation, or a scam?
 8. **Originality.** Does it say something a thousand other channels have not already said this way, and
    does `original_angle` actually show up in the script? Score 1 to 5; below 4 is a `revise`.

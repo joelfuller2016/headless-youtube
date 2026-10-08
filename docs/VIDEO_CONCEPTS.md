@@ -15,7 +15,9 @@ the numbers justify it. Prices are summarised here and sourced with dates in `do
   YouTube Audio Library's attribution-free tracks (the only music YouTube itself says will not be claimed)
   and Pixabay music (free, no attribution, covers every platform, but contributors can register tracks in
   Content ID, so the licence summary is stored per track for disputes). Fewer distinct tracks means fewer
-  surprise claims. A $10-a-month safelisting subscription replaces this in phase 5. Sources and the
+  surprise claims. A $10-a-month safelisting subscription can replace this in phase 5 only while TikTok rides Buffer Free,
+  because the phase-5 cap of $25 (D-012) does not fit it next to a $24 aggregator; otherwise it waits
+  for phase 6. Sources and the
   claim-check step in `docs/RESEARCH.md` section 4 and `docs/ARCHITECTURE.md`.
 - A 0.3 second brand bumper at the start and an end card that says only "come back tomorrow".
 - The hook scene is the only place the pipeline spends extra; everything after it can be plain.

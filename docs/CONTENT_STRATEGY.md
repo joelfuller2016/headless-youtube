@@ -16,14 +16,15 @@ also what YouTube's inauthentic-content policy is looking for: content made for 
 
 | Pillar | What it covers | Tone rule | Default sensitivity |
 |---|---|---|---|
-| **Hope** | hard seasons, waiting, starting over | gentle, patient, never "everything happens for a reason" | low |
+| **Hope** | hard seasons, waiting, starting over, and succeeding in life the slow way: goals, small wins, progress without hustle | gentle, patient, never "everything happens for a reason" | low |
 | **Prayer** | short prayers for specific moments | second person, spoken to God on the viewer's behalf, plain words | low |
 | **Mental health** | anxiety, depression, burnout, loneliness, grief | never clinical, always "you and a professional", crisis line when heavy | medium or high |
 | **Job and career** | interviews, first weeks, layoffs, bad bosses, imposter feelings | practical warmth, one small action | low |
 | **Encouragement** | "to the person who..." letters, affirmations | specific, concrete images, no hype | low |
 | **Happiness** | gratitude, small joys, rest, relationships | light, slow, never preachy | low |
 
-The self-feeding idea generator rotates through the pillars in that order, one a day, and skips to a
+The self-feeding idea generator rotates through the pillars in that order, one a day (the fixed Sunday and
+Monday series in section 8 take precedence), and skips to a
 calendar hook when one fits (Monday reset, Friday release, Sunday rest, the first of the month,
 World Mental Health Day on 10 October, the week before holidays). Two consecutive days never share a
 pillar unless the owner typed the idea.
@@ -65,7 +66,8 @@ be checked.
   words. The judge counts, and the synthesised audio (45 to 60 seconds, measured with `ffprobe`) is the
   final arbiter; the voice's measured pace feeds back into the budget.
 - **Hook.** The first line names who this is for and the moment. No greeting, no "in this video", no
-  question that can be answered "no".
+  question that can be answered "no". It is the first sentence of scene 1, repeated verbatim in the
+  `hook` field, and the judge counts it once.
 - **Shape.** Hook → three to five scenes of one to three sentences each → close. One idea per scene.
 - **Voice.** Second person, present tense, short sentences, concrete nouns. The narrator is a kind
   friend who has been there, not a coach and not a preacher.
@@ -147,11 +149,12 @@ coping strategies in the video and the description, and avoid naming methods or 
   rejects the rest.
 - **Heavy-topic gate.** A classifier (the judge's `sensitivity` field, checked against a keyword list so
   it cannot be missed) routes suicide, self-harm, eating disorders, abuse, addiction and acute grief to
-  the heavy template: the lint above, the resource block in the description *and* in a pinned first
-  comment (what 988 asks the press to do), and `review_mode: approve` for that one video even when the
-  channel otherwise runs unattended. Decision D-019.
-- **Comment safety.** On heavy videos YouTube's hold-for-review is set with a crisis keyword list, the
-  owner sweeps held comments daily, and the bot never replies to a comment that reads as a crisis;
+  the heavy template: the lint above, the resource block in the description *and* posted as the first
+  comment (the Data API cannot pin a comment, so pinning it is the one item on the owner's approval
+  checklist, which is what 988 asks the press to do), and `review_mode: approve` for that one video even
+  when the channel otherwise runs unattended. Decision D-019.
+- **Comment safety.** YouTube's hold-for-review is set once in Studio with a crisis keyword list (there
+  is no API for it), the owner sweeps held comments daily, and the bot never replies to a comment that reads as a crisis;
   people answer people.
 - **Encouragement, not advice.** The writer is a peer, never a clinician. A 2022 physician review of
   500 TikTok mental-health-advice videos rated 83.7 percent misleading (`docs/RESEARCH.md` section 9); the

@@ -312,7 +312,7 @@ covers every platform: Pixabay, CC BY with the credit, ACE-Step, or ElevenLabs M
 - Render with FFmpeg and a generated ASS file; Remotion only for animated page-style captions.
 - Music: a curated local library of 20 to 30 tracks from the YouTube Audio Library (attribution-free
   filter) and Pixabay, with licence URL and attribution stored per track and written into the job file;
-  Kevin MacLeod only with the credit block templated into the description. Move to a $10-a-month
+  Kevin MacLeod only with the credit block templated into the description. Move, only while TikTok rides Buffer Free and the phase-5 cap of $25 allows it, to a $10-a-month
   safelisting subscription in phase 5 when three platforms are live. For a generated bed per video, ACE-Step
   1.5 (MIT, local, under 4 GB of VRAM; section 12) is the $0 option and ElevenLabs Music the hosted one.
 - Add a post-publish claim check to the track stage: poll each new YouTube video for Content ID claims
@@ -565,7 +565,7 @@ labels is kept from day one so the judge can be re-run whenever the prompt, mode
 |---|---|---|---|
 | **GitHub issue form** (the canonical queue) | a workflow on `issues: opened` parses the body (responses become Markdown under `###` headings), writes the idea file, runs the pipeline, comments the video URL and closes the issue | templates can auto-apply a label; issue-triggered workflows run only from the default branch; the issue body is untrusted and is passed through an environment variable, never inlined into a shell step | [Issue forms](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms) |
 | **Telegram bot** | the runner long-polls `getUpdates` from the PC, so no public endpoint is needed; it opens the same GitHub issue | polling and webhooks are mutually exclusive; undelivered updates are kept 24 hours | [Bot API](https://core.telegram.org/bots/api) |
-| Self-feeding mode | a daily cron job picks the pillar by weekday, asks the writer for five candidate ideas that differ from the last 60, picks one by a diversity score, and opens an issue so it flows through the same gates; a pending human idea takes priority | | |
+| Self-feeding mode | a daily cron job takes the pillar from the rotation and calendar hooks in `docs/CONTENT_STRATEGY.md` section 2, shows the writer the last 30 ideas, takes the one idea it returns, lets the distinctness gate reject a near-repeat, and opens an issue so it flows through the same gates; a pending human idea takes priority | | |
 | Google Sheet | an Apps Script edit trigger posts to the GitHub issues API when a row's status is `ready` | 20,000 URL fetches a day; 6 minutes an execution | [Triggers](https://developers.google.com/apps-script/guides/triggers/installable), [Quotas](https://developers.google.com/apps-script/guides/services/quotas) |
 | Notion, Airtable, Tally | push subscriptions need a public HTTPS endpoint (a small relay such as a Cloudflare Worker that calls `repository_dispatch`), or the runner polls the API | Notion subscriptions are created in the UI and need a public endpoint; `repository_dispatch` payloads are capped at 10 top-level properties | [Notion webhooks](https://developers.notion.com/reference/webhooks) |
 | Email | the runner polls a Gmail label by IMAP or the Gmail API; push watches must be renewed every 7 days and can drop events | | [Gmail push](https://developers.google.com/workspace/gmail/api/guides/push) |
@@ -721,8 +721,8 @@ the notice in the description and, for ESV, the spoken credit.
   promises; a standing description footer says the video is encouragement, not medical advice.
 - A heavy-topic gate: a classifier for suicide, self-harm, eating disorders, abuse, addiction and grief
   routes a script to the heavy template, which runs the safe-messaging lint, requires a help-seeking
-  close, adds the crisis block to the description and the pinned first comment, and holds the video in
-  `approve` mode. Comments on those videos are held for review on crisis keywords, and the bot never
+  close, adds the crisis block to the description and posts it as the first comment (the API cannot pin, so the
+  owner pins it at approval), and holds the video in `approve` mode. Comments on those videos are held for review on crisis keywords, and the bot never
   replies to one.
 - Distinctness is measured, not hoped for: a rotation of at least four visual templates, a distinctness
   score (embedding distance to the last 30 scripts) as a deterministic gate, and the originality score in
@@ -754,8 +754,8 @@ the notice in the description and, for ESV, the spoken credit.
 Every unit price here was read on the linked page on 2026-10-08 in the section cited; the one price this
 section adds (Cloudflare R2) was read the same day. The sheets assume one video a day (30 a month) and show
 what changes at three a day (90). One video is a 55-second short with a 140-word script, which is about
-700 characters of speech to the voice engine (the sample in `examples/sample-script.json` speaks 156 words
-in 782 characters, counting hook, scenes and close), eight visuals, one hook clip where a clip is used, and one upload per platform.
+700 characters of speech to the voice engine (the sample in `examples/sample-script.json` speaks 129 words
+in 654 characters across its scenes and close), eight visuals, one hook clip where a clip is used, and one upload per platform.
 Nothing below includes electricity, the owner's time, or a domain, because the privacy-policy and terms
 pages the platform app reviews ask for can sit on GitHub Pages at $0.
 

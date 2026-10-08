@@ -42,8 +42,8 @@ Checked 2026-10-08 against Google's developer and help pages.
   [Audit and Quota Extension form](https://developers.google.com/youtube/v3/guides/quota_and_compliance_audits).
   The rule dates from 2020 and nobody has tested it for this project, so phase 2 starts with one real API
   upload to see whether it lands private; the publish stage is built on what that shows. Plan for it: the
-  first videos will land as private until the audit passes, so phase 1 includes submitting that form
-  early. The audit also expects the Required Minimum Functionality for upload clients (title,
+  first videos will land as private until the audit passes, so phase 2 starts by submitting that form
+  (it needs the phase-2 Google Cloud project). The audit also expects the Required Minimum Functionality for upload clients (title,
   description and privacy status settable by the user), which the CLI satisfies. A fallback is to upload as private via the API and publish by hand for a
   few weeks, which still saves most of the work.
 - **Scheduling.** `status.publishAt` schedules a video; it can only be set when `privacyStatus` is
@@ -236,7 +236,7 @@ free plan as the TikTok bridge.
 
 | Platform | Title | Description | Hashtags | AI flag | Schedule |
 |---|---|---|---|---|---|
-| YouTube | ≤100 chars | full description plus crisis resources when flagged, and the same block as a pinned first comment on heavy videos | 3 to 5 in description (YouTube shows three and ignores all of them past 60) | `containsSyntheticMedia` when render tier is D or photoreal C; YouTube's exemption list covers a synthetic voice over stock | `publishAt` with `privacyStatus=private` |
+| YouTube | ≤100 chars | full description plus crisis resources when flagged, and the same block posted as the first comment on heavy videos (`commentThreads.insert`; pinning is manual) | 3 to 5 in description (YouTube shows three and ignores all of them past 60) | `containsSyntheticMedia` when render tier is D or photoreal C; YouTube's exemption list covers a synthetic voice over stock | `publishAt` with `privacyStatus=private` |
 | TikTok | caption only (title field is the caption) | first 100 chars matter | 3 to 5 in caption | TikTok's AI-generated content toggle where the API exposes it; the August 2026 guidelines require it for realistic AI scenes and exempt generic text-to-speech narration (`docs/RESEARCH.md` section 9) | post time chosen by the runner |
 | Instagram | none | caption, first line is the hook | 3 to 5 (Instagram's own advice) | Meta's AI label where exposed; required for photorealistic video or realistic-sounding audio, with penalties stated for not labelling | container then publish; the runner picks the time |
 | Facebook | title | description | 3 to 5 | as Instagram | as Instagram |

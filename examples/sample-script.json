@@ -6,11 +6,11 @@
   "original_angle": "Tired after a first day is not failure; it is the feeling of growing. The prayer asks for one kind coworker and one small win, not for confidence.",
   "source": "manual",
   "title": "A prayer for your first week at a new job",
-  "hook": "If you start a new job this week and you're scared they'll find out you don't belong, this is for you.",
+  "hook": "New job this week, scared you don't belong.",
   "scenes": [
     {
       "index": 1,
-      "text": "If you start a new job this week and you're scared they'll find out you don't belong, this is for you.",
+      "text": "New job this week, scared you don't belong. This one is for you.",
       "visual": {
         "type": "stock-clip",
         "prompt": "person walking into office building early morning, soft light, from behind",
@@ -49,7 +49,7 @@
     },
     {
       "index": 4,
-      "text": "Give them one kind coworker, one small win, and the courage to ask a question out loud.",
+      "text": "Give them one kind coworker, one small win, and the courage to ask a question out loud before lunch.",
       "visual": {
         "type": "stock-clip",
         "prompt": "two colleagues smiling over coffee in a bright kitchen",
@@ -90,14 +90,11 @@
   "close": "If that was for you, save it for Monday morning. Come back tomorrow, there's one for you then too.",
   "description": "A short prayer for anyone starting a new job and fighting the feeling that they do not belong. You were chosen. Tired is not failing.\n\nNew prayers and encouragement every day.",
   "hashtags": [
+    "#shorts",
     "#prayer",
     "#newjob",
     "#encouragement",
-    "#faith",
-    "#imposter",
-    "#shorts",
-    "#hope",
-    "#mentalhealth"
+    "#faith"
   ],
   "music": {
     "mood": "soft-piano-hopeful"
@@ -122,6 +119,6 @@
   },
   "targets": {
     "duration_s": 55,
-    "words": 140
+    "words": 130
   }
 }
