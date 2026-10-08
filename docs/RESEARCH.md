@@ -96,8 +96,8 @@ card to start, prices not listed) is the agent-first alternative. More in sectio
 
 ## 2. Text-to-speech (checked 2026-10-08)
 
-**Summary.** At 130 to 160 words a video (about 700 to 900 characters) and one to three videos a day,
-roughly 21,000 to 81,000 characters a month, voice is effectively free at every tier. What differs is licence
+**Summary.** At 125 to 150 words a video (about 700 to 800 characters) and one to three videos a day,
+roughly 21,000 to 72,000 characters a month, voice is effectively free at every tier. What differs is licence
 safety, naturalness, emotion control, and whether it runs on a Windows CPU.
 
 | Option | Type | Price | Free allowance | Commercial use | Windows CPU | Notes |
@@ -565,8 +565,8 @@ own voice).
 
 The rules this section supports live in `docs/CONTENT_STRATEGY.md`; this is the evidence behind them. One
 research pass fetched the pages below on 2026-10-08; where a page refused an automated fetch (Biblica,
-HarperCollins, Cambridge, help.instagram.com, most subscriber trackers) the line says "snippet" and the
-claim is weaker.
+HarperCollins, Cambridge, help.instagram.com, vidIQ, Medium, most subscriber trackers) the line says
+"snippet" and the claim is weaker; those links are kept so the reader can open them in a browser.
 
 **Summary.** The faith-and-encouragement Shorts niche is large and already faceless: the biggest channels
 are a recognisable narrator reading an original script over licensed stock, posted in a fixed daily slot

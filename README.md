@@ -20,7 +20,7 @@ brief is kept verbatim in `docs/BRAIN_DUMP.md` and every design choice can be ch
 | [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) | Vision, goals, principles, the four end-to-end concepts from $0 to about $100 a month, phases, risks |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | How an idea becomes a published video: stages, the job file, the visual ladder, captions, render, publish, intake, hosting |
 | [`docs/VIDEO_CONCEPTS.md`](docs/VIDEO_CONCEPTS.md) | The five visual formats from brand card to AI video, what each costs, and when to climb |
-| [`docs/CONTENT_STRATEGY.md`](docs/CONTENT_STRATEGY.md) | Six pillars, twelve series, script rules, scripture and quote rules, mental-health safety rules |
+| [`docs/CONTENT_STRATEGY.md`](docs/CONTENT_STRATEGY.md) | Six pillars, sixteen series, script rules, scripture and quote rules, mental-health safety rules |
 | [`docs/DISTRIBUTION.md`](docs/DISTRIBUTION.md) | YouTube, TikTok, Instagram and Facebook rules: quotas, audits, scheduling, AI disclosure, monetisation policy |
 | [`docs/RESEARCH.md`](docs/RESEARCH.md) | Every tool, API, price and policy considered, with a link and the date it was checked |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | What has been decided, what is proposed, what is still open |

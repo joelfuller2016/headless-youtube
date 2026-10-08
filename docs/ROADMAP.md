@@ -12,7 +12,7 @@ acceptance test and is not negotiable by the person doing the work.
 - [x] Write the content and safety rules (`docs/CONTENT_STRATEGY.md`)
 - [x] Write the job schema, a sample, and the three prompts (`examples/`)
 - [x] Record decisions and open questions (`docs/DECISIONS.md`)
-- [ ] Owner reviews the plan and accepts or changes D-001 to D-006
+- [ ] Owner reviews the plan and accepts or changes D-001 to D-019
 
 **Done when:** the plan is merged and the owner has answered the open questions in `docs/BRAIN_DUMP.md`.
 
