@@ -16,7 +16,7 @@ recommendation is pending evidence.
 | D-007 | Phase 1 voice: Kokoro-82M locally as primary, Google Cloud TTS free tier as fallback; `edge-tts` for prototyping only | Proposed | 2026-10-08 |
 | D-008 | Script model and judge model are different models | Proposed | 2026-10-08 |
 | D-009 | Phases 1 and 2 run on the owner's Windows PC from Task Scheduler as the development runner; from phase 3 the scheduler of record is a GitHub Actions workflow in a private repository; GPU steps go to Modal's free credit or Hugging Face Jobs | Proposed | 2026-10-08 |
-| D-010 | Phase 5 publishes directly to Instagram Reels, Facebook Reels, Threads and Bluesky at $0; TikTok goes through Buffer's free plan (or upload-post at $24 a month); Pinterest and LinkedIn after their paperwork; X skipped | Proposed | 2026-10-08 |
+| D-010 | Phase 5 publishes directly to Instagram Reels, Facebook Reels, Threads and Bluesky at $0; TikTok uses its inbox Upload route at $0 (the owner finishes each post with one tap) until the budget allows upload-post Basic at $24 a month, because Buffer's API cannot create TikTok posts; Pinterest and LinkedIn after their paperwork; X skipped | Proposed | 2026-10-08 |
 | D-011 | `review_mode` defaults to `none`; `notify` for the first two weeks | Proposed | 2026-10-08 |
 | D-012 | Budget caps: $0 for phases 1 to 4, up to $25 a month in phase 5, up to $100 a month in phase 6 | Proposed | 2026-10-08 |
 | D-013 | No voice cloning of the owner in v1 | Proposed | 2026-10-08 |
@@ -115,9 +115,13 @@ Instagram-Login flavour, which needs no Facebook Page and no App Review for the 
 Facebook Reels, Threads (tester role) and Bluesky can all be published to by a personal app for nothing
 and with no review, provided the MP4 sits at a public URL. TikTok cannot: unaudited apps post privately,
 and TikTok's guidelines name personal upload utilities as unacceptable for the audit, so a self-hosted
-scheduler with the owner's own TikTok app would stay private too. Buffer's free plan uses Buffer's own
-approved TikTok app and allows one post a day within its queue cap, so it is the $0 bridge; upload-post
-Basic ($24 a month) is the paid one. Pinterest and LinkedIn wait for their paperwork, X is skipped.
+scheduler with the owner's own TikTok app would stay private too. Buffer's free plan was the planned $0
+bridge until the verification pass read Buffer's developer guides on 2026-10-08: the API creates posts
+for ten platforms and TikTok is not one of them, so a Buffer TikTok channel can only be fed by hand in
+the app. The $0 route is therefore TikTok's own inbox Upload (no audit; the video lands in the owner's
+TikTok inbox and one tap publishes it), and upload-post Basic ($24 a month, TikTok included with no
+audit) is the fully automatic one once the phase-5 budget allows it. Corrected the same day; the
+earlier wording is superseded, not deleted. Pinterest and LinkedIn wait for their paperwork, X is skipped.
 **Reversible:** yes; adapters are independent.
 
 ## D-011 Review mode

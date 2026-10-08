@@ -47,7 +47,7 @@ against the source. Everything below the first section is interpretation and can
 
 | Question | Assumption used in the plan | Change it in |
 |---|---|---|
-| Which platforms beyond YouTube? | YouTube Shorts first; then Instagram, Facebook, Threads and Bluesky directly, TikTok through Buffer's free plan, Pinterest deferred (D-010). | `docs/DECISIONS.md` |
+| Which platforms beyond YouTube? | YouTube Shorts first; then Instagram, Facebook, Threads and Bluesky directly, TikTok through its inbox route until a paid aggregator, Pinterest deferred (D-010). | `docs/DECISIONS.md` |
 | How often? | One video per day to start; the pipeline must not care. | `docs/PROJECT_PLAN.md` |
 | Voice: male, female, Joel's own cloned voice? | One consistent AI voice chosen once; cloning is a later option. | `docs/DECISIONS.md` |
 | How explicitly Christian? | Faith-forward but welcoming: scripture and prayer appear, never preachy, never partisan. | `docs/CONTENT_STRATEGY.md` |

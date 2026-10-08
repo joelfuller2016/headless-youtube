@@ -312,7 +312,7 @@ covers every platform: Pixabay, CC BY with the credit, ACE-Step, or ElevenLabs M
 - Render with FFmpeg and a generated ASS file; Remotion only for animated page-style captions.
 - Music: a curated local library of 20 to 30 tracks from the YouTube Audio Library (attribution-free
   filter) and Pixabay, with licence URL and attribution stored per track and written into the job file;
-  Kevin MacLeod only with the credit block templated into the description. Move, only while TikTok rides Buffer Free and the phase-5 cap of $25 allows it, to a $10-a-month
+  Kevin MacLeod only with the credit block templated into the description. Move, only while TikTok stays on the inbox route and the phase-5 cap of $25 allows it, to a $10-a-month
   safelisting subscription in phase 5 when three platforms are live. For a generated bed per video, ACE-Step
   1.5 (MIT, local, under 4 GB of VRAM; section 12) is the $0 option and ElevenLabs Music the hosted one.
 - Add a post-publish claim check to the track stage: poll each new YouTube video for Content ID claims
@@ -386,7 +386,7 @@ not expect to pass. The cheapest way to make TikTok hands-off is an aggregator w
 |---|---|---|---|---|---|
 | [Postiz](https://github.com/gitroomhq/postiz-app) self-hosted | free, AGPL-3.0; Postgres, Redis and storage on your box | **no**: its TikTok provider forces `SELF_ONLY` until TikTok audits *your* app | yes, 90 requests an hour by default | 36.9k stars, v2.25.0 on 2 Oct; "you create your own developer apps on each platform and go through their approval (Meta, YouTube, TikTok can take weeks)"; Cloud from $29 a month uses pre-approved apps | [README](https://github.com/gitroomhq/postiz-app), [TikTok provider](https://docs.postiz.com/providers/tiktok), [Public API](https://docs.postiz.com/public-api), [Cloud pricing](https://postiz.com/pricing) |
 | [Mixpost](https://mixpost.app/pricing) | Lite free (MIT) but only Facebook Pages, X and Mastodon; Pro $299 one-time for Instagram, YouTube, TikTok, Pinterest, Threads, Bluesky, LinkedIn and an API | no, same constraint | Pro and up | Laravel app; TikTok direct post "may require an additional audit" | [Pricing](https://mixpost.app/pricing), [TikTok guide](https://docs.mixpost.app/services/social/tik-tok/), [API](https://docs.mixpost.app/api/) |
-| [Buffer](https://buffer.com/pricing) | Free: 3 channels, 10 queued posts a channel, API key with 3,000 requests a month; Essentials $5 a channel a month | **yes**, Buffer's own approved apps | yes | channels include TikTok, Instagram, Facebook, YouTube Shorts, Threads, Pinterest, Bluesky, LinkedIn, X; one post a day through the API keeps the queue under ten. **The $0 TikTok bridge.** | [Pricing](https://buffer.com/pricing) |
+| [Buffer](https://buffer.com/pricing) | Free: 3 channels, 10 queued posts a channel, API key with 3,000 requests a month; Essentials $5 a channel a month | **yes**, Buffer's own approved apps | yes | channels include TikTok, Instagram, Facebook, YouTube Shorts, Threads, Pinterest, Bluesky, LinkedIn, X; one post a day through the API keeps the queue under ten. **The $0 TikTok bridge.** | [Pricing](https://buffer.com/pricing); **not a TikTok route**: Buffer's own API guide lists the platforms the API can create posts for (Instagram, Threads, LinkedIn, X, Facebook, Google Business Profiles, Mastodon, YouTube, Pinterest, Bluesky) and TikTok is not among them, and the API takes media only from a public URL ([posts guide](https://developers.buffer.com/guides/posts-and-scheduling), [hosting media](https://developers.buffer.com/guides/hosting-media), both read 2026-10-08) |
 | [upload-post](https://www.upload-post.com/llms-full.txt) | Free 10 uploads a month without TikTok; Basic $24 a month ($16 annual) unlimited uploads, 5 profiles, 22 platforms | **yes**: "no TikTok developer app or audited-client review needed" and no Meta app review either | yes, one REST call with the file or a URL | the service MoneyPrinterTurbo uses; Make users report occasional unknown final status on heavy files | same |
 | [Blotato](https://www.blotato.com/pricing) | Starter $29 a month: 20 accounts, up to 900 TikTok posts a month, API, n8n and Make nodes, hosted MCP | yes | yes | markets itself as avoiding "OAuth apps to get approved" | same |
 | [Ayrshare](https://www.ayrshare.com/pricing/) | Premium $149 a month (1 profile, 14 networks, unlimited posts) | yes, except X now needs your own app | yes | TikTok caps apply (6 a minute, 15 a day) | [Pricing](https://www.ayrshare.com/pricing/), [TikTok notes](https://www.ayrshare.com/docs/apis/post/social-networks/tiktok) |
@@ -404,10 +404,10 @@ not expect to pass. The cheapest way to make TikTok hands-off is an aggregator w
   Standard Access), Facebook Reels (the owner's Page), Threads (tester role) and Bluesky. Each rendered
   file goes to public HTTPS object storage behind a domain the owner controls, because Meta fetches by
   URL and TikTok needs a verified domain later.
-- **TikTok:** do not plan on passing the Direct Post audit with a personal tool. Use Buffer's free plan
-  (its own approved app, 3 channels, one post a day keeps the queue under ten) as the $0 bridge, or
-  upload-post Basic at $24 a month when the budget guard allows. The inbox route is the fallback if a
-  daily tap is acceptable.
+- **TikTok:** do not plan on passing the Direct Post audit with a personal tool, and do not plan on
+  Buffer either: Buffer's own API guide lists the platforms the API can create posts for (Instagram, Threads, LinkedIn, X, Facebook, Google Business Profiles, Mastodon, YouTube, Pinterest, Bluesky) and TikTok is not among them, and the API takes media only from a public URL ([posts guide](https://developers.buffer.com/guides/posts-and-scheduling), [hosting media](https://developers.buffer.com/guides/hosting-media), both read 2026-10-08). The $0 route is TikTok's own inbox Upload (no audit, one tap by the
+  owner to publish); upload-post Basic at $24 a month is the fully automatic route once the budget guard
+  allows it.
 - **Pinterest and LinkedIn:** phase 5b, after the paperwork (a one-minute OAuth demo video and a Business
   account for Pinterest; the self-serve share product or the Development tier for LinkedIn).
 - **X:** skipped until there is a reason; it is cheap but needs a card and has the least reach for
@@ -440,6 +440,9 @@ owner's Windows PC is the right development runner and manual backup but a poor 
 | **n8n** self-hosted | $0 under the Sustainable Use License for personal use (`npx n8n` on Windows with Node 20.19 to 24, or Docker Desktop); n8n Cloud from €20 a month billed annually | visual canvas, community templates; the faceless-Shorts template [#20025](https://n8n.io/workflows/) exists but assumes OpenAI billing and a paid Orshot plan | a second system to maintain if the Python stages stay; hosting for others is not permitted | [Licence](https://github.com/n8n-io/n8n/blob/master/LICENSE.md), [Editions](https://docs.n8n.io/choose-n8n/), [Cloud pricing](https://n8n.io/pricing/) |
 | **Make** | Free: 1,000 credits a month, 2 active scenarios, 15-minute interval; Core $12 | a thin publishing tail if a native connector saves work | no TikTok publishing module | [Pricing](https://www.make.com/en/pricing) |
 | **Zapier** | Free: 100 tasks a month | | too tight for a daily three-step flow | [Pricing](https://zapier.com/pricing) |
+| **GitHub Actions self-hosted runner** on the owner's PC | $0 (self-hosted minutes are not billed) | GitHub keeps the cron, secrets and logs while the job runs on the PC with its GPU and FFmpeg; Windows 10 and 11 supported | the PC-asleep problem returns, and a runner whose software is not updated within 30 days stops receiving jobs; a phase-6 option for GPU rungs, not the scheduler of record | [Self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) (verification pass, 2026-10-08) |
+| **Cloudflare Workers Cron Triggers** | Free plan 100,000 requests a day with 10 ms of CPU an invocation; Paid from $5 a month with up to 15 minutes of CPU per cron run | the cheapest always-on orchestrator for a pipeline whose heavy work runs elsewhere (calling Modal, HF Jobs or a webhook) | not a render host | [Cron Triggers](https://developers.cloudflare.com/workers/configuration/cron-triggers/) (verification pass; limits not re-read) |
+| **Google Cloud Run Jobs with Cloud Scheduler** | the Google Cloud Free Tier includes an e2-micro VM, 2M Cloud Run requests, 180,000 vCPU-seconds and 5 GB of Cloud Storage a month | a batch render host in the same Google account that already owns the YouTube API project | the free tier is regional and its limits are per month, so a 10-minute daily render fits but a GPU does not | [Free Tier](https://cloud.google.com/free/docs/free-cloud-features) (verification pass; not re-read) |
 
 ### GPU bursts without owning a GPU
 
@@ -456,11 +459,11 @@ owner's Windows PC is the right development runner and manual backup but a poor 
 | Host | Price | Catch | Source |
 |---|---|---|---|
 | Oracle Cloud Always Free | $0: Ampere A1 up to 2 OCPU and 12 GB (reduced from 4 and 24 in 2026), 200 GB storage | an idle instance (95th-percentile CPU and network under 20 percent for 7 days) may be reclaimed, and a once-a-day job looks idle; A1 capacity is often unavailable in busy regions | [Always Free resources](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm) |
-| Hetzner CX23 | about €5.99 a month including the IPv4 address (third-party August 2026 snapshot; Hetzner repriced on 2026-04-01 and its page is JavaScript-only) | confirm in the console | [Overview](https://docs.hetzner.com/cloud/servers/overview/), [Price notice](https://www.hetzner.com/pressroom/statement-price-adjustment/) |
+| Hetzner CX23 | about €5.99 a month including the IPv4 address (third-party August 2026 snapshot; Hetzner repriced on 2026-04-01 and again on 2026-06-15, when its [price-adjustment page](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/) moved CX23 to €5.49 excluding VAT per the verification pass; its pricing page is JavaScript-only) | confirm in the console; the cost-optimised plans were reported as not orderable in August 2026 | [Overview](https://docs.hetzner.com/cloud/servers/overview/), [Price notice](https://www.hetzner.com/pressroom/statement-price-adjustment/) |
 | DigitalOcean | $4 (512 MB) or $6 (1 GB) a month | | [Droplets](https://www.digitalocean.com/pricing/droplets) |
 | Fly.io | no free tier; shared-cpu-1x from $2.19 a month, card required | | [Pricing](https://docs.fly.io/about/pricing) |
 | Railway, Render | Railway Free is a $1 monthly credit; Render has no free cron jobs ($1 a month minimum per cron service) | | [Railway](https://railway.com/pricing), [Render cron](https://render.com/docs/cronjobs), [Render free](https://render.com/docs/free) |
-| Raspberry Pi or mini PC | one-time purchase, not priced here | the same runner as the PC without the sleep problem | |
+| Raspberry Pi or mini PC | one-time purchase, not priced here | the same runner as the PC without the sleep problem; the Pi, Oracle A1 and Hetzner CAX are arm64, so every wheel and image must have an arm64 build (FFmpeg does, some ML wheels do not) | |
 
 ### State and observability
 
@@ -472,6 +475,12 @@ owner's Windows PC is the right development runner and manual backup but a poor 
   10 embeds, free) or a [Telegram bot](https://core.telegram.org/bots/faq) (sends files up to 50 MB, so
   the rendered short can be reviewed on a phone) per run, plus GitHub's own failure email to the workflow
   author. Keep rendered MP4s as workflow artifacts rather than commits.
+- **Missed runs:** a dead-man's switch catches the failure that alerts cannot, a scheduler that silently
+  never fires: the last step of every run pings [healthchecks.io](https://healthchecks.io/pricing/) (the
+  Hobbyist plan monitors 20 checks for $0, per the verification pass 2026-10-08) and it emails when a day
+  passes without a ping. Durable storage for the rendered files is Cloudflare R2 (10 GB-month free, zero
+  egress; section 10) or Backblaze B2 (first 10 GB free, $6.95 a TB-month after, egress free up to three
+  times storage; verification pass, not re-read).
 - **Guardrails:** GitHub Actions spending limit at $0 (the default), a 25-minute `timeout-minutes` on the
   job, Modal capped at its free credit, an explicit timeout on any Hugging Face Job.
 
@@ -781,7 +790,7 @@ pages the platform app reviews ask for can sit on GitHub Pages at $0.
 | Music | Pixabay, Kevin MacLeod with credit, ACE-Step 1.5 locally | Epidemic Sound or Artlist about $10 a month; ElevenLabs Music inside the Creator plan | | $0 to $10 | section 4, [Epidemic](https://www.epidemicsound.com/pricing/), [ElevenLabs Music](https://elevenlabs.io/docs/api-reference/music/compose) |
 | Render | FFmpeg | | $0 | $0 | [1](#1-open-source-pipelines-and-render-engines-checked-2026-10-08) |
 | Publish, YouTube | Data API: 100 `videos.insert` calls a day and 10,000 units for everything else, per project | | $0 | $0 | [5](#5-youtube-api-and-policy-checked-2026-10-08), [quota](https://developers.google.com/youtube/v3/determine_quota_cost) |
-| Publish, other platforms | Instagram, Facebook, Threads and Bluesky direct; Buffer Free for TikTok (3 channels, 10 queued posts a channel) | upload-post Basic $24 a month ($16 on annual billing); Blotato Starter $29 | | $24 to $29 | [6](#6-other-platforms-and-schedulers-checked-2026-10-08), [upload-post](https://www.upload-post.com/llms-full.txt), [Blotato](https://www.blotato.com/pricing), [Buffer](https://buffer.com/pricing) |
+| Publish, other platforms | Instagram, Facebook, Threads and Bluesky direct; TikTok through its inbox Upload route (one tap by the owner) | upload-post Basic $24 a month ($16 on annual billing); Blotato Starter $29 | | $24 to $29 | [6](#6-other-platforms-and-schedulers-checked-2026-10-08), [upload-post](https://www.upload-post.com/llms-full.txt), [Blotato](https://www.blotato.com/pricing), [Buffer](https://buffer.com/pricing) |
 | Public URL for platforms that fetch by link | Cloudflare R2 free tier: 10 GB-month of storage, 1M Class A and 10M Class B operations a month, free egress; a month of 60 MB shorts is 1.8 GB | $0.015 a GB-month beyond that | $0 | $0 | [R2 pricing](https://developers.cloudflare.com/r2/pricing/) |
 | Tracking | YouTube Analytics API | | $0 | $0 | section 5 |
 | Scheduler, CPU | the owner's PC; GitHub Actions on a private repository, 2,000 minutes a month (a 10-minute daily run uses 300) | Linux overage $0.006 a minute; DigitalOcean droplet $4 (512 MB) or $6 (1 GB) a month; n8n Cloud from €20 a month on annual billing | | $0 to $6 | [7](#7-orchestration-scheduling-and-hosting-checked-2026-10-08), [GitHub](https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-actions/about-billing-for-github-actions), [DigitalOcean](https://www.digitalocean.com/pricing/droplets) |
@@ -868,7 +877,8 @@ $171, so three a day on the managed stack is only possible in the low configurat
   repository's schedule is disabled after 60 days without activity (section 7).
 - Google Cloud Text-to-Speech: 1M characters a month free on current voices (section 2).
 - ElevenLabs Starter: 30,000 credits, which one video a day consumes almost exactly.
-- Buffer Free: 10 queued posts a channel, so the queue must be fed daily rather than weekly (section 6).
+- TikTok: the inbox route needs one tap by the owner per video, and the Direct Post audit is closed to a
+  personal app, so fully automatic TikTok costs $24 a month (section 6).
 - OpenRouter free models: 50 requests a day until $10 of credit has ever been bought (section 8).
 - Hugging Face ZeroGPU: five GPU minutes a day on a free account (section 12).
 - Modal: $30 of credit a month, after which GPU steps bill per second (section 7).
@@ -877,12 +887,12 @@ $171, so three a day on the managed stack is only possible in the low configurat
 ### What this section decides
 
 - D-012's caps are consistent with the sheets: Concepts 1 and 2 are $0 through phase 4; phase 5 at up to
-  $25 covers Buffer Free for TikTok plus the $10 music safelisting subscription, or upload-post Basic
-  ($24, or $16 on annual billing) with no subscription, never both; phase 6 at up to $100 buys Concept 4
+  $25 covers upload-post Basic ($24, or $16 on annual billing) for fully automatic TikTok, or the $10
+  music safelisting subscription with TikTok on the inbox route, never both; phase 6 at up to $100 buys Concept 4
   in its low configuration with about $50 of headroom, or the high configuration minus Ideogram.
 - The downgrade order the budget guard follows, cheapest saving first: Ideogram to FLUX ($20.10), Epidemic
   to Pixabay ($10), ElevenLabs Creator to Cartesia ($17), Veo Lite to Pika ($2.40) to no hook clip
-  ($9.60), Blotato to upload-post ($5) to Buffer Free ($24), VPS to GitHub Actions ($6).
+  ($9.60), Blotato to upload-post ($5) to the TikTok inbox route ($24), VPS to GitHub Actions ($6).
 - Three videos a day is affordable only on Concepts 1 and 2 or on Concept 4's low configuration.
 
 ## 11. Tools the owner asked about: HeyGen, ChatCut and MiroFish (checked 2026-10-08)

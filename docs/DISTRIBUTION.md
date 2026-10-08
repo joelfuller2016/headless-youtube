@@ -186,7 +186,15 @@ Checked 2026-10-08 against TikTok for Developers.
   personal pipeline should not expect to pass the audit. The Upload (inbox) route needs no audit, but the
   creator must open the inbox notification and finish the post by hand
   ([Upload guide](https://developers.tiktok.com/doc/content-posting-api-get-started-upload-content)).
-  Decision D-010: TikTok goes through Buffer's free plan or a paid aggregator with its own approved app.
+  Decision D-010: TikTok goes through its inbox Upload route at $0 (one tap by the owner) until the
+  budget allows upload-post Basic, a paid aggregator with its own approved app. Buffer was dropped as the
+  bridge: Buffer's own API guide lists the platforms the API can create posts for (Instagram, Threads, LinkedIn, X, Facebook, Google Business Profiles, Mastodon, YouTube, Pinterest, Bluesky) and TikTok is not among them, and the API takes media only from a public URL ([posts guide](https://developers.buffer.com/guides/posts-and-scheduling), [hosting media](https://developers.buffer.com/guides/hosting-media), both read 2026-10-08).
+- **AI label.** Direct Post's `post_info` carries `is_aigc`; set it to true whenever the visuals are
+  generated, which labels the video "Creator labeled as AI-generated" (Content Posting API reference,
+  read by the verification pass 2026-10-08).
+- **Tokens.** An access token lasts 24 hours (`expires_in` 86400), the refresh token 365 days, and "the
+  returned refresh_token may be different than the one passed in", so the ledger stores the newest one
+  after every refresh.
 - Video limits: MP4 preferred (H.264), up to 4 GB, 23 to 60 fps, 360 to 4096 pixels on each side; all
   creators can post 3-minute videos. Pulling from a URL requires a **verified domain** that the developer
   owns; uploading the file bytes avoids that. Source:
@@ -207,8 +215,9 @@ Checked 2026-10-08 against Meta for Developers.
   [Content publishing](https://developers.facebook.com/docs/instagram-platform/content-publishing),
   [Instagram Login](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login),
   [Overview](https://developers.facebook.com/docs/instagram-platform/overview).
-- **100 API-published posts per 24 hours**, checkable via the `content_publishing_limit` endpoint. Same
-  source.
+- **100 API-published posts per 24 hours** on one part of Meta's page and 50 on another; the runner
+  reads the `content_publishing_limit` endpoint instead of hard-coding either and the ledger assumes 50
+  for Reels until the endpoint says otherwise. Same source.
 - Reels spec: MP4 or MOV, H.264 or HEVC, 23 to 60 fps, max width 1920, 9:16 recommended, AAC audio,
   3 seconds to 15 minutes, 300 MB. Source:
   [IG User Media reference](https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media).
@@ -219,25 +228,58 @@ Checked 2026-10-08 against Meta for Developers.
   Review, 250 posts per 24 hours, videos up to 300 seconds fetched from a public URL. Source:
   [Threads posts](https://developers.facebook.com/docs/threads/posts).
 - Design consequence: the pipeline needs public HTTPS object storage behind a domain the owner controls
-  (Cloudflare R2 or Azure Blob with a custom domain), because Meta fetches by URL and TikTok's pull
+  (Cloudflare R2, Backblaze B2 or Azure Blob with a custom domain), because Meta fetches by URL and TikTok's pull
   route needs a verified domain. All of this is phase 5.
 
 ## 4. Everything else
 
 Bluesky needs no registration (MP4 up to 300 MB, 25 videos a day at launch). Pinterest's trial tier
 makes Pins visible only to their creator until a Standard upgrade that requires a demo video and a
-Business account. X is pay-per-use at $0.015 a post with a card on file. LinkedIn is free but gated by
-tiers. The scheduler and aggregator comparison (Postiz, Mixpost, Buffer, upload-post, Blotato, Ayrshare,
-Publer, Metricool, Later, SocialBee, Repurpose, Zapier, Make) is in `docs/RESEARCH.md` section 6, and
-the choice is D-010 in `docs/DECISIONS.md`: direct adapters for the Meta surfaces and Bluesky, Buffer's
-free plan as the TikTok bridge.
+Business account; the trial allows 1,000 requests a day in total and 300 write calls a day, Standard
+100 requests a second per user ([rate limits](https://developers.pinterest.com/docs/reference/rate-limits/),
+read by the verification pass 2026-10-08). Threads adds a per-app call budget of 4,800 calls times the
+account's impressions (floor 10) in 24 hours on top of the 250 posts, with replies on a separate 1,000
+quota. X is pay-per-use at $0.015 a post with a card on file, but a post that contains a URL costs
+$0.20, thirteen times more, so a link back to the YouTube Short is not free; videos go through the v2
+chunked upload (initialize, append, finalize) with a 20-minute, 8 GB cap. LinkedIn is free but gated by
+tiers. Two channels need no review at all and were not in the first comparison: a Telegram channel fed
+by the Bot API, and Mastodon (free API, video limits set per instance); both are a phase-5b line for an
+audience that wants a daily word in a feed it already reads. The scheduler and aggregator comparison
+(Postiz, Mixpost, Buffer, upload-post, Blotato, Ayrshare, Publer, Metricool, Later, SocialBee,
+Repurpose, Zapier, Make) is in `docs/RESEARCH.md` section 6, and the choice is D-010 in
+`docs/DECISIONS.md`: direct adapters for the Meta surfaces and Bluesky, TikTok's inbox route until a
+paid aggregator.
+
+### Paperwork every platform asks for, consolidated
+
+- A public website with a visible privacy policy and terms (TikTok app review, the YouTube audit, and
+  Meta's app settings, which also want a data-deletion callback URL). GitHub Pages is enough and it is
+  a phase-2 task.
+- A Company Page for LinkedIn apps, a Business account for Pinterest Standard, a saved card for X.
+- Public HTTPS media hosting on a domain the owner controls (Cloudflare R2 or Backblaze B2 behind a
+  custom domain): Instagram, Threads, Facebook Reels, Buffer and TikTok's pull-from-URL all fetch by
+  link, and TikTok verifies the URL prefix, which a default bucket hostname cannot pass.
+
+### Token lifetimes and the refresh job
+
+| Platform | Token | Lifetime | What the runner does |
+|---|---|---|---|
+| YouTube | user refresh token | until revoked once the app is In production; dies after six months unused; 7 days while in Testing | refresh the access token every run; alert on `invalid_grant` |
+| Instagram, Facebook, Threads | long-lived user or Page token | 60 days | refresh when under 10 days remain; alert if the refresh fails |
+| TikTok | access and refresh tokens | 24 hours and 365 days; the refresh token may rotate | store the newest refresh token after every call |
+| LinkedIn | access token | 60 days | same as Meta |
+| Bluesky | app password | no expiry | keep it out of the repo |
+
+A token that expires silently is the usual way a "100 percent automated" pipeline stops, so the ledger
+records each token's expiry and the daily summary shows the days left (lifetimes per the verification
+pass, 2026-10-08, against each platform's token page).
 
 ## 5. Per-platform metadata rules the metadata stage applies
 
 | Platform | Title | Description | Hashtags | AI flag | Schedule |
 |---|---|---|---|---|---|
 | YouTube | ≤100 chars | full description plus crisis resources when flagged, and the same block posted as the first comment on heavy videos (`commentThreads.insert`; pinning is manual) | 3 to 5 in description (YouTube shows three and ignores all of them past 60) | `containsSyntheticMedia` when render tier is D or photoreal C; YouTube's exemption list covers a synthetic voice over stock | `publishAt` with `privacyStatus=private` |
-| TikTok | caption only (title field is the caption) | first 100 chars matter | 3 to 5 in caption | TikTok's AI-generated content toggle where the API exposes it; the August 2026 guidelines require it for realistic AI scenes and exempt generic text-to-speech narration (`docs/RESEARCH.md` section 9) | post time chosen by the runner |
+| TikTok | caption only (title field is the caption) | first 100 chars matter | 3 to 5 in caption | `post_info.is_aigc` on Direct Post, which labels the video as AI-generated; the August 2026 guidelines require it for realistic AI scenes and exempt generic text-to-speech narration (`docs/RESEARCH.md` section 9) | post time chosen by the runner |
 | Instagram | none | caption, first line is the hook | 3 to 5 (Instagram's own advice) | Meta's AI label where exposed; required for photorealistic video or realistic-sounding audio, with penalties stated for not labelling | container then publish; the runner picks the time |
 | Facebook | title | description | 3 to 5 | as Instagram | as Instagram |
 

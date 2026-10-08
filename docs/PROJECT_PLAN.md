@@ -162,7 +162,7 @@ YouTube Shorts first through the Data API: 100 uploads a day in the default quot
 submitted early because unaudited projects' uploads are forced private. Phase 5 adds Instagram Reels,
 Facebook Reels, Threads and Bluesky through their own APIs at no cost and with no review for the owner's
 own accounts, with the MP4 served from public object storage behind the owner's domain; TikTok goes
-through Buffer's free plan or a paid aggregator because its audit does not accept personal upload
+through its inbox Upload route (one tap by the owner) or a paid aggregator because its audit does not accept personal upload
 tools; Pinterest and LinkedIn follow their paperwork (decision D-010). Facts, quotas and sources in
 `docs/DISTRIBUTION.md`.
 
@@ -173,11 +173,11 @@ tools; Pinterest and LinkedIn follow their paperwork (decision D-010). Facts, qu
 | 0 Plan | this document set | owner has reviewed and answered the open questions |
 | 1 Walking skeleton | idea → MP4 on the PC, rung A, $0 | sample renders in under two minutes, no publish |
 | 2 YouTube unattended | scheduled private uploads, audit submitted, alerts | seven consecutive automatic days |
-| 3 Content system | pillars, series, self-feed, scripture file, brand kit, phone intake | thirty days unattended, two failures or fewer |
+| 3 Content system | pillars, series, self-feed, scripture file, brand kit, phone intake | thirty days unattended including a week with the PC off, two failures or fewer |
 | 4 Rung B and feedback | stock adapters, analytics pull, series scoreboard | five rung-B videos per pillar, retention per series visible |
 | 5 More platforms | aggregator or direct APIs, public hosting, budget guard at $25 | one upload reaches three platforms for fourteen days |
 | 6 Paid rungs | AI image, hybrid, AI video for hooks, cap $100 | a thirty-day comparison of retention per dollar |
-| 7 Hardening | backups, second host, runbook, quarterly fact re-check | a week with the PC switched off |
+| 7 Hardening | backups, second host, runbook, quarterly fact re-check | a restore from backup onto a fresh host publishes within a day |
 
 Task-level checklists in `docs/ROADMAP.md`.
 
@@ -193,7 +193,7 @@ Task-level checklists in `docs/ROADMAP.md`.
 | Harmful wording on a mental-health topic | low with controls | banned-phrase scanner, sensitivity levels, crisis block, YouTube's own guidance followed |
 | Music triggers a Content ID claim and blocks a video | low | YouTube Audio Library or a clearly licensed bed; videos under 60 seconds |
 | Stock clip repeats make the channel look like every other | medium | cache by term, allow-list per mood, rotate sources, climb to rung C for top series |
-| The PC is asleep, rebooted by an update, or its task's saved password changed, and nothing posts | high over a year | `publishAt` schedules a day ahead; the task runs as System; from phase 3 GitHub Actions is the scheduler of record and the PC only a backup |
+| The PC is asleep, rebooted by an update, or its task's saved password changed, and nothing posts | high over a year | `publishAt` schedules a day ahead; the task runs as System; from phase 3 GitHub Actions is the scheduler of record and the PC only a backup; a dead-man's switch (healthchecks.io, free) emails when a day passes without a run |
 | Spend creeps up once paid rungs are on | medium | budget guard with daily and monthly caps, downgrade on cap, spend in the daily summary |
 
 ## 11. Open questions for the owner

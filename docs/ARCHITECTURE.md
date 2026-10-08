@@ -192,6 +192,8 @@ n8n Concept 3, the always-on box hosts Concept 4, and GPU bursts serve any of th
 - One log line per stage per job with elapsed time and cost; `output/metrics.csv` for the feedback loop.
 - A daily summary message (Telegram, Discord webhook or email): jobs made, published, failed, spend to date.
 - A `PAUSE` file (or env var) stops publishing but keeps rendering, for when something looks wrong.
+- A dead-man's switch: the last step of every run pings a free healthchecks.io check, so a scheduler
+  that silently never fires (the PC asleep, a disabled workflow) is reported within a day.
 - `review_mode=approve` posts the rendered video to the owner and waits for a reaction; on timeout the
   job fails by default, and the switch that lets it publish instead never applies to a heavy-topic job
   (D-019).

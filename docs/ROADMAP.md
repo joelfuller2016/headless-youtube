@@ -44,6 +44,7 @@ endpoints.
 - [ ] Submit the YouTube API Audit and Quota Extension form
 - [ ] Windows Task Scheduler job running `hy run` hourly as System (not with a saved password); a `PAUSE` file honoured
 - [ ] Daily summary to Telegram or email; failure alert with the stage and error
+- [ ] Dead-man's switch: ping healthchecks.io (free Hobbyist plan) at the end of every run so a day without a run raises an email
 - [ ] `review_mode=notify` for the first two weeks
 
 **Done when:** seven consecutive days of automatic uploads with no manual step except, until the audit
@@ -80,11 +81,13 @@ retention per series.
 
 ## Phase 5 — More platforms
 
-- [x] Decide D-010 from the comparison in `docs/RESEARCH.md` (direct Meta and Bluesky adapters; Buffer for TikTok)
+- [x] Decide D-010 from the comparison in `docs/RESEARCH.md` (direct Meta and Bluesky adapters; TikTok inbox route, upload-post when the budget allows)
 - [ ] Public HTTPS object storage behind a domain the owner controls, with a short-lived copy per publish
 - [ ] Meta app with the Instagram Login flavour (professional account, Standard Access), the owner's Facebook Page, and the Threads tester role
 - [ ] Adapters: Instagram Reels, Facebook Reels, Threads, Bluesky; distribution ledger with daily counters, token refresh and remote ids
-- [ ] Buffer free plan connected for TikTok, posting one a day through its API; upload-post as the paid alternative
+- [ ] TikTok through the inbox Upload route (the owner finishes each post on the phone); upload-post Basic when the budget guard allows; re-check whether any $0 API route to TikTok has appeared
+- [ ] Token refresh job per platform (Meta and Threads 60 days, TikTok 24-hour access and rotating 365-day refresh, LinkedIn 60 days) with days-left in the daily summary and an alert on failure
+- [ ] Every publish call sets the platform's AI label field (`containsSyntheticMedia`, `is_aigc`, Meta's label) from the render tier
 - [ ] Per-platform metadata rules from `docs/DISTRIBUTION.md`
 - [ ] Budget guard live, cap $25 a month
 - [ ] Phase 5b: Pinterest Trial then Standard (demo video, Business account); LinkedIn share product
