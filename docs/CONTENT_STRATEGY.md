@@ -54,8 +54,9 @@ a shape with the same pillar, and every video still has a unique person and mome
 
 ## 4. Script rules (enforced by the generator prompt and the judge)
 
-- **Length.** 130 to 160 spoken words for a 50 to 58 second video at a slow pace (about 2.5 words a
-  second). The judge counts.
+- **Length.** 125 to 150 spoken words for a 50-second video at about 2.5 words a second, hook under nine
+  words. The judge counts, and the synthesised audio (45 to 60 seconds, measured with `ffprobe`) is the
+  final arbiter; the voice's measured pace feeds back into the budget.
 - **Hook.** The first line names who this is for and the moment. No greeting, no "in this video", no
   question that can be answered "no".
 - **Shape.** Hook → three to five scenes of one to three sentences each → close. One idea per scene.
@@ -66,7 +67,11 @@ a shape with the same pillar, and every video still has a unique person and mome
   more"), never partisan, never a test of the viewer.
 - **Close.** A blessing, a question, or "come back tomorrow". Never "like and subscribe", never a sell.
 - **Banned.** Clichés ("everything happens for a reason", "God won't give you more than you can handle",
-  "good vibes only"), hustle language, shouting, shame, comparisons to other people, miracle promises.
+  "good vibes only"), hustle language, shouting, shame, comparisons to other people, miracle promises,
+  promised outcomes ("God will give you the job"), and any financial advice (YouTube's monetisation page
+  names AI hosts offering financial guidance as ineligible; the job pillar is about courage, not money).
+- **Original angle.** Every script carries a short `original_angle`, one concrete perspective that no
+  recent video used, and the generator is shown the last three hooks to avoid.
 - **Originality.** Every sentence written fresh. No quote attributed to any real person unless it comes
   from the verified quote file. No scripture unless it is looked up from the translation file.
 
@@ -92,8 +97,11 @@ pastor's or a poet's mouth loses trust in one comment. The rules:
    terms are read. In practice the notice does not fit in a 55-second short, so licensed translations
    stay off by default (decision D-006).
 4. **Named-person quotes** come only from a small, hand-verified quote file (public-domain authors,
-   with a source line each). Anything else is rewritten as an original line with no attribution.
-5. **The judge fails any quote it cannot verify**, and a failed quote is a `reject`, not a `revise`.
+   with a source line each; [Project Gutenberg](https://www.gutenberg.org/policy/permission.html) texts
+   need no permission to quote). Anything else is rewritten as an original line with no attribution.
+5. **The attribution gate is code, not a prompt:** a quoted line must match the allowlist at 0.95
+   similarity or better, and any other attribution to a named person fails the job. The judge also fails
+   any quote it cannot verify, and a failed quote is a `reject`, not a `revise`.
 
 ## 6. Mental-health safety rules
 

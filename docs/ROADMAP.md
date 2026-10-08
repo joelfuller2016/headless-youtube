@@ -21,7 +21,7 @@ acceptance test and is not negotiable by the person doing the work.
 - [ ] `src/hy` package with a `run` command and the stage loop from `docs/ARCHITECTURE.md`
 - [ ] Intake from the CLI (`hy new "idea"`) writing `output/<id>/job.json`
 - [ ] Script stage with the generator prompt and schema validation (one retry)
-- [ ] Gate stage: deterministic checks plus the judge prompt on a second model
+- [ ] Gate stage in the researched order: schema and stop reason, word count and hook length, banned-phrase regex, attribution allowlist, profanity, free moderation call, judge on a second model, audio duration
 - [ ] Voice stage with the chosen local TTS and a fallback provider
 - [ ] Visual stage, rung A only: twelve brand backgrounds, three colour themes
 - [ ] Caption stage producing an ASS file with word timing and emphasis colouring
@@ -52,6 +52,8 @@ passes, flipping the video to public.
 - [ ] Self-feeding idea generator with the rotation calendar and the last-30-ideas memory
 - [ ] Crisis-resource block appended automatically for high-sensitivity topics
 - [ ] Scripture lookup from a public-domain translation file so references are never invented
+- [ ] An eval set of 20 to 30 scripts with human pass or fail labels, re-run against the judge whenever a prompt, model or threshold changes
+- [ ] GitHub issue form as the one idea queue; Telegram polling and self-feed open issues into it
 - [ ] Brand kit: fonts, colours, bumper, end card, licensed music bed with its licence file in `assets/`
 - [ ] Telegram (or GitHub issue form) intake so ideas can be sent from a phone
 - [ ] GitHub Actions workflow in a private repository as the scheduler of record: cron at an odd minute, `workflow_dispatch` with idea and publish inputs, FFmpeg install step, state committed back, 25-minute job timeout, Discord or Telegram report; the PC becomes the backup

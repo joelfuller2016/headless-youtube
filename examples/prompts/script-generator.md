@@ -15,9 +15,11 @@ struggles, job stress, and ordinary hard days.
 - Pillar: `{{pillar}}`
 - Series format: `{{series}}` — `{{series_description}}`
 - Idea from the owner: "{{idea}}"
-- Target: `{{target_words}}` words spoken (plus or minus 10), about `{{target_duration_s}}` seconds at a slow,
-  warm pace.
+- Target: `{{target_words}}` words spoken in total (the band is 125 to 150 for a 50-second video at
+  about 2.5 words a second), hook under nine words, each body scene 30 to 40 words.
 - Voice: one narrator, second person ("you"), present tense.
+- Recent hooks to avoid repeating: `{{recent_hooks}}`
+- Fill `original_angle` with the one concrete perspective this video takes that the recent videos did not.
 
 ## Rules that are never broken
 
@@ -28,6 +30,7 @@ struggles, job stress, and ordinary hard days.
    translation, with book, chapter and verse. Everything else must be written as original lines.
 3. **No clinical claims.** Never diagnose, never mention medication, never promise a cure, never say
    therapy or medicine is unnecessary. Faith and professional help are allies, never alternatives.
+   No financial advice of any kind, and no promised outcomes ("God will give you the job").
 4. **Sensitivity.** If the idea touches suicide, self-harm, abuse, or grief, set `safety.sensitivity` to
    `high`, set `safety.crisis_resources` to `true`, avoid method details, and speak to the person as someone
    worth staying for. Never minimise.
@@ -43,6 +46,9 @@ struggles, job stress, and ordinary hard days.
 ## Output
 
 Return one JSON object that validates against the schema below. No markdown fences, no commentary.
+(The schema sent to the model is a relaxed copy without string-length limits, because Anthropic's
+structured outputs reject `minLength` and `maxLength`; the full `examples/script-schema.json` is
+validated locally and the word count is enforced in code.)
 
 ```
 {{script_schema_json}}

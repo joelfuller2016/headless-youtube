@@ -49,8 +49,8 @@ flowchart LR
 |---|---|---|---|---|---|
 | 1 | **Intake** | an idea from any source, or nothing (self-feed) | `job.json` with `id`, `idea`, `pillar`, `series`, `source`; `state=queued` | malformed idea | drop with a note |
 | 2 | **Script** | idea, pillar, series, the generator prompt | `title`, `hook`, `scenes[]`, `close`, `description`, `hashtags`, `safety.quotes`; `state=scripted` | JSON invalid after one retry | `failed` |
-| 3 | **Gate** | the script | `safety.judge_verdict`, `judge_notes`; deterministic checks (word count, banned phrases, scripture reference format); `state=gated` | `reject`, or second `revise` | `failed` + alert |
-| 4 | **Voice** | scene texts, voice config | `voice/scene-N.wav` (or one file with marks), word timings when the provider returns them; `state=voiced` | provider down after retries | next voice provider in the list |
+| 3 | **Gate** | the script | cheapest first: schema and stop-reason check, word count (125 to 150) and hook length, banned-phrase regex, attribution allowlist match at 0.95, profanity check, a free moderation call, then the judge on a different model (PASS plus originality of 4 or more); `safety.judge_verdict`, `judge_notes`; `state=gated` | `reject`, or second `revise` | `failed` + alert |
+| 4 | **Voice** | scene texts, voice config | `voice/scene-N.wav` (or one file with marks), word timings when the provider returns them, measured duration (must be 45 to 60 s); `state=voiced` | provider down after retries; duration out of range | next voice provider in the list; a long script goes back to the script stage once with the measured count |
 | 5 | **Visuals** | each scene's `visual` | `visuals/scene-N.(mp4|png)` at 1080x1920; `render.tier`; `state=visualized` | provider down, budget spent, no stock match | step down the ladder for that scene only |
 | 6 | **Captions** | voice files, word timings (or forced alignment if none) | `captions.ass` with 1 to 3 words per card and the emphasis words highlighted; `state=captioned` | alignment drifts more than 300 ms | fall back to sentence-level captions |
 | 7 | **Render** | visuals, voice, captions, music bed, brand bumpers | `final.mp4` (1080x1920, 30 fps, H.264, AAC, loudness normalised), `thumb.jpg`, `render.actual_duration_s`, `render.cost_usd`; `state=rendered` | duration over the platform limit, silent gap, FFmpeg error | trim close, re-render once |
@@ -156,12 +156,13 @@ All sources produce the same thing: an idea string, an optional pillar and serie
 
 | Source | How it triggers | Good for |
 |---|---|---|
-| CLI (`new "idea"`) | immediate | testing, bulk loading |
-| GitHub issue with an `idea` label (issue form) | a workflow on `issues.opened` | phone-friendly, free, auditable |
-| Telegram bot | the runner polls `getUpdates` | fastest from a phone |
-| Google Sheet | the runner reads rows with an empty `status` | planning a week at once |
-| Email to a label | the runner reads the label via IMAP or the Gmail API | low-tech |
-| Self-feed | the runner, once a day, when the queue is empty | 100 percent automation |
+| GitHub issue form with the `idea` label (**the one queue**) | a workflow on `issues.opened` parses the form body, runs the pipeline, comments the video URL and closes the issue | phone-friendly, free, auditable; every other source opens one of these |
+| CLI (`new "idea"`) | immediate, opens an issue when online | testing, bulk loading |
+| Telegram bot | the runner long-polls `getUpdates` from the PC (no public endpoint) and opens an issue | fastest from a phone |
+| Google Sheet | an Apps Script trigger opens an issue when a row's status is `ready` | planning a week at once |
+| Email to a label | the runner polls the label via IMAP or the Gmail API and opens an issue | low-tech |
+| Notion, Airtable, forms | through a small relay (a Cloudflare Worker calling `repository_dispatch`) or polling | only if already in use |
+| Self-feed | once a day when no human idea is pending: pillar by weekday, five candidates, one chosen by diversity against the last 60, opened as an issue | 100 percent automation |
 
 ## 8. Hosting shapes
 

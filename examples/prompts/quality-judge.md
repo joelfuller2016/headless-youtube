@@ -1,9 +1,11 @@
 # Prompt: quality judge
 
-Used by the **gate** stage, with a different model (or at least a different temperature and system prompt)
-from the one that wrote the script, so the judge is not grading its own work. The judge never rewrites;
-it returns a verdict and reasons. `revise` sends the reasons back to the generator once; a second `revise`
-or any `reject` fails the job and alerts the owner.
+Used by the **gate** stage, after the cheap deterministic gates (schema, word count, banned phrases,
+attribution allowlist, profanity, moderation) have passed, with a different model family from the one
+that wrote the script, so the judge is not grading its own work and its known biases (position,
+verbosity, self-preference) are limited. It grades one script against the rubric, never two side by
+side. The judge never rewrites; it returns a verdict and reasons. `revise` sends the reasons back to the
+generator once; a second `revise` or any `reject` fails the job and alerts the owner.
 
 ---
 
@@ -28,10 +30,11 @@ script costs nothing; a published mistake costs trust.
    `crisis_resources` true, and is the language safe (no methods, no romanticising, no "you'll be fine")?
 5. **Tone.** Does it sound like a person or like a motivational poster? Flag clichés, hustle language,
    shouting, or anything that could shame the viewer.
-6. **Length.** Count the words in `hook` plus every `scenes[].text` plus `close`. Is it within 10 of
-   `targets.words`?
+6. **Length.** Count the words in `hook` plus every `scenes[].text` plus `close`. Is it within 125 to
+   150 (or within 10 of `targets.words`), and is the hook under nine words?
 7. **Platform safety.** Anything that could be read as hate, politics, medical misinformation, or a scam?
-8. **Originality.** Does it say something a thousand other channels have not already said this way?
+8. **Originality.** Does it say something a thousand other channels have not already said this way, and
+   does `original_angle` actually show up in the script? Score 1 to 5; below 4 is a `revise`.
 
 ## Output
 
@@ -41,6 +44,7 @@ Return JSON only:
 {
   "verdict": "pass" | "revise" | "reject",
   "word_count": <integer>,
+  "scores": { "hook": 1-5, "tone": 1-5, "originality": 1-5, "safety": 1-5 },
   "failures": [ { "check": "<1-8>", "quote": "<offending text>", "reason": "<one sentence>" } ],
   "notes": "<one or two sentences for the owner>"
 }

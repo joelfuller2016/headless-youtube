@@ -83,10 +83,15 @@ services are gone or going (PlayHT, Hume). Paid voices with emotion control (Ope
 non-commercial and requires a credit in the title, so it is never used. Sources and prices with dates
 in `docs/RESEARCH.md`. **Reversible:** yes, the voice provider is an interface.
 
-## D-008 Two models
+## D-008 Two models, and a $0 fallback chain
 
-**Why.** A judge grading its own writer's output is a weak gate. Use a different provider or at least a
-different model family for the quality judge. Costs pennies.
+**Why.** A judge grading its own writer's output is a weak gate, and LLM judges have documented position,
+verbosity and self-enhancement biases, so the judge is a different model family grading one script
+against a rubric with a constrained verdict. Cost is not the constraint: Claude Haiku 5.5 writes a script
+for about $0.0007 and Opus 5.5 for about $0.03, so a month at three videos a day stays under $2 on any
+of them; a free chain (Gemini Flash free tier, OpenRouter free models, a local Ollama model) sits behind
+the same client interface so a quota error never stops the daily post. Prices and sources in
+`docs/RESEARCH.md` section 8.
 
 ## D-009 Windows PC first, GitHub Actions as the scheduler of record from phase 3
 

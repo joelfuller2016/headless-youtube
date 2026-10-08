@@ -643,3 +643,97 @@ owner's Windows PC is the right development runner and manual backup but a poor 
 the 60-day rule (keep a human-visible journal commit anyway); current Hetzner prices; Docker Desktop on
 Windows Home (the requirements page lists Pro, Enterprise and Education); Modal's retry guarantees for
 scheduled functions.
+
+## 8. Script generation, quality gates and idea intake (checked 2026-10-08)
+
+**Summary.** Script generation is the cheapest stage by a wide margin: at one to three scripts a day every
+hosted model costs cents a month, and three paths cost nothing (Gemini Flash's free tier, OpenRouter's
+free models, a local Ollama model on the PC). What the research changed is not the price but the rules:
+no provider's JSON mode can enforce a word count, so length is enforced in code and the synthesised audio
+is the final arbiter; 130 to 160 words runs slightly long for a 50-second video at the published reading
+rate; the quality gates must be ordered cheapest first; and the fabricated-attribution failure needs an
+allowlist, not a prompt. For intake, a GitHub issue form is the cleanest single queue, a Telegram bot can
+be polled from the PC without a public endpoint, and every push-style source needs a relay.
+
+### Models and cost per script
+
+Assumes about 1,200 input and 700 output tokens for the writer and 1,500 and 200 for the judge.
+
+| Model | Price per million tokens (input, output) | About per video | Notes | Source |
+|---|---|---|---|---|
+| Claude Haiku 5.5 (`claude-haiku-5-5`) | $0.10, $0.50 for prompts up to 100K tokens | $0.0007 | the cheapest capable writer; batch is half | [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) |
+| Claude Sonnet 5.5 (`claude-sonnet-5-5`) | $2, $10 | $0.014 | a strong judge from a different family than the writer | same |
+| Claude Opus 5.5 (`claude-opus-5-5`) | $4, $20 | $0.03 (under $1 a month at one a day) | Anthropic's recommended default; affordable even here | same |
+| OpenAI `gpt-5-nano`, `gpt-5-mini` | $0.05, $0.40 and $0.25, $2.00 | $0.0005 and $0.002 | | [OpenAI pricing](https://developers.openai.com/api/docs/pricing) |
+| Gemini Flash and Flash-Lite | free tier "free of charge" on the current Flash models; paid 2.5 Flash-Lite $0.10, $0.40 | $0 | free-tier limits are shown only inside AI Studio and free-tier prompts may be used to improve Google's products | [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing), [Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) |
+| OpenRouter `:free` models | $0 | $0 | 50 requests a day until $10 of credit has ever been bought, then 1,000; 16 free models on 2026-10-08; never pin one id | [Limits](https://openrouter.ai/docs/api/reference/limits) |
+| Groq | free plan exists; `gpt-oss-20b` $0.075, $0.30 | cents | the Llama models were retired for free and developer tiers on 2026-08-16 | [Models](https://console.groq.com/docs/models), [Deprecations](https://console.groq.com/docs/deprecations) |
+| Ollama (local) | $0 | $0 | v0.40.1 (2026-10-07); Windows 10 22H2 or newer, NVIDIA driver 551+; structured outputs via the `format` field | [Releases](https://github.com/ollama/ollama/releases), [Windows](https://docs.ollama.com/windows), [Structured outputs](https://docs.ollama.com/capabilities/structured-outputs) |
+
+Two provider facts that shape the code: Anthropic's structured outputs reject `minLength`, `maxLength`
+and numeric constraints and can return non-conforming output on a refusal or `max_tokens` stop
+([structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs.md));
+OpenAI's require every field to be `required` and every object to carry `additionalProperties: false`
+([OpenAI structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs)). So the
+schema sent to a model is a relaxed copy of `examples/script-schema.json` without length limits, and the
+full schema is validated locally. Claude 4.7 and later tokenise about 30 percent more tokens for the same
+text, so estimates built on older counts under-count.
+
+### Length
+
+Published pacing guidance converges on about 2.5 words a second, 140 to 150 words for 60 seconds
+([one source](https://breadnbeyond.com/how-many-words-does-a-60-seconds-explainer-video-needs/)). The
+earlier target of 130 to 160 words lands at 52 to 64 seconds, so the rules now say **125 to 150 words
+for a 50-second video, hook under nine words, measured on the synthesised audio with `ffprobe`**; the
+TTS voice's measured words per minute feeds back into the budget.
+
+### Unattended quality gates, cheapest first
+
+1. Schema and stop-reason check (reject a refusal or a truncated reply before parsing).
+2. Word count 125 to 150 and hook under nine words; one retry with the measured count in the prompt.
+3. A regex banned-claims list: diagnosis, cure, medication, vaccine, invest, stock, crypto, guarantee,
+   "God will give you the job". YouTube's monetisation page also bans "AI-generated podcast hosts
+   offering financial guidance", so the job pillar never gives financial advice.
+4. Attribution gate: a `public_domain` attribution must fuzzy-match the local allowlist (the World
+   English Bible file, [Project Gutenberg](https://www.gutenberg.org/policy/permission.html) entries, whose
+   quotes need no permission) at 0.95 similarity or better; any other named-person attribution fails.
+5. Profanity: [alt-profanity-check](https://pypi.org/pypi/alt-profanity-check/json) 1.9.1 (2026-09-14) in
+   Python, with an allowlist for scripture and place names.
+6. OpenAI's [moderation endpoint](https://developers.openai.com/api/docs/guides/moderation), which is
+   free, for self-harm, harassment and hate flags; a flag sends the job to the review queue.
+7. The LLM judge on a different model than the writer, grading one script against a rubric with a
+   constrained PASS or FAIL plus 1 to 5 subscores, requiring PASS and originality of 4 or more.
+   [Zheng et al. 2023](https://arxiv.org/abs/2306.05685) documents position, verbosity and
+   self-enhancement biases in LLM judges, which is why the judge is a different model and never compares
+   two scripts side by side.
+8. Synthesised audio between 45 and 60 seconds.
+
+Every verdict is logged next to the script id, and a 20-to-30-script eval set with human PASS or FAIL
+labels is kept from day one so the judge can be re-run whenever the prompt, model or thresholds change.
+
+### Idea intake for one person
+
+| Source | How it reaches the queue | Notes | Source |
+|---|---|---|---|
+| **GitHub issue form** (the canonical queue) | a workflow on `issues: opened` parses the body (responses become Markdown under `###` headings), writes the idea file, runs the pipeline, comments the video URL and closes the issue | templates can auto-apply a label; issue-triggered workflows run only from the default branch; the issue body is untrusted and is passed through an environment variable, never inlined into a shell step | [Issue forms](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms) |
+| **Telegram bot** | the runner long-polls `getUpdates` from the PC, so no public endpoint is needed; it opens the same GitHub issue | polling and webhooks are mutually exclusive; undelivered updates are kept 24 hours | [Bot API](https://core.telegram.org/bots/api) |
+| Self-feeding mode | a daily cron job picks the pillar by weekday, asks the writer for five candidate ideas that differ from the last 60, picks one by a diversity score, and opens an issue so it flows through the same gates; a pending human idea takes priority | | |
+| Google Sheet | an Apps Script edit trigger posts to the GitHub issues API when a row's status is `ready` | 20,000 URL fetches a day; 6 minutes an execution | [Triggers](https://developers.google.com/apps-script/guides/triggers/installable), [Quotas](https://developers.google.com/apps-script/guides/services/quotas) |
+| Notion, Airtable, Tally | push subscriptions need a public HTTPS endpoint (a small relay such as a Cloudflare Worker that calls `repository_dispatch`), or the runner polls the API | Notion subscriptions are created in the UI and need a public endpoint; `repository_dispatch` payloads are capped at 10 top-level properties | [Notion webhooks](https://developers.notion.com/reference/webhooks) |
+| Email | the runner polls a Gmail label by IMAP or the Gmail API; push watches must be renewed every 7 days and can drop events | | [Gmail push](https://developers.google.com/workspace/gmail/api/guides/push) |
+
+### What this section decides
+
+- Writer: Claude Haiku 5.5 or Opus 5.5 behind one client interface, with a $0 fallback chain (Gemini
+  Flash free tier, OpenRouter free models, Ollama) so a quota error never stops the daily post. Judge: a
+  different model family (D-008). Whole-month LLM cost at three videos a day stays under $2 even on Opus.
+- The script carries a required `original_angle` field and the generator is given three recent hooks to
+  avoid, as the written defence against the inauthentic-content and spam rules.
+- Length is 125 to 150 words, enforced in code and by the audio.
+- Gates run in the order above; the attribution allowlist and the banned-phrase list live in config.
+- The GitHub issue form is the one queue; Telegram and self-feed open issues into it.
+
+**Open questions.** Gemini free-tier daily caps (visible only in AI Studio); Groq free-plan numbers;
+local Ollama throughput and structured-output reliability on the owner's hardware; whether a generic
+synthetic narration voice needs YouTube's AI-use disclosure (the help page addresses only cloning your
+own voice).
