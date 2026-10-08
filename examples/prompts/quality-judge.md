@@ -31,7 +31,8 @@ script costs nothing; a published mistake costs trust.
 4. **Sensitivity.** If the topic is suicide, self-harm, eating disorders, abuse, addiction or acute
    grief: is `sensitivity` set to `high`, is `crisis_resources` true, is there one grounding step, does
    the close point to help (a person, a line, the number in the description), and is the language safe
-   (no methods, no romanticising, no "you'll be fine", "died by suicide" never "committed")?
+   (no methods, no romanticising, no sensational language, no dramatic visual prompts, no "you'll be
+   fine", "died by suicide" never "committed")?
 5. **Tone.** Does it sound like a person or like a motivational poster? Flag clichés, hustle language,
    shouting, or anything that could shame the viewer.
 6. **Length.** Count the words in every `scenes[].text` plus `close` (the `hook` is the first sentence

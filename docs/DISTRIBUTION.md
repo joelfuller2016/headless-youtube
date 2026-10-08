@@ -139,6 +139,9 @@ Checked 2026-10-08 against Google's developer and help pages.
   What it means here: the brand-card and kinetic-typography formats are the most exposed, so they are
   never the whole channel, and every video must carry narrative and the owner's perspective, not only a
   quote on a background.
+- **Advertiser-friendly guidelines.** The [page](https://support.google.com/youtube/answer/6162278) that
+  decides ad eligibility for religious and sensitive-topic content resolves and has not been read; it is
+  on the phase-7 re-check list because monetisation is not a goal.
 - **February 2027 changes.** New Partner Program applicants will need 1,000 subscribers plus 8,000
   qualified watch hours in 365 days or 20 million qualified Shorts views in 90 days; existing members are
   not affected, but earning from the Shorts Creator Pool each month will require 10 million qualified

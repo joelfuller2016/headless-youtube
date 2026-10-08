@@ -93,8 +93,10 @@ verbosity and self-enhancement biases, so the judge is a different model family 
 against a rubric with a constrained verdict. Cost is not the constraint: Claude Haiku 5.5 writes a script
 for about $0.0007 and Opus 5.5 for about $0.03, so a month costs under $1 on Opus at one video a day and
 about $3 at three a day with a `gpt-5-mini` judge; a free chain (Gemini Flash free tier, OpenRouter free models, a local Ollama model) sits behind
-the same client interface so a quota error never stops the daily post. Prices and sources in
-`docs/RESEARCH.md` section 8.
+the same client interface so a quota error never stops the daily post. One limit on the free chain: the
+Gemini free tier's terms forbid personal information and allow human review, and OpenRouter's free
+variants may be logged by their providers, so an idea that names a real person is written by a paid or
+local model. Prices and sources in `docs/RESEARCH.md` section 8.
 
 ## D-009 Windows PC first, GitHub Actions as the scheduler of record from phase 3
 

@@ -518,14 +518,14 @@ Assumes about 1,200 input and 700 output tokens for the writer and 1,500 and 200
 
 | Model | Price per million tokens (input, output) | About per video | Notes | Source |
 |---|---|---|---|---|
-| Claude Haiku 5.5 (`claude-haiku-5-5`) | $0.10, $0.50 for prompts up to 100K tokens | $0.0007 | the cheapest capable writer; batch is half | [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) |
+| Claude Haiku 5.5 (`claude-haiku-5-5`) | $0.10, $0.50 for prompts up to 100K tokens | $0.0007 | the cheapest capable writer; batch is half; prompt caching needs a cached prefix of at least 512 tokens on the 5.5 models, so the style guide, examples and safety rules must be padded above that before the cache-hit price applies | [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing) |
 | Claude Sonnet 5.5 (`claude-sonnet-5-5`) | $2, $10 | $0.014 | a stronger same-family writer for a series that earns it; not the judge, which D-008 puts in another family | same |
 | Claude Opus 5.5 (`claude-opus-5-5`) | $4, $20 | $0.03 (under $1 a month at one a day) | Anthropic's recommended default; affordable even here | same |
 | OpenAI `gpt-5-nano`, `gpt-5-mini` | $0.05, $0.40 and $0.25, $2.00 | $0.0005 and $0.002 | | [OpenAI pricing](https://developers.openai.com/api/docs/pricing) |
-| Gemini Flash and Flash-Lite | free tier "free of charge" on the current Flash models; paid 2.5 Flash-Lite $0.10, $0.40 | $0 | free-tier limits are shown only inside AI Studio and free-tier prompts may be used to improve Google's products | [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing), [Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) |
-| OpenRouter `:free` models | $0 | $0 | 50 requests a day until $10 of credit has ever been bought, then 1,000; 16 free models on 2026-10-08; never pin one id | [Limits](https://openrouter.ai/docs/api/reference/limits) |
-| Groq | free plan exists; `gpt-oss-20b` $0.075, $0.30 | cents | the Llama models were retired for free and developer tiers on 2026-08-16 | [Models](https://console.groq.com/docs/models), [Deprecations](https://console.groq.com/docs/deprecations) |
-| Ollama (local) | $0 | $0 | v0.40.1 (2026-10-07); Windows 10 22H2 or newer, NVIDIA driver 551+; structured outputs via the `format` field | [Releases](https://github.com/ollama/ollama/releases), [Windows](https://docs.ollama.com/windows), [Structured outputs](https://docs.ollama.com/capabilities/structured-outputs) |
+| Gemini Flash and Flash-Lite | free tier "free of charge" on the current Flash models; paid 2.5 Flash-Lite $0.10, $0.40 | $0 | free-tier limits are shown only inside AI Studio and free-tier prompts may be used to improve Google's products; the [terms](https://ai.google.dev/gemini-api/terms) for the Unpaid Services say "do not submit sensitive, confidential, or personal information", that human reviewers may read input and output, and that only Paid Services may serve users in the European Economic Area (verification pass, 2026-10-08), so an idea that carries someone's personal situation never goes to the free tier | [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing), [Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) |
+| OpenRouter `:free` models | $0 | $0 | 50 requests a day until $10 of credit has ever been bought, then 1,000; 16 free models on 2026-10-08; never pin one id; free variants may be served by providers that log or train on prompts (OpenRouter's [provider-logging page](https://openrouter.ai/docs/guides/privacy/provider-logging) was not read), so the same personal-information rule as Gemini's free tier applies | [Limits](https://openrouter.ai/docs/api/reference/limits) |
+| Groq | free plan: 30 requests a minute, 1,000 a day, 8K tokens a minute and 200K a day on `gpt-oss-20b`, `gpt-oss-120b` and `qwen3.8-27b` (the verification pass read the free-plan tab of the [rate-limits page](https://console.groq.com/docs/rate-limits) on 2026-10-08; the Developer plan is 1,000 a minute and 500K a day); paid `gpt-oss-20b` $0.075, $0.30 | $0 within the free plan | the Llama models were retired for free and developer tiers on 2026-08-16; `qwen3.8-27b` is a preview model "for evaluation purposes only"; the free plan also serves two safety classifiers, `gpt-oss-safeguard-20b` (3 a minute, 1,000 a day) and `llama-prompt-guard-2` (30 a minute, 14,400 a day), a moderation option that needs no OpenAI account; and `whisper-large-v3-turbo` at $0.04 an audio hour (free: 20 a minute, 2,000 a day) for voice-note intake | [Models](https://console.groq.com/docs/models), [Deprecations](https://console.groq.com/docs/deprecations) |
+| Ollama (local) | $0 | $0 | v0.40.1 (released 7 October; the year is inferred from the asset timestamp because GitHub omits it); Windows 10 22H2 or newer, installed with the one-liner on [ollama.com/download/windows](https://ollama.com/download/windows); NVIDIA driver 551+; structured outputs via the `format` field | [Releases](https://github.com/ollama/ollama/releases), [Windows](https://docs.ollama.com/windows), [Structured outputs](https://docs.ollama.com/capabilities/structured-outputs) |
 
 Two provider facts that shape the code: Anthropic's structured outputs reject `minLength`, `maxLength`
 and numeric constraints and can return non-conforming output on a refusal or `max_tokens` stop
@@ -563,6 +563,8 @@ TTS voice's measured words per minute feeds back into the budget.
    Python, with an allowlist for scripture and place names.
 8. OpenAI's [moderation endpoint](https://developers.openai.com/api/docs/guides/moderation), which is
    free, for self-harm, harassment and hate flags; a flag forces `review_mode: approve` for that job, the same path D-019 uses for heavy topics.
+   Without an OpenAI account, Groq's free plan serves `gpt-oss-safeguard-20b` and `llama-prompt-guard-2`
+   as the same kind of classifier (limits in the table above).
 9. The LLM judge on a different model than the writer, grading one script against a rubric with a
    constrained pass, revise or reject verdict plus 1 to 5 subscores, requiring pass and originality of 4 or more.
    [Zheng et al. 2023](https://arxiv.org/abs/2306.05685) documents position, verbosity and
@@ -583,6 +585,13 @@ labels is kept from day one so the judge can be re-run whenever the prompt, mode
 | Google Sheet | an Apps Script edit trigger posts to the GitHub issues API when a row's status is `ready` | 20,000 URL fetches a day; 6 minutes an execution | [Triggers](https://developers.google.com/apps-script/guides/triggers/installable), [Quotas](https://developers.google.com/apps-script/guides/services/quotas) |
 | Notion, Airtable, Tally | push subscriptions need a public HTTPS endpoint (a small relay such as a Cloudflare Worker that calls `repository_dispatch`), or the runner polls the API | Notion subscriptions are created in the UI and need a public endpoint; `repository_dispatch` payloads are capped at 10 top-level properties | [Notion webhooks](https://developers.notion.com/reference/webhooks) |
 | Email | the runner polls a Gmail label by IMAP or the Gmail API; push watches must be renewed every 7 days and can drop events | | [Gmail push](https://developers.google.com/workspace/gmail/api/guides/push) |
+| Telegram voice note | the runner downloads the voice file and transcribes it with Groq's `whisper-large-v3-turbo` ($0.04 an audio hour; free plan 20 a minute, 2,000 a day) before opening the issue | Telegram keeps undelivered updates for 24 hours, so the poller must run at least daily | Groq [rate limits](https://console.groq.com/docs/rate-limits) (verification pass, 2026-10-08) |
+
+Every intake path is made idempotent the same way: the issue number, the Telegram `update_id`, the sheet
+row id or the message id is the job's `source_id`, a job is never opened twice for one id, and the GitHub
+Actions workflow runs under a `concurrency` group so two triggers cannot process the same queue at once.
+Airtable's free plan allows 1,000 API calls a month, which a five-minute poller spends in under four days,
+so Airtable works only through webhooks.
 
 ### What this section decides
 
@@ -597,8 +606,10 @@ labels is kept from day one so the judge can be re-run whenever the prompt, mode
 - Gates run in the order above; the attribution allowlist and the banned-phrase list live in config.
 - The GitHub issue form is the one queue; Telegram and self-feed open issues into it.
 
-**Open questions.** Gemini free-tier daily caps (visible only in AI Studio); Groq free-plan numbers;
-local Ollama throughput and structured-output reliability on the owner's hardware; whether a generic
+**Open questions.** Gemini free-tier daily caps (visible only in AI Studio); whether OpenAI's "Free" usage
+tier carries any complimentary credits (its rate-limits page names a $100 monthly usage limit and the
+pricing page lists none, so OpenAI at $0 beyond the moderation endpoint is unverified); local Ollama
+throughput and structured-output reliability on the owner's hardware; whether a generic
 synthetic narration voice needs YouTube's AI-use disclosure (the help page addresses only cloning your
 own voice).
 
@@ -711,7 +722,9 @@ no label on TikTok and none on YouTube; the pipeline still says so in the descri
 - Even famous lines are unsourced: "Be the change you wish to see in the world" traces to Arleen Lorrance
   in 1974, not Gandhi ([Quote Investigator, 2017-10-23](https://quoteinvestigator.com/2017/10/23/be-change/)).
 - [Quotable](https://github.com/lukePeavey/quotable) (MIT, 180 requests a minute, 55 open issues) says
-  nothing about how its quotes were sourced, so it is not an attribution oracle. Wikiquote separates
+  nothing about how its quotes were sourced, so it is not an attribution oracle. Quote Investigator has
+  no API, and the Wikiquote MediaWiki API answered an anonymous request with HTTP 429 and requires a
+  descriptive User-Agent, so the check runs against a cached local list, never a live call per video. Wikiquote separates
   sourced, disputed and misattributed entries and is [CC BY-SA](https://en.wikiquote.org/wiki/Wikiquote:Copyrights),
   so a list copied from it carries attribution.
 - Rule, already in `docs/CONTENT_STRATEGY.md`: original lines and public-domain scripture by default; a
@@ -722,7 +735,7 @@ no label on TikTok and none on YouTube; the pipeline still says so in the descri
 
 | Translation | Status | Conditions | Source |
 |---|---|---|---|
-| World English Bible | public domain ("not copyrighted"); the name is a trademark for faithful copies | none; modern English from the 1901 ASV | [worldenglish.bible](https://worldenglish.bible/) (fetched; ebible.org regenerated 2026-10-08) |
+| World English Bible | public domain ("not copyrighted"); the name is a trademark for faithful copies | none; modern English from the 1901 ASV; also served verse by verse as JSON by [bible-api.com](https://bible-api.com/) with `translation=web` (the verification pass fetched John 3:16 on 2026-10-08 and the response carried the note "Public Domain"), a second source to diff the local file against | [worldenglish.bible](https://worldenglish.bible/) (fetched; ebible.org regenerated 2026-10-08) |
 | Berean Standard Bible | public domain, CC0 dedication of 2023-04-30 | "all uses are freely permitted"; attribution appreciated, not required | [terms](https://berean.bible/terms.htm) (fetched) |
 | King James Version | public domain in the United States; in the United Kingdom the Crown's letters patent have no expiry and printing is licensed to Cambridge, Oxford and Collins; "this royal decree has no effect outside of the UK" | whether a UK-viewable video engages the patent was not established (Cambridge's page refused the fetch) | [Yale guide, 2026-08-10](https://guides.library.yale.edu/newtestament/kjv), [ebible.org](https://ebible.org/kjv/copr.htm) (both fetched) |
 | ESV (Crossway) | copyrighted; up to 500 verses without written permission | not more than half of a book or a quarter of the work; the full notice must appear; audio must be verbatim with verbal "ESV" credit; "digital artwork", cards and calendars need written permission; not usable in CC-licensed works; the API is free for non-commercial use | [permissions](https://www.crossway.org/permissions/) (fetched) |
@@ -764,6 +777,9 @@ pages.
 - Does the KJV Crown patent reach a digital video viewable in the UK? Unresolved.
 - First-party subscriber counts for the three channels above; the trackers disagree and block fetches.
 - The exact wording and penalties of Instagram's AI-label rule; the help page refused the fetch.
+- YouTube's advertiser-friendly content guidelines (religion and sensitive topics decide ad eligibility
+  for a hope-and-prayer channel): the [page](https://support.google.com/youtube/answer/6162278) resolves
+  and was not read; it belongs to the phase-7 re-check, since monetisation is not a goal.
 - Whether TikTok or Meta attach crisis resources to videos that merely mention anxiety or depression,
   and whether that affects reach.
 - How the inauthentic-content review treats a channel that rotates templates but is wholly

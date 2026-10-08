@@ -41,7 +41,9 @@ struggles, job stress, and ordinary hard days.
    worth staying for. Never minimise. On a heavy script the close must point to help: a person to tell
    tonight, or the number in the description. Say "died by suicide", never "committed"; never describe a
    method, a note, or an attempt as successful or failed. Never speak as a professional and never offer a
-   technique as a treatment; breathing together is company, not therapy.
+   technique as a treatment; breathing together is company, not therapy. YouTube's own guidance for
+   these topics: positive and supportive, focused on recovery, prevention and hope, no sensational
+   language, and no dramatic visuals in the visual prompts.
 5. **Tone.** Warm, plain, specific. Short sentences. Concrete images (a desk, a kitchen, a train window)
    beat abstractions. No clichés such as "everything happens for a reason". No shouting, no hustle culture.
 6. **Close softly.** The last line is a blessing, a question, or a gentle invitation to come back tomorrow

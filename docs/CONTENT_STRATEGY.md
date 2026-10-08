@@ -93,7 +93,9 @@ Language models invent quotes and misattribute real ones, and a channel that put
 pastor's or a poet's mouth loses trust in one comment. The rules:
 
 1. **Scripture is looked up, not generated.** The pipeline carries a public-domain translation as a
-   file and inserts the verse text from it; the model supplies only the reference.
+   file and inserts the verse text from it; the model supplies only the reference, as a `{{verse:...}}`
+   token in the scene text. bible-api.com serves the same World English Bible text as JSON and is the
+   second source the file is checked against (`docs/RESEARCH.md` section 9).
 2. **Public-domain translations by default.** The King James Version is public domain outside the
    United Kingdom (the UK holds a perpetual Crown patent; see
    [eBible's KJV note](https://ebible.org/find/details.php?id=eng-kjv)). The

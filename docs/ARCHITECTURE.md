@@ -160,11 +160,17 @@ All sources produce the same thing: an idea string, an optional pillar and serie
 |---|---|---|
 | GitHub issue form with the `idea` label (**the one queue**) | a workflow on `issues.opened` parses the form body, runs the pipeline, comments the video URL and closes the issue | phone-friendly, free, auditable; every other source opens one of these |
 | CLI (`new "idea"`) | immediate, opens an issue when online | testing, bulk loading |
-| Telegram bot | the runner long-polls `getUpdates` from the PC (no public endpoint) and opens an issue | fastest from a phone |
+| Telegram bot | the runner long-polls `getUpdates` from the PC (no public endpoint), transcribes a voice note with Groq's free Whisper, dedupes by `update_id` (Telegram keeps updates 24 hours) and opens an issue | fastest from a phone |
 | Google Sheet | an Apps Script trigger opens an issue when a row's status is `ready` | planning a week at once |
 | Email to a label | the runner polls the label via IMAP or the Gmail API and opens an issue | low-tech |
-| Notion, Airtable, forms | through a small relay (a Cloudflare Worker calling `repository_dispatch`) or polling | only if already in use |
+| Notion, Airtable, forms | through a small relay (a Cloudflare Worker calling `repository_dispatch`); Airtable's free 1,000 calls a month rule out polling | only if already in use |
 | Self-feed | once a day when no human idea is pending: the pillar rotation and calendar hooks from `docs/CONTENT_STRATEGY.md` section 2, the last 30 ideas shown to the generator, one idea returned, the distinctness gate as the diversity check; opened as an issue | 100 percent automation |
+
+An idea can carry a real person's situation ("a prayer for my sister who..."). The issue form and the
+Telegram bot say not to include names or details, the job records `source_id` and never the sender's
+identity beyond the owner, and an idea that names a third party is written by a paid or local model,
+never by the Gemini or OpenRouter free tiers, whose terms allow human review and training on prompts
+(`docs/RESEARCH.md` section 8).
 
 ## 8. Hosting shapes
 
