@@ -11,8 +11,10 @@ the numbers justify it. Prices are summarised here and sourced with dates in `do
 - One warm narrator voice, slow pace, the same voice on every video.
 - Large animated captions, one to three words at a time, with emphasis words in the brand colour. On a
   phone with the sound off, the captions *are* the video.
-- A licensed music bed that never triggers Content ID (YouTube Audio Library or a library with a clear
-  licence), ducked under the voice.
+- A licensed music bed that never triggers Content ID, ducked under the voice. YouTube's Audio Library is
+  claim-free on YouTube but YouTube does not address use on other platforms, so the bed comes from a library
+  whose licence covers every platform (Pixabay's Content License covers its music, no attribution required).
+  Sources and alternatives in `docs/RESEARCH.md`.
 - A 0.3 second brand bumper at the start and an end card that says only "come back tomorrow".
 - The hook scene is the only place the pipeline spends extra; everything after it can be plain.
 

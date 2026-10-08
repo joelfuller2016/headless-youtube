@@ -82,7 +82,8 @@ until YouTube's API audit passes; free-tier model limits must be watched. **Best
 ### Concept 2 — "Serverless on GitHub Actions"
 
 Same providers as Concept 1, hosted differently: a public repo with a scheduled workflow runs the
-pipeline on a GitHub-hosted Ubuntu runner (FFmpeg is preinstalled on the standard image), ideas arrive
+pipeline on a GitHub-hosted Ubuntu runner (FFmpeg is not on the standard image, so the workflow installs it
+with one `apt-get` step, about 30 seconds), ideas arrive
 as GitHub issues using an issue form, results and metrics are committed back, and the rendered MP4 is
 attached to a release so other platforms can fetch it from a public URL. Secrets live in the Actions
 secret store.

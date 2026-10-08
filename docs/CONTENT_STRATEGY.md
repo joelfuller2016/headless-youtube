@@ -149,7 +149,8 @@ coping strategies in the video and the description, and avoid naming methods or 
 - One narrator voice, warm, unhurried, mid-register, chosen once and never changed without a decision.
 - Brand kit: one display font and one caption font, three palettes (dawn, day, night), a 0.3 s bumper, an
   end card that reads "come back tomorrow", and a licensed music bed with its licence file committed next
-  to it.
+  to it. The licence must cover every platform the video goes to, not only YouTube (see
+  `docs/VIDEO_CONCEPTS.md`).
 - The channel name, handle and avatar are the owner's call and are not decided here.
 
 ## 10. What success looks like (so the loop has a target)

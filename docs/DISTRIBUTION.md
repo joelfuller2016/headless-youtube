@@ -85,9 +85,15 @@ Checked 2026-10-08 against Google's developer and help pages.
 
 ### Analytics for the feedback loop
 
-The YouTube Analytics API reports views, average view duration and retention per video for the channel
-owner. The track stage pulls these on days 1, 3, 7 and 28. Scope: `yt-analytics.readonly`. Details and
-quotas are confirmed in `docs/RESEARCH.md`.
+The YouTube Analytics API `reports.query` method returns `views`, `likes`, `averageViewDuration`,
+`averageViewPercentage` and `subscribersGained` (among others) and can be filtered and grouped by the
+`video` dimension with several video ids at once. Scopes: `yt-analytics.readonly`, and the page notes
+requests now also require `youtube.readonly`. The track stage pulls these on days 1, 3, 7 and 28.
+Source: [Reports: query](https://developers.google.com/youtube/analytics/reference/reports/query),
+checked 2026-10-08. The Audio Library page also matters here: music downloaded from it "won't be claimed by
+a rights holder through the Content ID system" on YouTube, Creative Commons tracks there must be credited
+in the description, and YouTube says nothing about use off-platform. Source:
+[Audio Library help](https://support.google.com/youtube/answer/3376882).
 
 ### Uploading without the API
 
