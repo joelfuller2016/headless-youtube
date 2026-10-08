@@ -88,6 +88,13 @@ provider supports it, otherwise cropped. Six to eight clips per video.
 the clearest disclosure obligation. Reserve it for the hook scene of top-performing series, and never
 let a job depend on it: a failed clip drops the scene to Rung C.
 
+### Optional rung F — AI presenter (cost: about $1 to $4 per video, deferred)
+
+A lip-synced AI presenter (HeyGen or similar) reads the script to camera. It is the one rung that puts a
+face on a faceless channel, so it is not part of the launch plan. It may suit one or two series where a
+person speaking to camera beats b-roll; it always needs YouTube's synthetic-media disclosure, and the
+uncanny-valley risk is highest on prayer and grief topics. See `docs/RESEARCH.md` section 11 and D-016.
+
 ### Rung E — Hybrid (cost: pennies to dimes)
 
 Rung D or C for the hook scene, Rung B elsewhere, Rung A for the scripture or closing card. This is the

@@ -143,3 +143,68 @@ The full treatment with design consequences is in `docs/DISTRIBUTION.md`; this i
 | Inauthentic content | 15 July 2025 rename of "repetitious content"; content must be original and "not be mass-produced, generic, repetitive, or manipulative" | [Channel monetization policies](https://support.google.com/youtube/answer/1311392) |
 | Self-harm policy | supportive, recovery-focused wording; resources in video and description; no methods; crisis resource panels may be added | [Suicide, self-harm policy](https://support.google.com/youtube/answer/2802245) |
 | Analytics | `reports.query` with `views`, `likes`, `averageViewDuration`, `averageViewPercentage`, `subscribersGained`, filterable by `video`; scopes `yt-analytics.readonly` and `youtube.readonly` | [Reports: query](https://developers.google.com/youtube/analytics/reference/reports/query) |
+
+## 11. Tools the owner asked about: HeyGen and ChatCut (checked 2026-10-08)
+
+Joel sent `heygen.com` and `chatcut.io/claude`. Both were read on their own sites on 2026-10-08. Neither
+changes the phase 1 plan; each has a place later, with conditions.
+
+### HeyGen — AI presenter videos (a talking avatar reads the script)
+
+**What it is.** A hosted service that renders a lip-synced AI presenter (stock "studio" avatars, a
+"digital twin" of a real person, or an animated photo) speaking a script, plus video translation and a
+"Video Agent" that builds a whole video from a prompt. It has a developer API.
+
+| Fact | Value | Source |
+|---|---|---|
+| Web plans | Free: 3 videos a month, up to 1 minute, 1080p. Creator $29 a month ($24 annual): 600 credits, videos up to 30 minutes, watermark removal. Pro $49: 1,000 credits. Business $149 plus $20 a seat: 1,500 credits. | [Pricing](https://www.heygen.com/pricing), [FAQ](https://www.heygen.com/faq) |
+| Credit burn on web plans | 20 credits a minute for Avatar IV, Avatar V and Video Agent; 3 a minute for Avatar III (so Creator's 600 credits are about 30 minutes of current-generation avatar video a month) | search summary of the pricing FAQ; not re-read directly, treat as approximate |
+| API billing | separate pay-as-you-go wallet, starts at $5, no subscription, "price per 1 minute, charged by actual seconds generated"; **no free API credits since February 2026**; pay-as-you-go credits expire after 12 months; 10 concurrent videos | [API plans article, updated 2026-09-16](https://intercom.help/heygen/en/articles/10060327-new-heygen-api-plans), [FAQ](https://www.heygen.com/faq) |
+| API per-minute rates | the official table did not render on the help article or the app page. Third-party pages agree on roughly $1 a minute for Avatar III, $3 to $4 for Avatar IV (photo avatar cheaper than studio or digital twin), about $4 for Avatar V, $2 for Video Agent ([G2](https://www.g2.com/articles/heygen-api-pricing), [AdMake](https://admakeai.com/blog/heygen-pricing-explained)). **Unverified on an official page; confirm in the wallet before budgeting.** | |
+| API limits | 10 concurrent workflows on pay-as-you-go; `POST /v3/videos` 10 a second; avatar script up to 5,000 characters; 30 minutes a scene | [Usage limits](https://developers.heygen.com/docs/usage-limits) |
+| API shape | `X-Api-Key` header; create, then poll `GET /v3/videos/{id}` until `completed`, or give a `callback_url`; result is a `video_url` MP4 | [Quick start](https://developers.heygen.com/docs/quick-start) |
+| Ownership and commercial use | Creator, Pro and Business: "you own all rights in your User Input or User Output", commercial use allowed. **Free plan output is a revocable licence for personal, non-commercial and evaluation use and "may not be ... monetized, or used in connection with commercial activities."** The terms do not say which bucket pay-as-you-go API users fall in. | [Terms](https://heygen.com/terms) |
+| AI disclosure | the terms require disclosing AI origin where the law requires and forbid presenting output as human-made; YouTube requires the synthetic-media flag for a realistic person saying things they did not say, which is exactly what an avatar is | [Terms](https://heygen.com/terms), `docs/DISTRIBUTION.md` |
+
+**Fit for this channel.** HeyGen is a different format from the brief: the brief is faceless, and an
+avatar is a face. It could still earn a place as an optional **rung F, "AI presenter"**, for one or two
+series where a person speaking to camera beats b-roll (a "word for today" or an interview-prep tip).
+What it costs at one video a day on the unverified third-party rates: about $1 a video on Avatar III
+and $3 to $4 on Avatar IV or V, so roughly $30 to $120 a month, which is the whole phase-6 budget. The
+Creator web plan at $29 covers about 30 one-minute videos a month, but the web app is not the API, and
+driving the web app is not automation. Risks: the uncanny-valley problem is sharpest for prayer and
+grief content; the synthetic-media flag is mandatory; and the free plan cannot be used for a public
+channel at all. **Verdict: not before phase 6, and only after a side-by-side test on one series against
+rung B.** Recorded as D-016.
+
+### ChatCut — an AI video editor that an agent can drive, with a Claude Code plugin
+
+**What it is.** A cloud video editor (web app, Windows and macOS desktop app) whose editing agent takes
+plain-English instructions: import media, cut a timeline, transcribe and caption, add motion graphics,
+generate video, voice-over, music and sound effects, and export. The page Joel linked,
+[chatcut.io/claude](https://chatcut.io/claude), is the install guide for its **Claude Code plugin**,
+which adds an MCP server (`plugin:chatcut:chatcut`, hosted at `api.chatcut.io`) and a skill. There is
+also an older npm CLI, `@chatcut/skill`.
+
+| Fact | Value | Source |
+|---|---|---|
+| Plugin hosts | Claude Code Desktop, the Codex desktop app, WorkBuddy; **not** claude.ai, ChatGPT's site, remote browser workspaces, or the ChatCut web editor. Sign-in is a browser authorisation flow. | [Agent plugin docs](https://chatcut.io/docs/agent-plugin), [install page](https://chatcut.io/claude) |
+| CLI | `@chatcut/skill` 0.2.1 (2026-05-31, licence `UNLICENSED`): `chatcut submit --prompt ... --asset ...` normalises assets locally with FFmpeg, uploads, runs the editing agent, renders in the cloud and prints a signed download URL; first run opens a browser once, then "everything is silent"; `chatcut login` can rotate an API key; first run downloads about 450 MB of Chromium through `@remotion/renderer` | [npm registry record](https://registry.npmjs.org/@chatcut/skill) |
+| Plans | Free: a one-time starting balance (the pricing page says 5 credits, the docs say 20) and a cumulative 60-minute cloud-export quota that never resets. Paid, billed annually: 200 credits a month for $42 (list $50), 400 for $49 (list $100), 800 for $98 (list $200); paid removes the export quota. Desktop local export does not count against the quota and offers 4K. | [Pricing](https://chatcut.io/pricing), [Free and Pro](https://chatcut.io/docs/free-and-pro), [Export limits](https://chatcut.io/docs/web-export-limits) |
+| What credits buy | AI generation only; "manual editing, uploads, transcription, and export do not consume credits". Video per generated second: Seedance 2.0 0.28 (480p), 0.60 (720p), 1.32 (1080p); Seedance 2.5 about 0.40, 0.90, 2.22; Seedance 2.0 mini 0.056 (480p), 0.12 (720p); Kling 3.0 Standard 0.60 (720p), Pro 0.80 (1080p). Voice-over 0.28 to 0.80 credits per 1,000 characters. Music 0.18 a song. Sound effects 0.12 a second. | [Credits policy](https://chatcut.io/docs/credits-policy), [Generation credits](https://chatcut.io/docs/generation-credits) |
+| Terms | the terms say you will not access the service "through automated or non-human means" and prohibit "any automated use of the system (scripts, data mining, robots)"; commercial use of your exports is allowed and referred to a usage policy that is not published at a findable URL; output ownership is not stated | [Terms](https://chatcut.io/terms) |
+
+**What a 55-second short would cost in credits.** At the 400-credit plan ($49 a month, about $0.12 a
+credit): voice-over for 900 characters is under 1 credit; a music bed 0.18; all scenes as AI video with
+Kling 3.0 Pro at 1080p is 44 credits (about $5.40); the same with Seedance 2.0 mini at 720p is under 7
+credits (about $0.80). So ChatCut is a reasonable **rung C or D provider**, priced in the same range as
+calling the video models directly, with captions, music and editing thrown in.
+
+**Fit for this channel.** Attractive as a one-stop rung-D renderer and as an interactive tool for
+designing the brand look with Claude Code Desktop. Three things keep it out of the unattended pipeline for
+now: the terms forbid automated use while the product ships a CLI and an agent plugin built for exactly
+that (ask ChatCut in writing before relying on it); the plugin runs only in desktop agent hosts and the
+CLI's licence is `UNLICENSED`; and the agent's edits are non-deterministic, which fights the
+idempotent, downgradeable design in `docs/ARCHITECTURE.md`. **Verdict: use interactively in phase 1 to
+prototype caption styles and brand cards, and reconsider as a rung-D provider in phase 6 once its
+automation terms are confirmed.** Recorded as D-016.

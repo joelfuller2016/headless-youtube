@@ -22,6 +22,7 @@ recommendation is pending evidence.
 | D-013 | No voice cloning of the owner in v1 | Proposed | 2026-10-08 |
 | D-014 | Monetisation is not a goal; the content rules still comply with YouTube's monetisation policies | Proposed | 2026-10-08 |
 | D-015 | Visual rungs A and B launch together; C, D and E are switched on per series by data | Proposed | 2026-10-08 |
+| D-016 | HeyGen (AI presenter) and ChatCut (agent-driven editor) are deferred: HeyGen is a phase-6 optional rung F after a one-series test; ChatCut is used interactively for prototyping and reconsidered as a rung-D provider once its automation terms are confirmed | Proposed | 2026-10-08 |
 
 ## D-001 Python and FFmpeg
 
@@ -124,3 +125,15 @@ same thing as making the channel worth watching, so it costs nothing extra and k
 
 **Why.** Both are free, both are robust, and together they cover every pillar. Paid rungs are turned on
 per series once there are 30 days of retention data to justify them. See `docs/VIDEO_CONCEPTS.md`.
+
+## D-016 HeyGen and ChatCut
+
+**Why.** Both were raised by the owner on 2026-10-08 and researched the same day (`docs/RESEARCH.md`
+section 11). HeyGen puts a realistic synthetic presenter on screen, which is a different format from the
+faceless brief, costs roughly $1 to $4 a minute through its pay-as-you-go API on third-party figures that
+could not be confirmed on an official page, has no free API credits since February 2026, forbids
+commercial use of free-plan output, and always requires YouTube's synthetic-media disclosure. ChatCut is
+priced sensibly for AI video and voice generation and ships a Claude Code plugin and a CLI, but its terms
+prohibit automated use, the plugin only runs inside desktop agent hosts, and its edits are
+non-deterministic. Neither blocks anything; both are kept as options with the conditions stated.
+**Reversible:** yes.
