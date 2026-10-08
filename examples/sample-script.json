@@ -54,7 +54,7 @@
   "description": "A short prayer for anyone starting a new job and fighting the feeling that they do not belong. You were chosen. Tired is not failing.\n\nNew prayers and encouragement every day.",
   "hashtags": ["#prayer", "#newjob", "#encouragement", "#faith", "#imposter", "#shorts", "#hope", "#mentalhealth"],
   "music": { "mood": "soft-piano-hopeful" },
-  "voice": { "provider": "edge-tts", "voice_id": "en-US-AndrewNeural", "pace": "slow" },
+  "voice": { "provider": "kokoro", "voice_id": "am_michael", "pace": "slow" },
   "safety": {
     "sensitivity": "low",
     "crisis_resources": false,

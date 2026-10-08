@@ -13,7 +13,7 @@ recommendation is pending evidence.
 | D-004 | Videos are capped at 60 seconds by default | Proposed | 2026-10-08 |
 | D-005 | YouTube first, through the Data API; submit the compliance audit in phase 2 | Proposed | 2026-10-08 |
 | D-006 | Scripture only from public-domain translations; licensed translations only within their gratis limits and with the required notice | Proposed | 2026-10-08 |
-| D-007 | Phase 1 voice: a local open-weight TTS as primary, a free online TTS as fallback | Open | 2026-10-08 |
+| D-007 | Phase 1 voice: Kokoro-82M locally as primary, Google Cloud TTS free tier as fallback; `edge-tts` for prototyping only | Proposed | 2026-10-08 |
 | D-008 | Script model and judge model are different models | Proposed | 2026-10-08 |
 | D-009 | Phase 1 and 2 run on the owner's Windows PC from Task Scheduler; GitHub Actions is the phase-3 option | Proposed | 2026-10-08 |
 | D-010 | Platforms beyond YouTube go through an aggregator or scheduler unless a direct API is cheap to keep | Open | 2026-10-08 |
@@ -65,14 +65,20 @@ as the ESV may be quoted without written permission up to 500 verses with its fu
 in audio and video, a spoken credit. That notice does not fit in a 55-second video, so the default is
 public domain, and the script generator is told so. Sources in `docs/CONTENT_STRATEGY.md`.
 
-## D-007 Phase 1 voice (open)
+## D-007 Phase 1 voice
 
-**Options.** (a) A local open-weight model (Kokoro-class) on CPU: no cost, no terms-of-service
-exposure, consistent voice, needs a one-time install. (b) `edge-tts`: free and instant, but it uses an
-unofficial route to Microsoft's online voices, so it can stop working or raise terms questions.
-(c) A paid API (ElevenLabs, OpenAI, Google, Azure): best quality, pennies per video, needs a key.
-**Recommendation pending** the TTS comparison in `docs/RESEARCH.md`: start with (a) as primary and (b)
-as fallback, add (c) only for a series that earns it.
+**Why.** Kokoro-82M's weights are Apache-2.0, it runs on a Windows CPU, and the Kokoro-FastAPI wrapper
+exposes an OpenAI-compatible endpoint that also returns caption timestamps, which removes the forced
+alignment step. Google Cloud Text-to-Speech gives one million characters a month free on its current
+voices (a billing account must exist), which covers more than a thousand scripts, so it is the
+zero-cost cloud fallback. `edge-tts` works and is free, but it reaches Microsoft's voices through an
+unofficial route that Microsoft staff have said may breach their terms for commercial use, and it
+breaks when the Edge endpoint changes, so it is kept for prototyping only. Several open models were
+ruled out because their weights forbid commercial use (XTTS-v2, F5-TTS, Fish Speech), and two hosted
+services are gone or going (PlayHT, Hume). Paid voices with emotion control (OpenAI's
+`gpt-4o-mini-tts`, ElevenLabs Starter) are the phase-6 upgrade; ElevenLabs' free plan is
+non-commercial and requires a credit in the title, so it is never used. Sources and prices with dates
+in `docs/RESEARCH.md`. **Reversible:** yes, the voice provider is an interface.
 
 ## D-008 Two models
 

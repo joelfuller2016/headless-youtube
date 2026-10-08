@@ -68,7 +68,7 @@ links and dates, in `docs/RESEARCH.md`. The budget caps are decision D-012.
 |---|---|---|
 | Intake | CLI and the self-feeding generator; Telegram bot later | $0 |
 | Script and judge | a free-tier hosted model (Gemini Flash free tier or an OpenRouter free model) for the script, a local Ollama model for the judge, or the other way round | $0 |
-| Voice | a local open-weight TTS (Kokoro-class) on CPU; `edge-tts` as fallback | $0 |
+| Voice | Kokoro-82M locally on CPU (Apache-2.0); Google Cloud Text-to-Speech free tier as fallback | $0 |
 | Visuals | rung A brand cards; rung B stock from Pexels and Pixabay | $0 |
 | Captions | word timings from the TTS, or forced alignment with faster-whisper on CPU | $0 |
 | Render | FFmpeg with ASS captions | $0 |
